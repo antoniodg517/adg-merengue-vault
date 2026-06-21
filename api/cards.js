@@ -1,11 +1,8 @@
 const { createClient } = require('@supabase/supabase-js');
+const { isAdmin } = require('./_auth');
 
 function sb() {
   return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-}
-
-function isAdmin(req) {
-  return req.headers.authorization === `Bearer ${process.env.ADMIN_TOKEN}`;
 }
 
 module.exports = async function handler(req, res) {
@@ -25,7 +22,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+    if (!(await isAdmin(req))) return res.status(401).json({ error: 'Unauthorized' });
     const { data, error } = await sb()
       .from('cards')
       .insert([req.body])

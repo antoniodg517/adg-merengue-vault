@@ -1,8 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
-
-function isAdmin(req) {
-  return req.headers.authorization === `Bearer ${process.env.ADMIN_TOKEN}`;
-}
+const { isAdmin } = require('./_auth');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -11,7 +8,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+  if (!(await isAdmin(req))) return res.status(401).json({ error: 'Unauthorized' });
 
   const { path } = req.body;
   if (!path) return res.status(400).json({ error: 'path is required' });
