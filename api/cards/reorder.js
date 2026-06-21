@@ -8,7 +8,11 @@ function isAdmin(req) {
   return req.headers.authorization === `Bearer ${process.env.ADMIN_TOKEN}`;
 }
 
-// POST { order: [id1, id2, ...] } — writes each card's sort_order to its index.
+// Which DB column each reorder group writes to.
+const COLUMN = { collection: 'sort_order', grail: 'sort_grail', forsale: 'sort_forsale' };
+
+// POST { group, order: [id1, id2, ...] } — writes each card's position to the
+// column for that group. group defaults to 'collection'.
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -19,12 +23,14 @@ module.exports = async function handler(req, res) {
   if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
 
   const order = req.body && req.body.order;
+  const col = COLUMN[(req.body && req.body.group) || 'collection'];
   if (!Array.isArray(order)) return res.status(400).json({ error: 'order array required' });
+  if (!col) return res.status(400).json({ error: 'invalid group' });
 
   const client = sb();
   try {
     for (let i = 0; i < order.length; i++) {
-      const { error } = await client.from('cards').update({ sort_order: i }).eq('id', order[i]);
+      const { error } = await client.from('cards').update({ [col]: i }).eq('id', order[i]);
       if (error) throw error;
     }
   } catch (e) {

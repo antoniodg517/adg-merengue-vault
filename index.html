@@ -406,6 +406,9 @@ class Component extends DCLogic {
       photo_url: c.photo_url || null,
       photo_url_back: c.photo_url_back || null,
       notes: c.notes || c.desc || '',
+      sort_order: c.sort_order != null ? c.sort_order : 9999,
+      sort_grail: c.sort_grail != null ? c.sort_grail : 9999,
+      sort_forsale: c.sort_forsale != null ? c.sort_forsale : 9999,
     });
 
     const badgeStyle = (l) => ['GRAIL', '1/1', 'FEATURED'].includes(l) ? { bg: '#C8A75B', color: '#0A0A0A' }
@@ -428,10 +431,11 @@ class Component extends DCLogic {
     const source = dbCards !== null ? dbCards : FALLBACK;
     const allCards = source.map(buildCard);
 
-    // ── Partition by status ─────────────────────────────────────────────
-    const collectionCards = allCards.filter(c => c.status === 'collection');
-    const forSaleCards = allCards.filter(c => c.status === 'for_sale');
-    const grailCards = collectionCards.filter(c => c.is_grail);
+    // ── Partition by status, each ordered by its own sort field ─────────
+    const byField = (f) => (a, b) => a[f] - b[f];
+    const collectionCards = allCards.filter(c => c.status === 'collection').sort(byField('sort_order'));
+    const forSaleCards = allCards.filter(c => c.status === 'for_sale').sort(byField('sort_forsale'));
+    const grailCards = allCards.filter(c => c.is_grail).sort(byField('sort_grail'));
 
     // ── Live stats ──────────────────────────────────────────────────────
     const totalCards = allCards.length;

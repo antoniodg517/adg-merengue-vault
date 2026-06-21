@@ -203,8 +203,12 @@
 
         <!-- ── RIORDINA ───────────────────────────────────────────────── -->
         <sc-if value="{{ showReorder }}" hint-placeholder-val="{{ false }}">
-          <div style="display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
-            <p style="font-size: 12px; color: #A1A1AA; line-height: 1.6;">Trascina le carte per cambiare l'ordine di visualizzazione sul sito pubblico. L'ordine viene salvato automaticamente.</p>
+          <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <sc-for list="{{ reorderTabs }}" as="t" hint-placeholder-count="3">
+                <button onClick="{{ t.onClick }}" style="background: {{ t.bg }}; color: {{ t.col }}; border-width: 1px; border-style: solid; border-color: {{ t.bc }}; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 16px; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: all 0.15s;">{{ t.label }}</button>
+              </sc-for>
+            </div>
             <sc-if value="{{ orderSaving }}" hint-placeholder-val="{{ false }}">
               <span style="font-size: 11px; color: #C8A75B; font-weight: 600; white-space: nowrap;">Salvataggio…</span>
             </sc-if>
@@ -212,9 +216,10 @@
               <span style="font-size: 11px; color: #16A34A; font-weight: 600; white-space: nowrap;">✓ Ordine salvato</span>
             </sc-if>
           </div>
+          <p style="font-size: 11px; color: #A1A1AA; line-height: 1.6; margin-bottom: 14px;">Trascina le carte per cambiare l'ordine di visualizzazione sul sito pubblico. L'ordine viene salvato automaticamente.</p>
           <div style="background: #111111; border: 1px solid #1A1A1A; border-radius: 8px; overflow: hidden;">
-            <sc-if value="{{ noCards }}" hint-placeholder-val="{{ false }}">
-              <div style="padding: 48px; text-align: center; color: #A1A1AA; font-size: 13px;">Nessuna carta da ordinare.</div>
+            <sc-if value="{{ noOrderCards }}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 48px; text-align: center; color: #A1A1AA; font-size: 13px;">Nessuna carta in questo gruppo.</div>
             </sc-if>
             <sc-for list="{{ orderCards }}" as="card" hint-placeholder-count="0">
               <div draggable="true" onDragStart="{{ card.onDragStart }}" onDragOver="{{ card.onDragOver }}" onDrop="{{ card.onDrop }}" onDragEnd="{{ card.onDragEnd }}" style="display: grid; grid-template-columns: 28px 40px 1.6fr 1.4fr 88px 100px; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid #0D0D0D; cursor: grab; background: {{ card.rowBg }}; opacity: {{ card.rowOpacity }}; transition: background 0.12s;" style-hover="background: #0D0D0D;">
@@ -419,6 +424,7 @@ class Component extends DCLogic {
     photoPreview_back: null, photoFile_back: null, photoUploading_back: false,
     deleteId: null,
     orderCards: [], dragIndex: null, orderSaving: false, orderSaved: false,
+    reorderGroup: 'collection',
   };
 
   _blank() {
@@ -508,9 +514,31 @@ class Component extends DCLogic {
     }
   }
 
+  _groupCards(cards, group) {
+    if (group === 'grail') {
+      return cards.filter(c => c.is_grail)
+        .sort((a, b) => (a.sort_grail ?? 9999) - (b.sort_grail ?? 9999));
+    }
+    if (group === 'forsale') {
+      return cards.filter(c => c.status === 'for_sale')
+        .sort((a, b) => (a.sort_forsale ?? 9999) - (b.sort_forsale ?? 9999));
+    }
+    return cards.filter(c => c.status === 'collection')
+      .sort((a, b) => (a.sort_order ?? 9999) - (b.sort_order ?? 9999));
+  }
+
   _enterReorder() {
     this.setState({ section: 'reorder', orderSaved: false });
-    this._fetch().then(() => this.setState({ orderCards: [...this.state.cards] }));
+    this._fetch().then(() => this.setState({
+      orderCards: this._groupCards(this.state.cards, this.state.reorderGroup),
+    }));
+  }
+
+  _switchReorderGroup(group) {
+    this.setState({
+      reorderGroup: group, orderSaved: false, dragIndex: null,
+      orderCards: this._groupCards(this.state.cards, group),
+    });
   }
 
   _moveCard(from, to) {
@@ -522,17 +550,22 @@ class Component extends DCLogic {
   }
 
   async _saveOrder() {
+    const group = this.state.reorderGroup;
+    const col = group === 'grail' ? 'sort_grail' : group === 'forsale' ? 'sort_forsale' : 'sort_order';
     const order = this.state.orderCards.map(c => c.id);
     this.setState({ orderSaving: true, orderSaved: false, dragIndex: null });
     try {
       const res = await fetch('/api/cards/reorder', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${this._PWD}` },
-        body: JSON.stringify({ order }),
+        body: JSON.stringify({ group, order }),
       });
       if (!res.ok) throw new Error('reorder failed');
-      // Keep local cards in the new order so other sections stay consistent.
-      this.setState({ cards: [...this.state.orderCards], orderSaving: false, orderSaved: true });
+      // Write the new positions back into local cards so tab switches stay consistent.
+      const pos = {};
+      order.forEach((id, i) => { pos[id] = i; });
+      const cards = this.state.cards.map(c => (pos[c.id] != null ? { ...c, [col]: pos[c.id] } : c));
+      this.setState({ cards, orderSaving: false, orderSaved: true });
       setTimeout(() => { if (this.state.section === 'reorder') this.setState({ orderSaved: false }); }, 2500);
     } catch (e) {
       this.setState({ orderSaving: false });
@@ -683,6 +716,18 @@ class Component extends DCLogic {
       navItems, showDashboard: section === 'dashboard', showCards: section === 'cards', showForm: section === 'form', showReorder: section === 'reorder',
       isLoading: loading,
       orderCards: orderCardsView, orderSaving, orderSaved,
+      reorderTabs: [
+        { id: 'grail', label: '★ Grails' },
+        { id: 'collection', label: '🏛 Collection' },
+        { id: 'forsale', label: '💚 For Sale' },
+      ].map(t => ({
+        label: t.label,
+        bg: this.state.reorderGroup === t.id ? '#C8A75B' : 'transparent',
+        col: this.state.reorderGroup === t.id ? '#0A0A0A' : '#A1A1AA',
+        bc: this.state.reorderGroup === t.id ? '#C8A75B' : '#2A2A2A',
+        onClick: () => this._switchReorderGroup(t.id),
+      })),
+      noOrderCards: orderCardsView.length === 0,
 
       dashStats,
       recentCards: enriched.slice(0, 6),

@@ -219,6 +219,7 @@ class Component extends DCLogic {
       photo_url: c.photo_url || null,
       photo_url_back: c.photo_url_back || null,
       notes: c.notes || c.desc || '',
+      sort_order: c.sort_order != null ? c.sort_order : 9999,
     });
 
     const badgeStyle = (l) => ['GRAIL', '1/1', 'FEATURED'].includes(l)
@@ -240,8 +241,9 @@ class Component extends DCLogic {
     const source = dbCards !== null ? dbCards : FALLBACK;
     const allCards = source.map(buildCard);
 
-    // All cards that belong to the collection (including grails)
-    const collectionCards = allCards.filter(c => c.status === 'collection');
+    // All cards that belong to the collection (including grails), in custom order
+    const collectionCards = allCards.filter(c => c.status === 'collection')
+      .sort((a, b) => a.sort_order - b.sort_order);
 
     // Free-text search across all card fields
     const q = searchQuery.trim().toLowerCase();
