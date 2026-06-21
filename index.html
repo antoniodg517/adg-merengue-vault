@@ -384,6 +384,7 @@
         <div style="flex: 1; height: 1px; background: #1A1A1A;"></div>
       </div>
       <input type="text" value="{{ contactName }}" onChange="{{ onContactName }}" placeholder="Il tuo nome" style="width: 100%; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 6px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px 12px; outline: none; margin-bottom: 10px;">
+      <input type="email" value="{{ contactEmail }}" onChange="{{ onContactEmail }}" placeholder="La tua email" style="width: 100%; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 6px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px 12px; outline: none; margin-bottom: 10px;">
       <select value="{{ contactCardId }}" onChange="{{ onContactCard }}" style="width: 100%; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 6px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px 12px; outline: none; margin-bottom: 10px; cursor: pointer;">
         <option value="">— Carta di interesse (opzionale) —</option>
         <sc-for list="{{ contactCardOptions }}" as="opt" hint-placeholder-count="0">
@@ -391,7 +392,15 @@
         </sc-for>
       </select>
       <textarea value="{{ contactMsg }}" onChange="{{ onContactMsg }}" placeholder="Messaggio…" rows="3" style="width: 100%; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 6px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px 12px; outline: none; resize: vertical; line-height: 1.5; margin-bottom: 14px;"></textarea>
-      <button onClick="{{ sendContactEmail }}" style="width: 100%; background: #C8A75B; border: none; color: #0A0A0A; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 13px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" style-hover="background: #E3CE9A;">✉ Invia email</button>
+      <sc-if value="{{ contactError }}" hint-placeholder-val="{{ false }}">
+        <p style="font-size: 11px; color: #EF4444; margin-bottom: 10px;">{{ contactErrorMsg }}</p>
+      </sc-if>
+      <sc-if value="{{ contactSent }}" hint-placeholder-val="{{ false }}">
+        <p style="font-size: 12px; color: #16A34A; font-weight: 600; text-align: center; padding: 6px 0;">✓ Messaggio inviato! Ti risponderò presto.</p>
+      </sc-if>
+      <sc-if value="{{ contactNotSent }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ sendContactEmail }}" style="width: 100%; background: #C8A75B; border: none; color: #0A0A0A; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 13px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" style-hover="background: #E3CE9A;">{{ contactBtnLabel }}</button>
+      </sc-if>
     </div>
   </sc-if>
   <button onClick="{{ toggleContact }}" title="Contattami" style="width: 56px; height: 56px; border-radius: 50%; background: #C8A75B; border: none; color: #0A0A0A; font-size: 24px; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex: none;" style-hover="background: #E3CE9A; transform: scale(1.05);">{{ contactFabIcon }}</button>
@@ -407,7 +416,8 @@ class Component extends DCLogic {
     dbCards: null,
     dbLoading: false,
     lastUpdated: null,
-    contactOpen: false, contactName: '', contactMsg: '', contactCardId: '',
+    contactOpen: false, contactName: '', contactEmail: '', contactMsg: '', contactCardId: '',
+    contactSending: false, contactSent: false, contactError: '',
   };
 
   componentDidMount() {
@@ -447,8 +457,30 @@ class Component extends DCLogic {
     }
   }
 
+  async _sendContact(cardLabel) {
+    const { contactName, contactEmail, contactMsg } = this.state;
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((contactEmail || '').trim());
+    if (!emailOk) { this.setState({ contactError: 'Inserisci un indirizzo email valido.' }); return; }
+    if (!contactMsg.trim()) { this.setState({ contactError: 'Scrivi un messaggio.' }); return; }
+    this.setState({ contactSending: true, contactError: '' });
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: contactName, email: contactEmail, message: contactMsg, card: cardLabel }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Invio fallito.');
+      }
+      this.setState({ contactSending: false, contactSent: true, contactName: '', contactEmail: '', contactMsg: '', contactCardId: '' });
+    } catch (e) {
+      this.setState({ contactSending: false, contactError: e.message || 'Invio fallito.' });
+    }
+  }
+
   renderVals() {
-    const { lightboxCard, dbCards, dbLoading, lastUpdated, contactOpen, contactName, contactMsg, contactCardId } = this.state;
+    const { lightboxCard, dbCards, dbLoading, lastUpdated, contactOpen, contactName, contactEmail, contactMsg, contactCardId, contactSending, contactSent, contactError } = this.state;
 
     // ── Fallback hardcoded data ─────────────────────────────────────────
     const FALLBACK = [
@@ -587,21 +619,25 @@ class Component extends DCLogic {
       // Floating contact
       contactOpen,
       contactFabIcon: contactOpen ? '×' : '✉',
-      toggleContact: () => this.setState({ contactOpen: !contactOpen }),
+      toggleContact: () => this.setState({ contactOpen: !this.state.contactOpen, contactSent: false, contactError: '' }),
       closeContact: () => this.setState({ contactOpen: false }),
       contactName, onContactName: (e) => this.setState({ contactName: e.target.value }),
+      contactEmail, onContactEmail: (e) => this.setState({ contactEmail: e.target.value }),
       contactMsg, onContactMsg: (e) => this.setState({ contactMsg: e.target.value }),
       contactCardId, onContactCard: (e) => this.setState({ contactCardId: e.target.value }),
+      contactError: !!contactError, contactErrorMsg: contactError,
+      contactSent,
+      contactNotSent: !contactSent,
+      contactBtnLabel: contactSending ? 'INVIO…' : '✉ Invia messaggio',
       contactCardOptions: allCards.map(c => ({
         value: c.id,
         label: [c.player, c.year, c.set, c.variant].filter(Boolean).join(' · '),
       })),
       sendContactEmail: () => {
+        if (contactSending) return;
         const card = allCards.find(c => c.id === contactCardId);
         const cardLabel = card ? [card.player, card.year, card.set, card.variant].filter(Boolean).join(' · ') : '';
-        const subject = card ? `Interesse carta: ${cardLabel}` : 'Contatto dal sito — ADG Merengue Vault';
-        const body = `${contactMsg || ''}\n\n${cardLabel ? 'Carta di interesse: ' + cardLabel + '\n' : ''}${contactName ? '— ' + contactName : ''}`;
-        window.location.href = `mailto:adg.merenguevault@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        this._sendContact(cardLabel);
       },
       // Navigation
       scrollToTop: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
