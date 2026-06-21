@@ -201,6 +201,47 @@
           </div>
         </sc-if>
 
+        <!-- ── RIORDINA ───────────────────────────────────────────────── -->
+        <sc-if value="{{ showReorder }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+            <p style="font-size: 12px; color: #A1A1AA; line-height: 1.6;">Trascina le carte per cambiare l'ordine di visualizzazione sul sito pubblico. L'ordine viene salvato automaticamente.</p>
+            <sc-if value="{{ orderSaving }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size: 11px; color: #C8A75B; font-weight: 600; white-space: nowrap;">Salvataggio…</span>
+            </sc-if>
+            <sc-if value="{{ orderSaved }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size: 11px; color: #16A34A; font-weight: 600; white-space: nowrap;">✓ Ordine salvato</span>
+            </sc-if>
+          </div>
+          <div style="background: #111111; border: 1px solid #1A1A1A; border-radius: 8px; overflow: hidden;">
+            <sc-if value="{{ noCards }}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 48px; text-align: center; color: #A1A1AA; font-size: 13px;">Nessuna carta da ordinare.</div>
+            </sc-if>
+            <sc-for list="{{ orderCards }}" as="card" hint-placeholder-count="0">
+              <div draggable="true" onDragStart="{{ card.onDragStart }}" onDragOver="{{ card.onDragOver }}" onDrop="{{ card.onDrop }}" onDragEnd="{{ card.onDragEnd }}" style="display: grid; grid-template-columns: 28px 40px 1.6fr 1.4fr 88px 100px; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid #0D0D0D; cursor: grab; background: {{ card.rowBg }}; opacity: {{ card.rowOpacity }}; transition: background 0.12s;" style-hover="background: #0D0D0D;">
+                <span style="color: #3A3A3A; font-size: 16px; line-height: 1; text-align: center; user-select: none;">⠿</span>
+                <div style="width: 30px; height: 42px; border-radius: 3px; overflow: hidden; background: #1A1A1A; display: flex; align-items: center; justify-content: center;">
+                  <sc-if value="{{ card.hasPhoto }}" hint-placeholder-val="{{ false }}">
+                    <img src="{{ card.photo_url }}" style="width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none;">
+                  </sc-if>
+                  <sc-if value="{{ card.noPhoto }}" hint-placeholder-val="{{ true }}">
+                    <span style="font-size: 12px; opacity: 0.2;">🃏</span>
+                  </sc-if>
+                </div>
+                <div style="min-width: 0;">
+                  <p style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.player }}</p>
+                  <p style="font-size: 10px; color: #A1A1AA;">{{ card.year }}</p>
+                </div>
+                <div style="min-width: 0;">
+                  <p style="font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.set_brand }}</p>
+                  <p style="font-size: 10px; color: #A1A1AA; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.variant }}</p>
+                </div>
+                <p style="font-size: 12px; font-weight: 700; color: #C8A75B; white-space: nowrap;">{{ card.grade }}</p>
+                <span style="background: {{ card.sBg }}; color: {{ card.sCol }}; font-size: 8px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; display: inline-block; white-space: nowrap; text-align: center;">{{ card.sLbl }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
         <!-- ── FORM ───────────────────────────────────────────────────── -->
         <sc-if value="{{ showForm }}" hint-placeholder-val="{{ false }}">
           <div style="display: grid; grid-template-columns: 1fr 252px; gap: 20px; max-width: 980px; align-items: flex-start;">
@@ -377,6 +418,7 @@ class Component extends DCLogic {
     photoPreview: null, photoFile: null, photoUploading: false,
     photoPreview_back: null, photoFile_back: null, photoUploading_back: false,
     deleteId: null,
+    orderCards: [], dragIndex: null, orderSaving: false, orderSaved: false,
   };
 
   _blank() {
@@ -466,8 +508,39 @@ class Component extends DCLogic {
     }
   }
 
+  _enterReorder() {
+    this.setState({ section: 'reorder', orderSaved: false });
+    this._fetch().then(() => this.setState({ orderCards: [...this.state.cards] }));
+  }
+
+  _moveCard(from, to) {
+    if (from === to || from == null || to == null) return;
+    const arr = [...this.state.orderCards];
+    const [moved] = arr.splice(from, 1);
+    arr.splice(to, 0, moved);
+    this.setState({ orderCards: arr, dragIndex: to });
+  }
+
+  async _saveOrder() {
+    const order = this.state.orderCards.map(c => c.id);
+    this.setState({ orderSaving: true, orderSaved: false, dragIndex: null });
+    try {
+      const res = await fetch('/api/cards/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${this._PWD}` },
+        body: JSON.stringify({ order }),
+      });
+      if (!res.ok) throw new Error('reorder failed');
+      // Keep local cards in the new order so other sections stay consistent.
+      this.setState({ cards: [...this.state.orderCards], orderSaving: false, orderSaved: true });
+      setTimeout(() => { if (this.state.section === 'reorder') this.setState({ orderSaved: false }); }, 2500);
+    } catch (e) {
+      this.setState({ orderSaving: false });
+    }
+  }
+
   renderVals() {
-    const { auth, pwInput, loginErr, section, cards, loading, search, statusFilter, editCard, form, formErr, photoPreview, photoUploading, deleteId } = this.state;
+    const { auth, pwInput, loginErr, section, cards, loading, search, statusFilter, editCard, form, formErr, photoPreview, photoUploading, deleteId, orderCards, dragIndex, orderSaving, orderSaved } = this.state;
 
     const sInfo = (s) => s === 'for_sale' ? { bg: '#16A34A', col: '#FFF', lbl: 'For Sale' }
       : s === 'sold' ? { bg: '#DC2626', col: '#FFF', lbl: 'Sold' }
@@ -513,6 +586,7 @@ class Component extends DCLogic {
       { icon: '📊', label: 'Dashboard', id: 'dashboard' },
       { icon: '🃏', label: 'Tutte le Carte', id: 'cards' },
       { icon: '➕', label: 'Aggiungi Carta', id: 'form' },
+      { icon: '🔀', label: 'Riordina', id: 'reorder' },
     ].map(n => ({
       ...n,
       bg: section === n.id ? 'rgba(200,167,91,0.14)' : 'transparent',
@@ -520,12 +594,29 @@ class Component extends DCLogic {
       onClick: () => {
         if (n.id === 'form') {
           this.setState({ section: 'form', editCard: null, form: this._blank(), photoPreview: null, photoFile: null, formErr: null });
+        } else if (n.id === 'reorder') {
+          this._enterReorder();
         } else {
           this.setState({ section: n.id });
           this._fetch();
         }
       },
     }));
+
+    const orderCardsView = orderCards.map((c, i) => {
+      const si = sInfo(c.status);
+      return {
+        ...c,
+        hasPhoto: !!c.photo_url, noPhoto: !c.photo_url,
+        sBg: si.bg, sCol: si.col, sLbl: si.lbl,
+        rowBg: dragIndex === i ? '#1A1A1A' : 'transparent',
+        rowOpacity: dragIndex === i ? '0.5' : '1',
+        onDragStart: () => this.setState({ dragIndex: i }),
+        onDragOver: (e) => { e.preventDefault(); if (dragIndex !== i) this._moveCard(dragIndex, i); },
+        onDrop: (e) => { e.preventDefault(); this._saveOrder(); },
+        onDragEnd: () => this._saveOrder(),
+      };
+    });
 
     const sFilters = [
       { id: 'all', label: 'Tutte' }, { id: 'collection', label: 'Collection' },
@@ -588,9 +679,10 @@ class Component extends DCLogic {
       doLogin,
       doLogout: () => this.setState({ auth: false, pwInput: '', cards: [] }),
 
-      sectionTitle: section === 'dashboard' ? 'Dashboard' : section === 'cards' ? 'Tutte le Carte' : editCard ? `Modifica — ${editCard.player || ''}` : 'Aggiungi Carta',
-      navItems, showDashboard: section === 'dashboard', showCards: section === 'cards', showForm: section === 'form',
+      sectionTitle: section === 'dashboard' ? 'Dashboard' : section === 'cards' ? 'Tutte le Carte' : section === 'reorder' ? 'Riordina Collezione' : editCard ? `Modifica — ${editCard.player || ''}` : 'Aggiungi Carta',
+      navItems, showDashboard: section === 'dashboard', showCards: section === 'cards', showForm: section === 'form', showReorder: section === 'reorder',
       isLoading: loading,
+      orderCards: orderCardsView, orderSaving, orderSaved,
 
       dashStats,
       recentCards: enriched.slice(0, 6),

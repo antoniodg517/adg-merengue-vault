@@ -61,10 +61,12 @@
 
 <!-- ── FILTERS ── -->
 <div id="filters-bar" style="background: #0A0A0A; padding: 24px 48px; border-bottom: 1px solid #1A1A1A; position: sticky; top: 72px; z-index: 100; backdrop-filter: blur(8px);">
-  <div style="max-width: 1280px; margin: 0 auto; display: flex; gap: 8px; flex-wrap: wrap;">
-    <sc-for list="{{ filtersComputed }}" as="filter" hint-placeholder-count="6">
-      <button onClick="{{ filter.onClick }}" style="background: {{ filter.bg }}; color: {{ filter.color }}; border-width: 1px; border-style: solid; border-color: {{ filter.borderColor }}; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; padding: 9px 18px; border-radius: 2px; cursor: pointer; transition: all 0.2s;">{{ filter.label }}</button>
-    </sc-for>
+  <div style="max-width: 1280px; margin: 0 auto; position: relative;">
+    <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #A1A1AA; font-size: 14px; pointer-events: none;">⌕</span>
+    <input type="text" value="{{ searchQuery }}" onChange="{{ onSearchChange }}" placeholder="Cerca per giocatore, set, variante, numerazione, grade…" style="width: 100%; background: #111111; border: 1px solid #1A1A1A; border-radius: 6px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 14px; padding: 13px 16px 13px 40px; outline: none; letter-spacing: 0.01em;">
+    <sc-if value="{{ hasSearch }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ clearSearch }}" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #A1A1AA; font-size: 18px; cursor: pointer; line-height: 1; padding: 4px;" style-hover="color: #FFF;">×</button>
+    </sc-if>
   </div>
 </div>
 
@@ -156,7 +158,7 @@
 
 class Component extends DCLogic {
   state = {
-    activeFilter: 'all',
+    searchQuery: '',
     lightboxCard: null,
     dbCards: null,
     dbLoading: false,
@@ -185,7 +187,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const { activeFilter, lightboxCard, dbCards, dbLoading, lastUpdated } = this.state;
+    const { searchQuery, lightboxCard, dbCards, dbLoading, lastUpdated } = this.state;
 
     const FALLBACK = [
       { id: 'c01', player: 'Cristiano Ronaldo', year: '2023', set: 'Stadium Club', variant: 'Porsche Refractor', grade: 'PSA 10', serial: '01/25', badges: ['GRAIL', 'AUTO'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2023 Topps Stadium Club Chrome Cristiano Ronaldo Porsche Refractor — numbered 01/25.' },
@@ -241,24 +243,15 @@ class Component extends DCLogic {
     // All cards that belong to the collection (including grails)
     const collectionCards = allCards.filter(c => c.status === 'collection');
 
-    // Player filter chips — built from all collection cards (grails included)
-    const uniquePlayers = [...new Set(collectionCards.map(c => c.player))].sort();
-    const filterDefs = [
-      { id: 'all', label: 'ALL' },
-      ...uniquePlayers.map(p => ({ id: p.toLowerCase(), label: p.toUpperCase() })),
-    ];
-    const filtersComputed = filterDefs.map(f => ({
-      ...f,
-      bg: f.id === activeFilter ? '#C8A75B' : 'transparent',
-      color: f.id === activeFilter ? '#0A0A0A' : '#A1A1AA',
-      borderColor: f.id === activeFilter ? '#C8A75B' : '#2A2A2A',
-      onClick: () => this.setState({ activeFilter: f.id }),
-    }));
-
-    // ALL shows every collection card (grails included)
-    const gridCards = activeFilter === 'all'
+    // Free-text search across all card fields
+    const q = searchQuery.trim().toLowerCase();
+    const gridCards = !q
       ? collectionCards
-      : collectionCards.filter(c => c.player.toLowerCase() === activeFilter);
+      : collectionCards.filter(c => {
+          const hay = [c.player, c.year, c.set, c.variant, c.grade, c.serial, c.notes, ...(c.badges || [])]
+            .filter(Boolean).join(' ').toLowerCase();
+          return hay.includes(q);
+        });
 
     // Lightbox
     const closeLightbox = () => this.setState({ lightboxCard: null });
@@ -269,10 +262,15 @@ class Component extends DCLogic {
       : '';
 
     return {
-      filtersComputed,
+      searchQuery,
+      hasSearch: !!q,
+      onSearchChange: (e) => this.setState({ searchQuery: e.target.value }),
+      clearSearch: () => this.setState({ searchQuery: '' }),
       gridCards,
       emptyGrid: gridCards.length === 0,
-      totalLabel: `${collectionCards.length} card${collectionCards.length !== 1 ? 's' : ''}`,
+      totalLabel: q
+        ? `${gridCards.length} / ${collectionCards.length}`
+        : `${collectionCards.length} card${collectionCards.length !== 1 ? 's' : ''}`,
       dbLoaded: dbCards !== null,
       dbLoading,
       lastUpdatedText,

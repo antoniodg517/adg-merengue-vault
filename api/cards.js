@@ -18,6 +18,7 @@ module.exports = async function handler(req, res) {
     const { data, error } = await sb()
       .from('cards')
       .select('*')
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false });
     if (error) return res.status(500).json({ error: error.message });
     return res.status(200).json(data);
