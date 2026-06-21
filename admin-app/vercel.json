@@ -1,4 +1,6 @@
 {
   "framework": null,
+  "buildCommand": "mkdir -p public && cp index.html support.js public/ && cp -r uploads public/",
+  "outputDirectory": "public",
   "cleanUrls": true
 }

@@ -24,7 +24,6 @@ export default defineConfig({
       input: {
         main: 'index.html',
         collection: 'collection/index.html',
-        admin: 'admin/index.html',
       },
     },
   },

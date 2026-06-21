@@ -4,8 +4,6 @@
   "devCommand": "vite",
   "framework": null,
   "rewrites": [
-    { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/admin/", "destination": "/admin/index.html" },
     { "source": "/collection", "destination": "/collection/index.html" },
     { "source": "/collection/", "destination": "/collection/index.html" }
   ]
