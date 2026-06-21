@@ -416,7 +416,7 @@
 // API lives on the public site project; this admin is a separate static app.
 const API_BASE = 'https://adg-merengue-vault.vercel.app';
 const SUPABASE_URL = 'https://iyjmtcmtbrivodqmdjmq.supabase.co';
-const SUPABASE_ANON_KEY = '__SUPABASE_ANON_KEY__'; // public anon key (safe in client)
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5am10Y210YnJpdm9kcW1kam1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NjI2MzAsImV4cCI6MjA5NzUzODYzMH0.UpxNykyn57Pkgl4SbrV1mt08zamvpQzsX0u4nTPQ-_w'; // public anon key (safe in client)
 const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 class Component extends DCLogic {
