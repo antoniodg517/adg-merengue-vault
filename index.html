@@ -369,6 +369,34 @@
   </div>
 </sc-if>
 
+<!-- ── FLOATING CONTACT ── -->
+<div style="position: fixed; bottom: 24px; right: 24px; z-index: 280; display: flex; flex-direction: column; align-items: flex-end; gap: 14px;">
+  <sc-if value="{{ contactOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="width: 330px; max-width: calc(100vw - 40px); background: #111111; border: 1px solid #2A2A2A; border-radius: 14px; padding: 22px; box-shadow: 0 24px 64px rgba(0,0,0,0.7); animation: fadeIn 0.2s ease;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <h3 style="font-family: 'Anton', sans-serif; font-size: 20px; text-transform: uppercase; letter-spacing: 0.05em; color: #FFF;">Contattami</h3>
+        <button onClick="{{ closeContact }}" style="background: none; border: none; color: #A1A1AA; font-size: 22px; cursor: pointer; line-height: 1; padding: 2px;" style-hover="color: #FFF;">×</button>
+      </div>
+      <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: #C8A75B; color: #0A0A0A; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 13px; border-radius: 6px; text-decoration: none; transition: background 0.2s; margin-bottom: 18px;" style-hover="background: #E3CE9A;">◎ Instagram — @adgmerenguevault</a>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+        <div style="flex: 1; height: 1px; background: #1A1A1A;"></div>
+        <span style="font-size: 9px; color: #A1A1AA; letter-spacing: 0.16em; text-transform: uppercase;">oppure scrivimi</span>
+        <div style="flex: 1; height: 1px; background: #1A1A1A;"></div>
+      </div>
+      <input type="text" value="{{ contactName }}" onChange="{{ onContactName }}" placeholder="Il tuo nome" style="width: 100%; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 6px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px 12px; outline: none; margin-bottom: 10px;">
+      <select value="{{ contactCardId }}" onChange="{{ onContactCard }}" style="width: 100%; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 6px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px 12px; outline: none; margin-bottom: 10px; cursor: pointer;">
+        <option value="">— Carta di interesse (opzionale) —</option>
+        <sc-for list="{{ contactCardOptions }}" as="opt" hint-placeholder-count="0">
+          <option value="{{ opt.value }}">{{ opt.label }}</option>
+        </sc-for>
+      </select>
+      <textarea value="{{ contactMsg }}" onChange="{{ onContactMsg }}" placeholder="Messaggio…" rows="3" style="width: 100%; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 6px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px 12px; outline: none; resize: vertical; line-height: 1.5; margin-bottom: 14px;"></textarea>
+      <button onClick="{{ sendContactEmail }}" style="width: 100%; background: #C8A75B; border: none; color: #0A0A0A; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 13px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" style-hover="background: #E3CE9A;">✉ Invia email</button>
+    </div>
+  </sc-if>
+  <button onClick="{{ toggleContact }}" title="Contattami" style="width: 56px; height: 56px; border-radius: 50%; background: #C8A75B; border: none; color: #0A0A0A; font-size: 24px; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex: none;" style-hover="background: #E3CE9A; transform: scale(1.05);">{{ contactFabIcon }}</button>
+</div>
+
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 
@@ -379,6 +407,7 @@ class Component extends DCLogic {
     dbCards: null,
     dbLoading: false,
     lastUpdated: null,
+    contactOpen: false, contactName: '', contactMsg: '', contactCardId: '',
   };
 
   componentDidMount() {
@@ -419,7 +448,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const { lightboxCard, dbCards, dbLoading, lastUpdated } = this.state;
+    const { lightboxCard, dbCards, dbLoading, lastUpdated, contactOpen, contactName, contactMsg, contactCardId } = this.state;
 
     // ── Fallback hardcoded data ─────────────────────────────────────────
     const FALLBACK = [
@@ -555,6 +584,25 @@ class Component extends DCLogic {
       lightboxIsCollection: lb.status !== 'for_sale' && lb.status !== 'wishlist',
       lightboxHasPrice: !!lb.price,
       lightboxPriceLabel: lb.price ? `€ ${Number(lb.price).toLocaleString('it-IT')}` : '',
+      // Floating contact
+      contactOpen,
+      contactFabIcon: contactOpen ? '×' : '✉',
+      toggleContact: () => this.setState({ contactOpen: !contactOpen }),
+      closeContact: () => this.setState({ contactOpen: false }),
+      contactName, onContactName: (e) => this.setState({ contactName: e.target.value }),
+      contactMsg, onContactMsg: (e) => this.setState({ contactMsg: e.target.value }),
+      contactCardId, onContactCard: (e) => this.setState({ contactCardId: e.target.value }),
+      contactCardOptions: allCards.map(c => ({
+        value: c.id,
+        label: [c.player, c.year, c.set, c.variant].filter(Boolean).join(' · '),
+      })),
+      sendContactEmail: () => {
+        const card = allCards.find(c => c.id === contactCardId);
+        const cardLabel = card ? [card.player, card.year, card.set, card.variant].filter(Boolean).join(' · ') : '';
+        const subject = card ? `Interesse carta: ${cardLabel}` : 'Contatto dal sito — ADG Merengue Vault';
+        const body = `${contactMsg || ''}\n\n${cardLabel ? 'Carta di interesse: ' + cardLabel + '\n' : ''}${contactName ? '— ' + contactName : ''}`;
+        window.location.href = `mailto:adg.merenguevault@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      },
       // Navigation
       scrollToTop: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
       navToGrails: () => scrollTo('grails'),
