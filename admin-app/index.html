@@ -682,7 +682,7 @@ class Component extends DCLogic {
       : s === 'wishlist' ? { bg: '#7C3AED', col: '#FFF', lbl: 'Wishlist' }
       : { bg: '#2A2A2A', col: '#FFF', lbl: 'Collection' };
 
-    const bInfo = (l) => ['GRAIL', '1/1', 'FEATURED'].includes(l) ? { bg: '#C8A75B', col: '#0A0A0A' } : { bg: '#2A2A2A', col: '#FFF' };
+    const bInfo = (l) => ['GRAIL', '1/1', 'GOAT'].includes(l) ? { bg: '#C8A75B', col: '#0A0A0A' } : { bg: '#2A2A2A', col: '#FFF' };
 
     const enriched = cards.map(c => {
       const si = sInfo(c.status);
@@ -787,7 +787,7 @@ class Component extends DCLogic {
       onClick: () => this.setState({ form: { ...form, status: s.id } }),
     }));
 
-    const badgeChips = ['AUTO','PATCH','ROOKIE','FEATURED','1/1','SIGNED','RC'].map(b => ({
+    const badgeChips = ['GOAT','AUTO','PATCH','ROOKIE','1/1','SIGNED','RC'].map(b => ({
       label: b,
       bg: form.badges.includes(b) ? '#C8A75B' : 'transparent',
       col: form.badges.includes(b) ? '#0A0A0A' : '#A1A1AA',
