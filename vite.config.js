@@ -24,6 +24,7 @@ export default defineConfig({
       input: {
         main: 'index.html',
         collection: 'collection/index.html',
+        sold: 'sold/index.html',
       },
     },
   },
