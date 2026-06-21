@@ -39,6 +39,7 @@
     <button onClick="{{ navToGrails }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">GRAILS</button>
     <a href="/collection/" style="color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; transition: color 0.2s;" style-hover="color: #FFF;">COLLECTION</a>
     <button onClick="{{ navToForSale }}" style="background: none; border: none; color: #16A34A; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #4ADE80;">FOR SALE</button>
+    <button onClick="{{ navToWishlist }}" style="background: none; border: none; color: #A78BFA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #C4B5FD;">WISHLIST</button>
     <button onClick="{{ navToAbout }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">ABOUT</button>
     <sc-if value="{{ dbLoaded }}" hint-placeholder-val="{{ false }}">
       <button onClick="{{ doRefresh }}" title="{{ lastUpdatedText }}" style="background: none; border: none; color: #A1A1AA; font-size: 14px; cursor: pointer; padding: 4px; line-height: 1; transition: color 0.2s;" style-hover="color: #C8A75B;">↻</button>
@@ -190,6 +191,48 @@
   </div>
 </section>
 
+<!-- ── WISHLIST ── -->
+<section id="wishlist" style="background: #0D0D0D; padding: 100px 0; border-top: 1px solid #1A1A1A;">
+  <div style="max-width: 1280px; margin: 0 auto; padding: 0 48px;">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 60px; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <p style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #A78BFA; margin-bottom: 12px;">Most Wanted</p>
+        <h2 style="font-family: 'Anton', sans-serif; font-size: 52px; text-transform: uppercase; color: #FFF; line-height: 1;">WISHLIST</h2>
+      </div>
+      <p style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 300; color: #A1A1AA; max-width: 360px; text-align: right; line-height: 1.7;">Le carte che sto cercando. Se ne hai una, scrivimi via Instagram DM.</p>
+    </div>
+    <sc-if value="{{ noWishlist }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align: center; padding: 80px 0; border: 1px dashed #1A1A1A; border-radius: 8px;">
+        <p style="font-family: 'Anton', sans-serif; font-size: 24px; text-transform: uppercase; color: #2A2A2A; margin-bottom: 10px;">Wishlist vuota per ora</p>
+        <p style="font-family: 'Inter', sans-serif; font-size: 13px; color: #A1A1AA;">Segui <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="color: #A78BFA; text-decoration: none;">@adgmerenguevault</a> per gli aggiornamenti.</p>
+      </div>
+    </sc-if>
+    <div id="wishlist-row" style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap;">
+      <sc-for list="{{ wishlistCards }}" as="card" hint-placeholder-count="0">
+        <div style="flex: none; width: 260px;">
+          <div onClick="{{ card.onClick }}" style="cursor: pointer; position: relative; transition: transform 0.35s ease;" style-hover="transform: scale(1.03);">
+            <div style="width: 260px; height: 364px; border-radius: 12px; overflow: hidden; background: #1A1A1A;">
+              <image-slot id="{{ card.slotId }}" src="{{ card.photoSrc }}" placeholder="{{ card.player }}" shape="rect" fit="contain" style="width: 260px; height: 364px; display: block;"></image-slot>
+            </div>
+            <div style="position: absolute; top: 12px; left: 12px; display: flex; flex-direction: column; gap: 5px; z-index: 2;">
+              <span style="display: block; background: #7C3AED; color: #FFF; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px;">WISHLIST</span>
+              <sc-for list="{{ card.badgesStyled }}" as="badge" hint-placeholder-count="0">
+                <span style="display: block; background: {{ badge.bg }}; color: {{ badge.color }}; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px;">{{ badge.label }}</span>
+              </sc-for>
+            </div>
+          </div>
+          <div style="padding: 18px 0 0; border-top: 1px solid #1A1A1A; margin-top: 1px;">
+            <p style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: #FFF; margin-bottom: 4px;">{{ card.player }}</p>
+            <p style="font-family: 'Inter', sans-serif; font-size: 12px; color: #A1A1AA; margin-bottom: 2px;">{{ card.year }} · {{ card.set }}</p>
+            <p style="font-family: 'Inter', sans-serif; font-size: 12px; color: #A1A1AA; margin-bottom: 16px;">{{ card.variant }}</p>
+            <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="display: block; background: transparent; color: #A78BFA; border: 1px solid #A78BFA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 12px; border-radius: 4px; text-decoration: none; text-align: center; transition: all 0.2s;" style-hover="background: #A78BFA; color: #0A0A0A;">CE L'HAI? SCRIVIMI</a>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
 <!-- ── ABOUT ── -->
 <section id="about" style="background: #0A0A0A; padding: 100px 0; border-top: 1px solid #1A1A1A;">
   <div style="max-width: 1280px; margin: 0 auto; padding: 0 48px;">
@@ -254,6 +297,7 @@
         <button onClick="{{ scrollToGrails }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">Grails</button>
         <a href="/collection/" style="color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; transition: color 0.2s;" style-hover="color: #FFF;">Collection</a>
         <button onClick="{{ navToForSale }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">For Sale</button>
+        <button onClick="{{ navToWishlist }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">Wishlist</button>
         <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="color: #C8A75B; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; transition: color 0.2s;" style-hover="color: #E3CE9A;">@adgmerenguevault</a>
       </div>
     </div>
@@ -315,6 +359,9 @@
         </sc-if>
         <sc-if value="{{ lightboxIsCollection }}" hint-placeholder-val="{{ true }}">
           <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="display: inline-block; background: #C8A75B; color: #0A0A0A; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 16px 32px; border-radius: 2px; text-decoration: none; transition: background 0.2s;" style-hover="background: #E3CE9A;">ENQUIRE VIA INSTAGRAM DM</a>
+        </sc-if>
+        <sc-if value="{{ lightboxIsWishlist }}" hint-placeholder-val="{{ false }}">
+          <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="display: inline-block; background: #7C3AED; color: #FFF; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 16px 32px; border-radius: 2px; text-decoration: none; transition: background 0.2s;" style-hover="background: #6D28D9;">CE L'HAI? SCRIVIMI — INSTAGRAM DM</a>
         </sc-if>
       </div>
     </div>
@@ -435,6 +482,7 @@ class Component extends DCLogic {
     const byField = (f) => (a, b) => a[f] - b[f];
     const collectionCards = allCards.filter(c => c.status === 'collection').sort(byField('sort_order'));
     const forSaleCards = allCards.filter(c => c.status === 'for_sale').sort(byField('sort_forsale'));
+    const wishlistCards = allCards.filter(c => c.status === 'wishlist').sort(byField('sort_order'));
     const grailCards = allCards.filter(c => c.is_grail).sort(byField('sort_grail'));
 
     // ── Live stats ──────────────────────────────────────────────────────
@@ -473,6 +521,8 @@ class Component extends DCLogic {
       grailCards,
       forSaleCards,
       noForSale: forSaleCards.length === 0,
+      wishlistCards,
+      noWishlist: wishlistCards.length === 0,
       // About live numbers
       aboutTotal: String(totalCards || 127),
       aboutGrails: String(grailCount || 8),
@@ -501,13 +551,15 @@ class Component extends DCLogic {
       lightboxDesc: lb.notes || '',
       lightboxBadges: lbBadges,
       lightboxIsForSale: lb.status === 'for_sale',
-      lightboxIsCollection: lb.status !== 'for_sale',
+      lightboxIsWishlist: lb.status === 'wishlist',
+      lightboxIsCollection: lb.status !== 'for_sale' && lb.status !== 'wishlist',
       lightboxHasPrice: !!lb.price,
       lightboxPriceLabel: lb.price ? `€ ${Number(lb.price).toLocaleString('it-IT')}` : '',
       // Navigation
       scrollToTop: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
       navToGrails: () => scrollTo('grails'),
       navToForSale: () => scrollTo('forsale'),
+      navToWishlist: () => scrollTo('wishlist'),
       navToAbout: () => scrollTo('about'),
       scrollToGrails: () => scrollTo('grails'),
     };

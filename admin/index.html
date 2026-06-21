@@ -308,7 +308,7 @@
               <!-- Status chips -->
               <div>
                 <label style="display: block; font-size: 8px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #A1A1AA; margin-bottom: 9px;">Stato</label>
-                <div style="display: flex; gap: 8px;">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                   <sc-for list="{{ statusChips }}" as="s" hint-placeholder-count="0">
                     <button onClick="{{ s.onClick }}" style="flex: 1; background: {{ s.bg }}; color: {{ s.col }}; border-width: 1px; border-style: solid; border-color: {{ s.bc }}; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 11px 8px; border-radius: 4px; cursor: pointer; text-align: center; transition: all 0.15s;">{{ s.label }}</button>
                   </sc-for>
@@ -523,6 +523,10 @@ class Component extends DCLogic {
       return cards.filter(c => c.status === 'for_sale')
         .sort((a, b) => (a.sort_forsale ?? 9999) - (b.sort_forsale ?? 9999));
     }
+    if (group === 'wishlist') {
+      return cards.filter(c => c.status === 'wishlist')
+        .sort((a, b) => (a.sort_order ?? 9999) - (b.sort_order ?? 9999));
+    }
     return cards.filter(c => c.status === 'collection')
       .sort((a, b) => (a.sort_order ?? 9999) - (b.sort_order ?? 9999));
   }
@@ -551,6 +555,7 @@ class Component extends DCLogic {
 
   async _saveOrder() {
     const group = this.state.reorderGroup;
+    // wishlist and collection are disjoint sets, so they safely share sort_order.
     const col = group === 'grail' ? 'sort_grail' : group === 'forsale' ? 'sort_forsale' : 'sort_order';
     const order = this.state.orderCards.map(c => c.id);
     this.setState({ orderSaving: true, orderSaved: false, dragIndex: null });
@@ -577,6 +582,7 @@ class Component extends DCLogic {
 
     const sInfo = (s) => s === 'for_sale' ? { bg: '#16A34A', col: '#FFF', lbl: 'For Sale' }
       : s === 'sold' ? { bg: '#DC2626', col: '#FFF', lbl: 'Sold' }
+      : s === 'wishlist' ? { bg: '#7C3AED', col: '#FFF', lbl: 'Wishlist' }
       : { bg: '#2A2A2A', col: '#FFF', lbl: 'Collection' };
 
     const bInfo = (l) => ['GRAIL', '1/1', 'FEATURED'].includes(l) ? { bg: '#C8A75B', col: '#0A0A0A' } : { bg: '#2A2A2A', col: '#FFF' };
@@ -653,7 +659,7 @@ class Component extends DCLogic {
 
     const sFilters = [
       { id: 'all', label: 'Tutte' }, { id: 'collection', label: 'Collection' },
-      { id: 'for_sale', label: 'For Sale' }, { id: 'sold', label: 'Sold' },
+      { id: 'for_sale', label: 'For Sale' }, { id: 'wishlist', label: 'Wishlist' }, { id: 'sold', label: 'Sold' },
     ].map(f => ({
       ...f,
       bg: statusFilter === f.id ? '#C8A75B' : 'transparent',
@@ -674,6 +680,7 @@ class Component extends DCLogic {
     const statusChips = [
       { id: 'collection', label: '🏛 Collection', aBg: '#2A2A2A' },
       { id: 'for_sale', label: '💚 For Sale', aBg: '#16A34A' },
+      { id: 'wishlist', label: '🌟 Wishlist', aBg: '#7C3AED' },
       { id: 'sold', label: '❌ Sold', aBg: '#DC2626' },
     ].map(s => ({
       label: s.label,
@@ -720,6 +727,7 @@ class Component extends DCLogic {
         { id: 'grail', label: '★ Grails' },
         { id: 'collection', label: '🏛 Collection' },
         { id: 'forsale', label: '💚 For Sale' },
+        { id: 'wishlist', label: '🌟 Wishlist' },
       ].map(t => ({
         label: t.label,
         bg: this.state.reorderGroup === t.id ? '#C8A75B' : 'transparent',
