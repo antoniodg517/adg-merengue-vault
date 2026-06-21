@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
 import { copyFileSync, mkdirSync } from 'fs';
 
 // Plugin to copy classic (non-module) scripts to dist
@@ -31,5 +30,11 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true,
+    proxy: {
+      '/api': {
+        target: 'https://merenguevault.vercel.app',
+        changeOrigin: true,
+      },
+    },
   },
 });
