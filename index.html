@@ -23,7 +23,7 @@
       #hero-inner { flex-direction: column !important; padding: 60px 24px !important; }
       #hero-cards { display: none !important; }
       #grails-row { flex-direction: column !important; align-items: center !important; }
-#forsale-grid { grid-template-columns: 1fr !important; }
+      #forsale-grid { flex-direction: column !important; align-items: center !important; }
       #stats-row { flex-wrap: wrap !important; }
       #nav-links { display: none !important; }
       #about-inner { flex-direction: column !important; }
@@ -158,39 +158,31 @@
         <p style="font-family: 'Inter', sans-serif; font-size: 13px; color: #A1A1AA;">Follow <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="color: #C8A75B; text-decoration: none;">@adgmerenguevault</a> for updates.</p>
       </div>
     </sc-if>
-    <div id="forsale-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
+    <div id="forsale-grid" style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap;">
       <sc-for list="{{ forSaleCards }}" as="card" hint-placeholder-count="0">
-        <div style="background: #111111; border: 1px solid #1A1A1A; border-radius: 12px; overflow: hidden; display: flex; align-items: stretch; transition: transform 0.3s ease;" style-hover="transform: translateY(-4px);">
-          <!-- Foto compatta sinistra -->
-          <div onClick="{{ card.onClick }}" style="flex: none; width: 110px; background: #0A0A0A; cursor: pointer; position: relative;">
-            <image-slot id="{{ card.slotId }}" src="{{ card.photoSrc }}" placeholder="{{ card.player }}" shape="rect" fit="contain" style="width: 110px; height: 100%; min-height: 154px; display: block;"></image-slot>
-            <div style="position: absolute; top: 8px; left: 8px; display: flex; flex-direction: column; gap: 4px; z-index: 2;">
-              <span style="background: #16A34A; color: #FFF; font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 6px; border-radius: 2px;">FOR SALE</span>
+        <div style="flex: none; width: 260px;">
+          <div onClick="{{ card.onClick }}" style="cursor: pointer; position: relative; transition: transform 0.35s ease;" style-hover="transform: scale(1.03);">
+            <div style="width: 260px; height: 364px; border-radius: 12px; overflow: hidden; background: #1A1A1A;">
+              <image-slot id="{{ card.slotId }}" src="{{ card.photoSrc }}" placeholder="{{ card.player }}" shape="rect" fit="contain" style="width: 260px; height: 364px; display: block;"></image-slot>
+            </div>
+            <div style="position: absolute; top: 12px; left: 12px; display: flex; flex-direction: column; gap: 5px; z-index: 2;">
+              <span style="display: block; background: #16A34A; color: #FFF; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px;">FOR SALE</span>
               <sc-for list="{{ card.badgesStyled }}" as="badge" hint-placeholder-count="0">
-                <span style="display: block; background: {{ badge.bg }}; color: {{ badge.color }}; font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 6px; border-radius: 2px;">{{ badge.label }}</span>
+                <span style="display: block; background: {{ badge.bg }}; color: {{ badge.color }}; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px;">{{ badge.label }}</span>
               </sc-for>
             </div>
           </div>
-          <!-- Dettagli destra -->
-          <div style="flex: 1; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; gap: 12px;">
-            <div>
-              <p style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: #FFF; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.player }}</p>
-              <p style="font-family: 'Inter', sans-serif; font-size: 11px; color: #A1A1AA; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.year }} · {{ card.set }}</p>
-              <p style="font-family: 'Inter', sans-serif; font-size: 11px; color: #A1A1AA; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.variant }}</p>
-            </div>
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #0A0A0A; border-radius: 6px;">
-              <div>
-                <p style="font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #A1A1AA; margin-bottom: 2px;">Grade</p>
-                <p style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: #C8A75B;">{{ card.grade }}</p>
-              </div>
+          <div style="padding: 18px 0 0; border-top: 1px solid #1A1A1A; margin-top: 1px;">
+            <p style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: #FFF; margin-bottom: 4px;">{{ card.player }}</p>
+            <p style="font-family: 'Inter', sans-serif; font-size: 12px; color: #A1A1AA; margin-bottom: 2px;">{{ card.year }} · {{ card.set }}</p>
+            <p style="font-family: 'Inter', sans-serif; font-size: 12px; color: #A1A1AA; margin-bottom: 12px;">{{ card.variant }}</p>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+              <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #C8A75B;">{{ card.grade }}</span>
               <sc-if value="{{ card.hasPrice }}" hint-placeholder-val="{{ false }}">
-                <div style="text-align: right;">
-                  <p style="font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #A1A1AA; margin-bottom: 2px;">Prezzo</p>
-                  <p style="font-family: 'Anton', sans-serif; font-size: 18px; color: #FFF; font-variant-numeric: tabular-nums; line-height: 1;">{{ card.priceLabel }}</p>
-                </div>
+                <span style="font-family: 'Anton', sans-serif; font-size: 22px; color: #FFF; font-variant-numeric: tabular-nums; line-height: 1;">{{ card.priceLabel }}</span>
               </sc-if>
             </div>
-            <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="display: block; background: #16A34A; color: #FFF; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 11px; border-radius: 4px; text-decoration: none; text-align: center; transition: background 0.2s;" style-hover="background: #15803D;">ACQUISTA — IG DM</a>
+            <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="display: block; background: #16A34A; color: #FFF; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 13px; border-radius: 4px; text-decoration: none; text-align: center; transition: background 0.2s;" style-hover="background: #15803D;">ACQUISTA — INSTAGRAM DM</a>
           </div>
         </div>
       </sc-for>
