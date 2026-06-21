@@ -23,8 +23,7 @@
       #hero-inner { flex-direction: column !important; padding: 60px 24px !important; }
       #hero-cards { display: none !important; }
       #grails-row { flex-direction: column !important; align-items: center !important; }
-      #vault-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
-      #forsale-grid { grid-template-columns: 1fr !important; }
+#forsale-grid { grid-template-columns: 1fr !important; }
       #stats-row { flex-wrap: wrap !important; }
       #nav-links { display: none !important; }
       #about-inner { flex-direction: column !important; }
@@ -38,7 +37,7 @@
   <img src="uploads/logo.png" alt="ADG Merengue Vault" onClick="{{ scrollToTop }}" style="height: 40px; width: auto; mix-blend-mode: screen; cursor: pointer; display: block;">
   <div id="nav-links" style="display: flex; align-items: center; gap: 24px;">
     <button onClick="{{ navToGrails }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">GRAILS</button>
-    <button onClick="{{ navToVault }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">COLLECTION</button>
+    <a href="/collection/" style="color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; transition: color 0.2s;" style-hover="color: #FFF;">COLLECTION</a>
     <button onClick="{{ navToForSale }}" style="background: none; border: none; color: #16A34A; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #4ADE80;">FOR SALE</button>
     <button onClick="{{ navToAbout }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">ABOUT</button>
     <sc-if value="{{ dbLoaded }}" hint-placeholder-val="{{ false }}">
@@ -61,7 +60,7 @@
       <div style="width: 48px; height: 2px; background: #C8A75B; margin-bottom: 28px; animation: fadeUp 0.7s 0.35s both;"></div>
       <p style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 300; line-height: 1.75; color: #A1A1AA; max-width: 420px; margin-bottom: 44px; animation: fadeUp 0.7s 0.45s both;">A private vault of meticulously curated Real Madrid sports cards. Every slab, a piece of Madridista heritage.</p>
       <div style="display: flex; gap: 16px; flex-wrap: wrap; animation: fadeUp 0.7s 0.6s both;">
-        <button onClick="{{ scrollToVault }}" style="background: #C8A75B; color: #0A0A0A; border: none; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 16px 32px; cursor: pointer; border-radius: 2px; transition: background 0.2s;" style-hover="background: #E3CE9A;">EXPLORE THE VAULT</button>
+        <a href="/collection/" style="background: #C8A75B; color: #0A0A0A; border: none; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 16px 32px; border-radius: 2px; text-decoration: none; transition: background 0.2s;" style-hover="background: #E3CE9A;">EXPLORE THE VAULT</a>
         <button onClick="{{ scrollToGrails }}" style="background: transparent; color: #FFF; border: 1px solid #2A2A2A; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; padding: 16px 32px; cursor: pointer; border-radius: 2px; transition: border-color 0.2s;" style-hover="border-color: #A1A1AA;">SEE THE GRAILS</button>
       </div>
     </div>
@@ -140,53 +139,6 @@
         </div>
       </sc-for>
     </div>
-  </div>
-</section>
-
-<!-- ── THE VAULT ── -->
-<section id="vault" style="background: #0D0D0D; padding: 100px 0; border-top: 1px solid #1A1A1A;">
-  <div style="max-width: 1280px; margin: 0 auto; padding: 0 48px;">
-    <div style="margin-bottom: 48px;">
-      <p style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #C8A75B; margin-bottom: 12px;">Full Inventory</p>
-      <h2 style="font-family: 'Anton', sans-serif; font-size: 52px; text-transform: uppercase; color: #FFF; line-height: 1;">THE VAULT</h2>
-    </div>
-    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 40px;">
-      <sc-for list="{{ filtersComputed }}" as="filter" hint-placeholder-count="6">
-        <button onClick="{{ filter.onClick }}" style="background: {{ filter.bg }}; color: {{ filter.color }}; border-width: 1px; border-style: solid; border-color: {{ filter.borderColor }}; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; padding: 9px 18px; border-radius: 2px; cursor: pointer; transition: all 0.2s;">{{ filter.label }}</button>
-      </sc-for>
-    </div>
-    <div id="vault-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px;">
-      <sc-for list="{{ gridCards }}" as="card" hint-placeholder-count="9">
-        <div>
-          <div onClick="{{ card.onClick }}" style="cursor: pointer; position: relative; transition: transform 0.3s ease;" style-hover="transform: scale(1.03);">
-            <div style="aspect-ratio: 5/7; overflow: hidden; border-radius: 10px; background: #1A1A1A;">
-              <image-slot id="{{ card.slotId }}" src="{{ card.photoSrc }}" placeholder="{{ card.player }}" shape="rect" style="width: 100%; height: 100%; display: block;"></image-slot>
-            </div>
-            <div style="position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 2;">
-              <sc-for list="{{ card.badgesStyled }}" as="badge" hint-placeholder-count="0">
-                <span style="display: block; background: {{ badge.bg }}; color: {{ badge.color }}; font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 7px; border-radius: 2px;">{{ badge.label }}</span>
-              </sc-for>
-            </div>
-          </div>
-          <div style="padding: 12px 0 0; border-top: 1px solid #1A1A1A; margin-top: 1px;">
-            <p style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #FFF; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.player }}</p>
-            <p style="font-family: 'Inter', sans-serif; font-size: 11px; color: #A1A1AA; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.year }} · {{ card.set }}</p>
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <span style="font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: #C8A75B;">{{ card.grade }}</span>
-              <sc-if value="{{ card.hasSerial }}" hint-placeholder-val="{{ true }}">
-                <span style="font-family: 'Inter', sans-serif; font-size: 11px; color: #A1A1AA; font-variant-numeric: tabular-nums;">{{ card.serial }}</span>
-              </sc-if>
-            </div>
-          </div>
-        </div>
-      </sc-for>
-    </div>
-    <sc-if value="{{ emptyGrid }}" hint-placeholder-val="{{ false }}">
-      <div style="text-align: center; padding: 80px 0;">
-        <p style="font-family: 'Anton', sans-serif; font-size: 28px; text-transform: uppercase; color: #2A2A2A; margin-bottom: 12px;">This vault is empty</p>
-        <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: #A1A1AA;">No cards match this filter.</p>
-      </div>
-    </sc-if>
   </div>
 </section>
 
@@ -306,7 +258,7 @@
       </div>
       <div style="display: flex; gap: 32px; flex-wrap: wrap; align-items: center;">
         <button onClick="{{ scrollToGrails }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">Grails</button>
-        <button onClick="{{ scrollToVault }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">Collection</button>
+        <a href="/collection/" style="color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; transition: color 0.2s;" style-hover="color: #FFF;">Collection</a>
         <button onClick="{{ navToForSale }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">For Sale</button>
         <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="color: #C8A75B; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; transition: color 0.2s;" style-hover="color: #E3CE9A;">@adgmerenguevault</a>
       </div>
@@ -381,7 +333,6 @@
 
 class Component extends DCLogic {
   state = {
-    activeFilter: 'all',
     lightboxCard: null,
     navScrolled: false,
     dbCards: null,
@@ -420,7 +371,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const { activeFilter, lightboxCard, dbCards, dbLoading, lastUpdated } = this.state;
+    const { lightboxCard, dbCards, dbLoading, lastUpdated } = this.state;
 
     // ── Fallback hardcoded data ─────────────────────────────────────────
     const FALLBACK = [
@@ -481,24 +432,6 @@ class Component extends DCLogic {
     const forSaleCards = allCards.filter(c => c.status === 'for_sale');
     const grailCards = collectionCards.filter(c => c.is_grail);
 
-    // ── Player filter chips (dynamic) ───────────────────────────────────
-    const uniquePlayers = [...new Set(collectionCards.map(c => c.player))].sort();
-    const filterDefs = [
-      { id: 'all', label: 'ALL' },
-      ...uniquePlayers.map(p => ({ id: p.toLowerCase(), label: p.toUpperCase() })),
-    ];
-    const filtersComputed = filterDefs.map(f => ({
-      ...f,
-      bg: f.id === activeFilter ? '#C8A75B' : 'transparent',
-      color: f.id === activeFilter ? '#0A0A0A' : '#A1A1AA',
-      borderColor: f.id === activeFilter ? '#C8A75B' : '#2A2A2A',
-      onClick: () => this.setState({ activeFilter: f.id }),
-    }));
-
-    const gridCards = activeFilter === 'all'
-      ? collectionCards.filter(c => !c.is_grail)
-      : allCards.filter(c => c.player.toLowerCase() === activeFilter);
-
     // ── Live stats ──────────────────────────────────────────────────────
     const totalCards = allCards.length;
     const uniquePlayersCount = new Set(allCards.map(c => c.player)).size;
@@ -533,11 +466,8 @@ class Component extends DCLogic {
       stats,
       // Sections
       grailCards,
-      gridCards,
       forSaleCards,
       noForSale: forSaleCards.length === 0,
-      emptyGrid: gridCards.length === 0,
-      filtersComputed,
       // About live numbers
       aboutTotal: String(totalCards || 127),
       aboutGrails: String(grailCount || 8),
@@ -572,11 +502,8 @@ class Component extends DCLogic {
       // Navigation
       scrollToTop: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
       navToGrails: () => scrollTo('grails'),
-      navToVault: () => scrollTo('vault'),
       navToForSale: () => scrollTo('forsale'),
       navToAbout: () => scrollTo('about'),
-      navToTrade: () => scrollTo('trade'),
-      scrollToVault: () => scrollTo('vault'),
       scrollToGrails: () => scrollTo('grails'),
     };
   }
