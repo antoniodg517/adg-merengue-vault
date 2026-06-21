@@ -274,6 +274,12 @@
                 </div>
               </div>
 
+              <!-- Team (squadra) -->
+              <div>
+                <label style="display: block; font-size: 8px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #A1A1AA; margin-bottom: 6px;">Squadra</label>
+                <input type="text" list="teams-datalist" value="{{ form.team }}" onChange="{{ onTeamCh }}" placeholder="Es. Real Madrid" autocomplete="off" style="width: 100%; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 4px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px 12px; outline: none;">
+              </div>
+
               <!-- Set + Variant -->
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <div>
@@ -409,6 +415,70 @@
   </div>
 </sc-if>
 
+<!-- Datalist squadre per autocomplete -->
+<datalist id="teams-datalist">
+  <option value="Real Madrid"><option value="FC Barcelona"><option value="Atlético Madrid">
+  <option value="Sevilla FC"><option value="Real Betis"><option value="Valencia CF">
+  <option value="Real Sociedad"><option value="Athletic Bilbao"><option value="Villarreal CF">
+  <option value="Girona FC"><option value="Getafe CF"><option value="Osasuna">
+  <option value="Rayo Vallecano"><option value="RCD Espanyol">
+  <option value="Manchester City"><option value="Manchester United"><option value="Liverpool">
+  <option value="Arsenal"><option value="Chelsea"><option value="Tottenham Hotspur">
+  <option value="Aston Villa"><option value="Newcastle United"><option value="West Ham United">
+  <option value="Brighton"><option value="Everton"><option value="Fulham">
+  <option value="Crystal Palace"><option value="Brentford"><option value="Leicester City">
+  <option value="Wolverhampton Wanderers"><option value="Nottingham Forest">
+  <option value="Juventus"><option value="Inter Milan"><option value="AC Milan">
+  <option value="Napoli"><option value="AS Roma"><option value="SS Lazio">
+  <option value="Fiorentina"><option value="Atalanta"><option value="Torino FC">
+  <option value="Bologna FC"><option value="Hellas Verona"><option value="Cagliari">
+  <option value="Monza"><option value="Genoa CFC"><option value="Udinese"><option value="Sampdoria">
+  <option value="Bayern München"><option value="Borussia Dortmund"><option value="RB Leipzig">
+  <option value="Bayer Leverkusen"><option value="Eintracht Frankfurt"><option value="VfL Wolfsburg">
+  <option value="VfB Stuttgart"><option value="SC Freiburg"><option value="Werder Bremen">
+  <option value="Borussia Mönchengladbach"><option value="Union Berlin">
+  <option value="Paris Saint-Germain"><option value="Olympique de Marseille"><option value="AS Monaco">
+  <option value="Olympique Lyonnais"><option value="LOSC Lille"><option value="RC Lens">
+  <option value="Stade Rennais"><option value="Stade Brestois">
+  <option value="FC Porto"><option value="SL Benfica"><option value="Sporting CP">
+  <option value="AFC Ajax"><option value="Feyenoord"><option value="PSV Eindhoven">
+  <option value="Galatasaray"><option value="Fenerbahçe"><option value="Beşiktaş"><option value="Trabzonspor">
+  <option value="Celtic FC"><option value="Rangers FC">
+  <option value="Flamengo"><option value="Palmeiras"><option value="Santos FC">
+  <option value="São Paulo FC"><option value="Corinthians"><option value="Athletico Paranaense">
+  <option value="Boca Juniors"><option value="River Plate"><option value="Independiente">
+  <option value="Racing Club"><option value="San Lorenzo"><option value="Estudiantes">
+  <option value="Nacional"><option value="Peñarol">
+  <option value="Inter Miami CF"><option value="LA Galaxy"><option value="LAFC">
+  <option value="Seattle Sounders FC"><option value="New York City FC"><option value="New York Red Bulls">
+  <option value="Al-Nassr"><option value="Al-Hilal"><option value="Al-Ahly SC"><option value="Al-Ittihad">
+  <option value="CSKA Mosca"><option value="Zenit San Pietroburgo">
+  <option value="Urawa Red Diamonds"><option value="Vissel Kobe">
+  <option value="Spagna"><option value="Francia"><option value="Germania"><option value="Inghilterra">
+  <option value="Italia"><option value="Portogallo"><option value="Paesi Bassi"><option value="Belgio">
+  <option value="Croazia"><option value="Danimarca"><option value="Austria"><option value="Svizzera">
+  <option value="Polonia"><option value="Ungheria"><option value="Serbia"><option value="Scozia">
+  <option value="Turchia"><option value="Romania"><option value="Ucraina"><option value="Grecia">
+  <option value="Repubblica Ceca"><option value="Albania"><option value="Georgia">
+  <option value="Galles"><option value="Norvegia"><option value="Svezia"><option value="Finlandia">
+  <option value="Slovacchia"><option value="Slovenia"><option value="Montenegro">
+  <option value="Bosnia ed Erzegovina"><option value="Irlanda"><option value="Kosovo">
+  <option value="Macedonia del Nord">
+  <option value="Brasile"><option value="Argentina"><option value="Uruguay"><option value="Colombia">
+  <option value="Cile"><option value="Ecuador"><option value="Perù"><option value="Messico">
+  <option value="USA"><option value="Canada"><option value="Costa Rica"><option value="Honduras">
+  <option value="Paraguay"><option value="Bolivia"><option value="Venezuela"><option value="Panama">
+  <option value="Giamaica">
+  <option value="Marocco"><option value="Senegal"><option value="Nigeria"><option value="Ghana">
+  <option value="Costa d'Avorio"><option value="Camerun"><option value="Egitto"><option value="Algeria">
+  <option value="Tunisia"><option value="Sudafrica"><option value="Mali"><option value="Burkina Faso">
+  <option value="Capo Verde">
+  <option value="Giappone"><option value="Corea del Sud"><option value="Arabia Saudita">
+  <option value="Iran"><option value="Australia"><option value="Cina"><option value="Iraq">
+  <option value="Qatar"><option value="Emirati Arabi"><option value="Uzbekistan">
+  <option value="Pokémon">
+</datalist>
+
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 
@@ -427,7 +497,7 @@ class Component extends DCLogic {
     cards: [], loading: false,
     search: '', statusFilter: 'all',
     editCard: null,
-    form: { player: '', year: '', set_brand: '', variant: '', grade: 'PSA 10', serial: '', photo_url: '', photo_url_back: '', badges: [], status: 'collection', is_grail: false, price: '', notes: '' },
+    form: { player: '', year: '', set_brand: '', variant: '', grade: 'PSA 10', serial: '', photo_url: '', photo_url_back: '', badges: [], status: 'collection', is_grail: false, price: '', notes: '', team: '' },
     formErr: null,
     photoPreview: null, photoFile: null, photoUploading: false,
     photoPreview_back: null, photoFile_back: null, photoUploading_back: false,
@@ -437,7 +507,7 @@ class Component extends DCLogic {
   };
 
   _blank() {
-    return { player: '', year: '', set_brand: '', variant: '', grade: 'PSA 10', serial: '', photo_url: '', photo_url_back: '', badges: [], status: 'collection', is_grail: false, price: '', notes: '' };
+    return { player: '', year: '', set_brand: '', variant: '', grade: 'PSA 10', serial: '', photo_url: '', photo_url_back: '', badges: [], status: 'collection', is_grail: false, price: '', notes: '', team: '' };
   }
 
   async componentDidMount() {
@@ -514,7 +584,7 @@ class Component extends DCLogic {
         variant: form.variant || null, grade: form.grade || null, serial: form.serial || null,
         photo_url: photo_url || null, photo_url_back: photo_url_back || null, badges: form.badges, status: form.status,
         is_grail: form.is_grail, price: form.price ? parseFloat(form.price) : null,
-        notes: form.notes || null, updated_at: new Date().toISOString(),
+        notes: form.notes || null, team: form.team || null, updated_at: new Date().toISOString(),
       };
       const url = editCard ? `/api/cards/${editCard.id}` : '/api/cards';
       const method = editCard ? 'PUT' : 'POST';
@@ -625,7 +695,7 @@ class Component extends DCLogic {
         confirmDel: deleteId === c.id, showAct: deleteId !== c.id,
         onEdit: () => this.setState({
           section: 'form', editCard: c,
-          form: { player: c.player || '', year: c.year || '', set_brand: c.set_brand || '', variant: c.variant || '', grade: c.grade || 'PSA 10', serial: c.serial || '', photo_url: c.photo_url || '', photo_url_back: c.photo_url_back || '', badges: Array.isArray(c.badges) ? [...c.badges] : [], status: c.status || 'collection', is_grail: !!c.is_grail, price: c.price != null ? String(c.price) : '', notes: c.notes || '' },
+          form: { player: c.player || '', year: c.year || '', set_brand: c.set_brand || '', variant: c.variant || '', grade: c.grade || 'PSA 10', serial: c.serial || '', photo_url: c.photo_url || '', photo_url_back: c.photo_url_back || '', badges: Array.isArray(c.badges) ? [...c.badges] : [], status: c.status || 'collection', is_grail: !!c.is_grail, price: c.price != null ? String(c.price) : '', notes: c.notes || '', team: c.team || '' },
           photoPreview: c.photo_url || null, photoFile: null, photoPreview_back: c.photo_url_back || null, photoFile_back: null, formErr: null,
         }),
         onDelete: () => this.setState({ deleteId: c.id }),
@@ -830,6 +900,7 @@ class Component extends DCLogic {
       onSerialCh: (e) => this.setState({ form: { ...form, serial: e.target.value } }),
       onPriceCh: (e) => this.setState({ form: { ...form, price: e.target.value } }),
       onNotesCh: (e) => this.setState({ form: { ...form, notes: e.target.value } }),
+      onTeamCh: (e) => this.setState({ form: { ...form, team: e.target.value } }),
     };
   }
 }

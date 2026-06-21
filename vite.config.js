@@ -32,7 +32,7 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: 'https://merenguevault.vercel.app',
+        target: 'https://adg-merengue-vault.vercel.app',
         changeOrigin: true,
       },
     },

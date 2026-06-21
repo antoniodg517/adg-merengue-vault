@@ -24,6 +24,7 @@
       #page-header { padding: 40px 24px 32px !important; }
       #filters-bar { padding: 0 24px 24px !important; }
       #grid-wrap { padding: 0 24px 80px !important; }
+      #team-sidebar { display: none !important; }
     }
   </style>
 </helmet>
@@ -70,40 +71,101 @@
   </div>
 </div>
 
-<!-- ── GRID ── -->
-<div id="grid-wrap" style="max-width: 1280px; margin: 0 auto; padding: 40px 48px 100px;">
-  <div id="collection-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px;">
-    <sc-for list="{{ gridCards }}" as="card" hint-placeholder-count="9">
-      <div>
-        <div onClick="{{ card.onClick }}" style="cursor: pointer; position: relative; transition: transform 0.3s ease;" style-hover="transform: scale(1.03);">
-          <div style="aspect-ratio: 5/7; overflow: hidden; border-radius: 10px; background: #1A1A1A;">
-            <image-slot id="{{ card.slotId }}" src="{{ card.photoSrc }}" placeholder="{{ card.player }}" shape="rect" fit="contain" style="width: 100%; height: 100%; display: block;"></image-slot>
-          </div>
-          <div style="position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 2;">
-            <sc-for list="{{ card.badgesStyled }}" as="badge" hint-placeholder-count="0">
-              <span style="display: block; background: {{ badge.bg }}; color: {{ badge.color }}; font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 7px; border-radius: 2px;">{{ badge.label }}</span>
-            </sc-for>
-          </div>
+<!-- ── CONTENT (sidebar + grid) ── -->
+<div id="grid-wrap" style="max-width: 1280px; margin: 0 auto; padding: 40px 48px 100px; display: flex; gap: 32px; align-items: flex-start;">
+
+  <!-- ── TEAM SIDEBAR ── -->
+  <aside id="team-sidebar" style="width: 200px; flex: none; position: sticky; top: 175px;">
+    <p style="font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #3A3A3A; margin-bottom: 10px; padding-left: 2px;">SQUADRE</p>
+
+    <!-- TUTTI -->
+    <div onClick="{{ tuttiItem.onClick }}" style="display: flex; align-items: center; gap: 9px; padding: 7px 8px; border-radius: 6px; cursor: pointer; background: {{ tuttiItem.itemBg }}; margin-bottom: 3px; transition: background 0.12s;" style-hover="background: #111111;">
+      <div style="width: 24px; height: 28px; background: {{ tuttiItem.badgeBg }}; clip-path: polygon(50% 0%, 100% 18%, 100% 70%, 50% 100%, 0% 70%, 0% 18%); display: flex; align-items: center; justify-content: center; padding-top: 2px; flex: none;">
+        <span style="font-size: 9px; font-weight: 800; color: {{ tuttiItem.badgeText }}; line-height: 1;">★</span>
+      </div>
+      <span style="font-size: 12px; color: {{ tuttiItem.nameColor }}; font-weight: {{ tuttiItem.nameFw }}; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Tutte</span>
+      <span style="font-size: 10px; color: #555; flex: none; font-variant-numeric: tabular-nums;">{{ tuttiItem.count }}</span>
+    </div>
+
+    <!-- divider -->
+    <sc-if value="{{ hasSideTeams }}" hint-placeholder-val="{{ false }}">
+      <div style="height: 1px; background: #1A1A1A; margin: 8px 0;"></div>
+    </sc-if>
+
+    <!-- Top 10 teams -->
+    <sc-for list="{{ sideTeams }}" as="t" hint-placeholder-count="0">
+      <div onClick="{{ t.onClick }}" style="display: flex; align-items: center; gap: 9px; padding: 7px 8px; border-radius: 6px; cursor: pointer; background: {{ t.itemBg }}; margin-bottom: 3px; transition: background 0.12s;" style-hover="background: #111111;">
+        <div style="width: 24px; height: 28px; background: {{ t.badgeBg }}; clip-path: polygon(50% 0%, 100% 18%, 100% 70%, 50% 100%, 0% 70%, 0% 18%); display: flex; align-items: center; justify-content: center; padding-top: 2px; flex: none;">
+          <span style="font-size: 6px; font-weight: 800; color: {{ t.badgeText }}; letter-spacing: -0.02em; line-height: 1;">{{ t.initials }}</span>
         </div>
-        <div style="padding: 12px 0 0; border-top: 1px solid #1A1A1A; margin-top: 1px;">
-          <p style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #FFF; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.player }}</p>
-          <p style="font-family: 'Inter', sans-serif; font-size: 11px; color: #A1A1AA; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.year }} · {{ card.set }}</p>
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <span style="font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: #C8A75B;">{{ card.grade }}</span>
-            <sc-if value="{{ card.hasSerial }}" hint-placeholder-val="{{ true }}">
-              <span style="font-family: 'Inter', sans-serif; font-size: 11px; color: #A1A1AA; font-variant-numeric: tabular-nums;">{{ card.serial }}</span>
-            </sc-if>
-          </div>
-        </div>
+        <span style="font-size: 12px; color: {{ t.nameColor }}; font-weight: {{ t.nameFw }}; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ t.name }}</span>
+        <span style="font-size: 10px; color: #555; flex: none; font-variant-numeric: tabular-nums;">{{ t.count }}</span>
       </div>
     </sc-for>
-  </div>
-  <sc-if value="{{ emptyGrid }}" hint-placeholder-val="{{ false }}">
-    <div style="text-align: center; padding: 80px 0;">
-      <p style="font-family: 'Anton', sans-serif; font-size: 28px; text-transform: uppercase; color: #2A2A2A; margin-bottom: 12px;">No cards found</p>
-      <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: #A1A1AA;">No cards match this filter.</p>
+
+    <!-- ALTRO (hover dropdown for teams beyond top 10) -->
+    <sc-if value="{{ hasAltro }}" hint-placeholder-val="{{ false }}">
+      <div style="position: relative; margin-top: 3px;">
+        <button onMouseEnter="{{ onAltroEnter }}" onMouseLeave="{{ onAltroLeave }}" style="width: 100%; display: flex; align-items: center; gap: 9px; padding: 7px 8px; border-radius: 6px; border: none; background: transparent; cursor: pointer; color: #555; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; transition: all 0.15s;" style-hover="background: #111111; color: #A1A1AA;">
+          <div style="width: 24px; height: 28px; background: #1A1A1A; clip-path: polygon(50% 0%, 100% 18%, 100% 70%, 50% 100%, 0% 70%, 0% 18%); display: flex; align-items: center; justify-content: center; padding-top: 2px; flex: none;">
+            <span style="font-size: 8px; color: #555; line-height: 1; letter-spacing: 0;">···</span>
+          </div>
+          <span style="flex: 1; text-align: left;">ALTRO</span>
+          <span style="font-size: 9px; color: #555;">▾</span>
+        </button>
+        <sc-if value="{{ altroOpen }}" hint-placeholder-val="{{ false }}">
+          <div onMouseEnter="{{ onAltroEnter }}" onMouseLeave="{{ onAltroLeave }}" style="position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 50; background: #0D0D0D; border: 1px solid #2A2A2A; border-radius: 8px; padding: 6px; box-shadow: 0 16px 40px rgba(0,0,0,0.8); animation: fadeIn 0.15s ease; max-height: 260px; overflow-y: auto;">
+            <sc-for list="{{ altroSideTeams }}" as="t" hint-placeholder-count="0">
+              <div onClick="{{ t.onClick }}" style="display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 5px; cursor: pointer; background: {{ t.itemBg }}; transition: background 0.12s;" style-hover="background: #1A1A1A;">
+                <div style="width: 21px; height: 25px; background: {{ t.badgeBg }}; clip-path: polygon(50% 0%, 100% 18%, 100% 70%, 50% 100%, 0% 70%, 0% 18%); display: flex; align-items: center; justify-content: center; padding-top: 2px; flex: none;">
+                  <span style="font-size: 5px; font-weight: 800; color: {{ t.badgeText }}; letter-spacing: -0.02em; line-height: 1;">{{ t.initials }}</span>
+                </div>
+                <span style="font-size: 12px; color: {{ t.nameColor }}; font-weight: {{ t.nameFw }}; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ t.name }}</span>
+                <span style="font-size: 10px; color: #555; flex: none; font-variant-numeric: tabular-nums;">{{ t.count }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+  </aside>
+
+  <!-- ── GRID AREA ── -->
+  <div style="flex: 1; min-width: 0;">
+    <div id="collection-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px;">
+      <sc-for list="{{ gridCards }}" as="card" hint-placeholder-count="9">
+        <div>
+          <div onClick="{{ card.onClick }}" style="cursor: pointer; position: relative; transition: transform 0.3s ease;" style-hover="transform: scale(1.03);">
+            <div style="aspect-ratio: 5/7; overflow: hidden; border-radius: 10px; background: #1A1A1A;">
+              <image-slot id="{{ card.slotId }}" src="{{ card.photoSrc }}" placeholder="{{ card.player }}" shape="rect" fit="contain" style="width: 100%; height: 100%; display: block;"></image-slot>
+            </div>
+            <div style="position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 2;">
+              <sc-for list="{{ card.badgesStyled }}" as="badge" hint-placeholder-count="0">
+                <span style="display: block; background: {{ badge.bg }}; color: {{ badge.color }}; font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 7px; border-radius: 2px;">{{ badge.label }}</span>
+              </sc-for>
+            </div>
+          </div>
+          <div style="padding: 12px 0 0; border-top: 1px solid #1A1A1A; margin-top: 1px;">
+            <p style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #FFF; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.player }}</p>
+            <p style="font-family: 'Inter', sans-serif; font-size: 11px; color: #A1A1AA; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.year }} · {{ card.set }}</p>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: #C8A75B;">{{ card.grade }}</span>
+              <sc-if value="{{ card.hasSerial }}" hint-placeholder-val="{{ true }}">
+                <span style="font-family: 'Inter', sans-serif; font-size: 11px; color: #A1A1AA; font-variant-numeric: tabular-nums;">{{ card.serial }}</span>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-for>
     </div>
-  </sc-if>
+    <sc-if value="{{ emptyGrid }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align: center; padding: 80px 0;">
+        <p style="font-family: 'Anton', sans-serif; font-size: 28px; text-transform: uppercase; color: #2A2A2A; margin-bottom: 12px;">No cards found</p>
+        <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: #A1A1AA;">No cards match this filter.</p>
+      </div>
+    </sc-if>
+  </div>
+
 </div>
 
 <!-- ── LIGHTBOX ── -->
@@ -196,6 +258,8 @@
 class Component extends DCLogic {
   state = {
     searchQuery: '',
+    selectedTeam: null,
+    altroOpen: false,
     lightboxCard: null,
     dbCards: null,
     dbLoading: false,
@@ -248,21 +312,26 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const { searchQuery, lightboxCard, dbCards, dbLoading, lastUpdated, contactOpen, contactName, contactEmail, contactMsg, contactCardId, contactSending, contactSent, contactError } = this.state;
+    const {
+      searchQuery, selectedTeam, altroOpen,
+      lightboxCard, dbCards, dbLoading, lastUpdated,
+      contactOpen, contactName, contactEmail, contactMsg, contactCardId,
+      contactSending, contactSent, contactError,
+    } = this.state;
 
     const FALLBACK = [
-      { id: 'c01', player: 'Cristiano Ronaldo', year: '2023', set: 'Stadium Club', variant: 'Porsche Refractor', grade: 'PSA 10', serial: '01/25', badges: ['GRAIL', 'AUTO'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2023 Topps Stadium Club Chrome Cristiano Ronaldo Porsche Refractor — numbered 01/25.' },
-      { id: 'c02', player: 'Cristiano Ronaldo', year: '2019', set: 'Panini Immaculate', variant: 'On-Card Auto Patch', grade: 'PSA 10', serial: '1/1', badges: ['GRAIL', '1/1', 'AUTO', 'PATCH'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2019 Panini Immaculate on-card auto patch — the only copy in existence.' },
-      { id: 'c03', player: 'Karim Benzema', year: '2022', set: 'Topps Museum', variant: 'Gold Frame Quad Patch Auto', grade: 'PSA 10', serial: '10/10', badges: ['GRAIL', 'AUTO', 'PATCH'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2022 Topps Museum Collection Benzema gold frame quad patch auto, numbered /10.' },
-      { id: 'c04', player: 'Luka Modrić', year: '2021', set: 'Topps Chrome', variant: 'Gold Refractor', grade: 'PSA 10', serial: '08/50', badges: ['FEATURED'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2021 Topps Chrome Modrić Gold Refractor /50, gem-mint condition.' },
-      { id: 'c05', player: 'Karim Benzema', year: '2020', set: 'Panini Prizm', variant: 'Silver Prizm', grade: 'PSA 10', serial: null, badges: [], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2020 Panini Prizm Benzema Silver Prizm — pristine PSA 10 slab.' },
-      { id: 'c06', player: 'Sergio Ramos', year: '2018', set: 'Topps Chrome', variant: 'Blue Wave Refractor', grade: 'PSA 9', serial: '45/199', badges: ['ROOKIE'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2018 Topps Chrome Ramos Blue Wave Refractor /199, PSA 9.' },
-      { id: 'c07', player: 'Cristiano Ronaldo', year: '2018', set: 'Panini Immaculate', variant: 'Patch Auto', grade: 'PSA 9', serial: '12/25', badges: ['PATCH', 'AUTO'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2018 Panini Immaculate Ronaldo patch auto /25, PSA 9.' },
-      { id: 'c08', player: 'Vinícius Jr.', year: '2023', set: 'Topps NOW', variant: 'Gold Parallel', grade: 'BGS 9.5', serial: null, badges: ['ROOKIE'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2023 Topps NOW Vinícius Jr. Gold Parallel.' },
-      { id: 'c09', player: 'Luka Modrić', year: '2018', set: 'Stadium Club', variant: 'Crystal Parallel', grade: 'PSA 10', serial: null, badges: [], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2018 Stadium Club Modrić Crystal Parallel — gem-mint slab.' },
-      { id: 'c10', player: 'Sergio Ramos', year: '2020', set: 'Topps Museum', variant: 'Silver Frame', grade: 'PSA 10', serial: '22/75', badges: [], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2020 Topps Museum Ramos Silver Frame /75, gem mint.' },
-      { id: 'c11', player: 'Karim Benzema', year: '2021', set: 'Panini Prizm', variant: 'Gold Prizm', grade: 'PSA 10', serial: '8/10', badges: ['FEATURED', 'PATCH'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2021 Panini Prizm Benzema Gold Prizm /10 — ultra scarce.' },
-      { id: 'c12', player: 'Jude Bellingham', year: '2023', set: 'Topps Chrome', variant: 'Atomic Refractor', grade: 'PSA 10', serial: '5/25', badges: ['ROOKIE', 'FEATURED'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2023 Topps Chrome Bellingham Atomic Refractor /25 — debut season.' },
+      { id: 'c01', player: 'Cristiano Ronaldo', year: '2023', set: 'Stadium Club', variant: 'Porsche Refractor', grade: 'PSA 10', serial: '01/25', badges: ['GRAIL', 'AUTO'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2023 Topps Stadium Club Chrome Cristiano Ronaldo Porsche Refractor — numbered 01/25.', team: 'Real Madrid' },
+      { id: 'c02', player: 'Cristiano Ronaldo', year: '2019', set: 'Panini Immaculate', variant: 'On-Card Auto Patch', grade: 'PSA 10', serial: '1/1', badges: ['GRAIL', '1/1', 'AUTO', 'PATCH'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2019 Panini Immaculate on-card auto patch — the only copy in existence.', team: 'Real Madrid' },
+      { id: 'c03', player: 'Karim Benzema', year: '2022', set: 'Topps Museum', variant: 'Gold Frame Quad Patch Auto', grade: 'PSA 10', serial: '10/10', badges: ['GRAIL', 'AUTO', 'PATCH'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2022 Topps Museum Collection Benzema gold frame quad patch auto, numbered /10.', team: 'Real Madrid' },
+      { id: 'c04', player: 'Luka Modrić', year: '2021', set: 'Topps Chrome', variant: 'Gold Refractor', grade: 'PSA 10', serial: '08/50', badges: ['FEATURED'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2021 Topps Chrome Modrić Gold Refractor /50, gem-mint condition.', team: 'Real Madrid' },
+      { id: 'c05', player: 'Karim Benzema', year: '2020', set: 'Panini Prizm', variant: 'Silver Prizm', grade: 'PSA 10', serial: null, badges: [], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2020 Panini Prizm Benzema Silver Prizm — pristine PSA 10 slab.', team: 'Real Madrid' },
+      { id: 'c06', player: 'Sergio Ramos', year: '2018', set: 'Topps Chrome', variant: 'Blue Wave Refractor', grade: 'PSA 9', serial: '45/199', badges: ['ROOKIE'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2018 Topps Chrome Ramos Blue Wave Refractor /199, PSA 9.', team: 'Real Madrid' },
+      { id: 'c07', player: 'Cristiano Ronaldo', year: '2018', set: 'Panini Immaculate', variant: 'Patch Auto', grade: 'PSA 9', serial: '12/25', badges: ['PATCH', 'AUTO'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2018 Panini Immaculate Ronaldo patch auto /25, PSA 9.', team: 'Juventus' },
+      { id: 'c08', player: 'Vinícius Jr.', year: '2023', set: 'Topps NOW', variant: 'Gold Parallel', grade: 'BGS 9.5', serial: null, badges: ['ROOKIE'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2023 Topps NOW Vinícius Jr. Gold Parallel.', team: 'Real Madrid' },
+      { id: 'c09', player: 'Luka Modrić', year: '2018', set: 'Stadium Club', variant: 'Crystal Parallel', grade: 'PSA 10', serial: null, badges: [], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2018 Stadium Club Modrić Crystal Parallel — gem-mint slab.', team: 'Real Madrid' },
+      { id: 'c10', player: 'Sergio Ramos', year: '2020', set: 'Topps Museum', variant: 'Silver Frame', grade: 'PSA 10', serial: '22/75', badges: [], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2020 Topps Museum Ramos Silver Frame /75, gem mint.', team: 'Real Madrid' },
+      { id: 'c11', player: 'Karim Benzema', year: '2021', set: 'Panini Prizm', variant: 'Gold Prizm', grade: 'PSA 10', serial: '8/10', badges: ['FEATURED', 'PATCH'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2021 Panini Prizm Benzema Gold Prizm /10 — ultra scarce.', team: 'Real Madrid' },
+      { id: 'c12', player: 'Jude Bellingham', year: '2023', set: 'Topps Chrome', variant: 'Atomic Refractor', grade: 'PSA 10', serial: '5/25', badges: ['ROOKIE', 'FEATURED'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2023 Topps Chrome Bellingham Atomic Refractor /25 — debut season.', team: 'Real Madrid' },
     ];
 
     const normalize = (c) => ({
@@ -281,6 +350,7 @@ class Component extends DCLogic {
       photo_url_back: c.photo_url_back || null,
       notes: c.notes || c.desc || '',
       sort_order: c.sort_order != null ? c.sort_order : 9999,
+      team: c.team || null,
     });
 
     const badgeStyle = (l) => ['GRAIL', '1/1', 'FEATURED'].includes(l)
@@ -302,20 +372,78 @@ class Component extends DCLogic {
     const source = dbCards !== null ? dbCards : FALLBACK;
     const allCards = source.map(buildCard);
 
-    // All cards that belong to the collection (including grails), in custom order
     const collectionCards = allCards.filter(c => c.status === 'collection')
       .sort((a, b) => a.sort_order - b.sort_order);
 
-    // Free-text search across all card fields, accent-insensitive
-    const fold = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    // ── Team sidebar ──────────────────────────────────────────────────────
+    const teamMap = {};
+    collectionCards.forEach(c => { if (c.team) teamMap[c.team] = (teamMap[c.team] || 0) + 1; });
+
+    const getInitials = (name) => {
+      const w = name.trim().split(/\s+/);
+      if (w.length >= 2) return (w[0][0] + w[w.length - 1][0]).toUpperCase();
+      return w[0].slice(0, 2).toUpperCase();
+    };
+
+    const makeTeamItem = (name, count) => {
+      const active = selectedTeam === name;
+      return {
+        name, count,
+        initials: getInitials(name),
+        itemBg: active ? 'rgba(200,167,91,0.1)' : 'transparent',
+        badgeBg: active ? '#C8A75B' : '#2A2A2A',
+        badgeText: active ? '#0A0A0A' : '#FFF',
+        nameColor: active ? '#C8A75B' : '#FFF',
+        nameFw: active ? '700' : '500',
+        onClick: () => this.setState({ selectedTeam: active ? null : name, altroOpen: false }),
+      };
+    };
+
+    const teamsSorted = Object.entries(teamMap)
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([n, c]) => makeTeamItem(n, c));
+
+    const sideTeams = teamsSorted.slice(0, 10);
+    const altroSideTeams = teamsSorted.slice(10);
+    const hasAltro = altroSideTeams.length > 0;
+    const hasSideTeams = teamsSorted.length > 0;
+
+    const tuttiActive = selectedTeam === null;
+    const tuttiItem = {
+      itemBg: tuttiActive ? 'rgba(200,167,91,0.1)' : 'transparent',
+      badgeBg: tuttiActive ? '#C8A75B' : '#2A2A2A',
+      badgeText: tuttiActive ? '#0A0A0A' : '#FFF',
+      nameColor: tuttiActive ? '#C8A75B' : '#A1A1AA',
+      nameFw: tuttiActive ? '700' : '400',
+      count: collectionCards.length,
+      onClick: () => this.setState({ selectedTeam: null }),
+    };
+
+    // ALTRO hover with grace-period timer so the dropdown doesn't close when
+    // the mouse moves from the button to the dropdown.
+    const onAltroEnter = () => {
+      if (this._altroTimer) { clearTimeout(this._altroTimer); this._altroTimer = null; }
+      if (!this.state.altroOpen) this.setState({ altroOpen: true });
+    };
+    const onAltroLeave = () => {
+      this._altroTimer = setTimeout(() => this.setState({ altroOpen: false }), 150);
+    };
+
+    // ── Search + team filter ──────────────────────────────────────────────
+    const fold = (s) => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
     const q = fold(searchQuery.trim());
-    const gridCards = !q
+
+    const filteredBySearch = !q
       ? collectionCards
       : collectionCards.filter(c => {
-          const hay = fold([c.player, c.year, c.set, c.variant, c.grade, c.serial, c.notes, ...(c.badges || [])]
+          const hay = fold([c.player, c.year, c.set, c.variant, c.grade, c.serial, c.notes, c.team, ...(c.badges || [])]
             .filter(Boolean).join(' '));
           return hay.includes(q);
         });
+
+    const gridCards = selectedTeam
+      ? filteredBySearch.filter(c => c.team === selectedTeam)
+      : filteredBySearch;
 
     // Lightbox
     const closeLightbox = () => this.setState({ lightboxCard: null });
@@ -325,11 +453,20 @@ class Component extends DCLogic {
       ? `Aggiornato: ${lastUpdated.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}`
       : '';
 
+    const totalLabel = selectedTeam
+      ? `${selectedTeam}: ${gridCards.length} / ${collectionCards.length}`
+      : q
+        ? `${gridCards.length} / ${collectionCards.length}`
+        : `${collectionCards.length} card${collectionCards.length !== 1 ? 's' : ''}`;
+
     return {
       searchQuery,
-      hasSearch: !!q,
+      hasSearch: !!(q || selectedTeam),
       onSearchChange: (e) => this.setState({ searchQuery: e.target.value }),
-      clearSearch: () => this.setState({ searchQuery: '' }),
+      clearSearch: () => this.setState({ searchQuery: '', selectedTeam: null }),
+      // Team sidebar
+      tuttiItem, sideTeams, altroSideTeams, hasAltro, hasSideTeams, altroOpen,
+      onAltroEnter, onAltroLeave,
       // Floating contact
       contactOpen,
       contactFabIcon: contactOpen ? '×' : '✉',
@@ -355,9 +492,7 @@ class Component extends DCLogic {
       },
       gridCards,
       emptyGrid: gridCards.length === 0,
-      totalLabel: q
-        ? `${gridCards.length} / ${collectionCards.length}`
-        : `${collectionCards.length} card${collectionCards.length !== 1 ? 's' : ''}`,
+      totalLabel,
       dbLoaded: dbCards !== null,
       dbLoading,
       lastUpdatedText,
