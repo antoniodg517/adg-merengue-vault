@@ -9,7 +9,6 @@
 <x-dc>
 
 <helmet>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -365,31 +364,6 @@
 <script type="text/x-dc" data-dc-script>
 
 class Component extends DCLogic {
-  /*
-  ╔══════════════════════════════════════════════════════════════════════╗
-  ║  CONFIGURAZIONE — modifica questi tre valori                         ║
-  ║  Supabase Dashboard → Settings → API                                 ║
-  ╠══════════════════════════════════════════════════════════════════════╣
-  ║  SQL DA ESEGUIRE su Supabase → SQL Editor:                           ║
-  ║                                                                      ║
-  ║  create table public.cards (                                         ║
-  ║    id uuid default gen_random_uuid() primary key,                    ║
-  ║    player text, year text, set_brand text, variant text,             ║
-  ║    grade text, serial text, photo_url text,                          ║
-  ║    badges text[] default '{}',                                       ║
-  ║    status text default 'collection',                                 ║
-  ║    is_grail boolean default false,                                   ║
-  ║    price numeric, notes text,                                        ║
-  ║    created_at timestamptz default now(),                             ║
-  ║    updated_at timestamptz default now()                              ║
-  ║  );                                                                  ║
-  ║  alter table public.cards disable row level security;                ║
-  ║                                                                      ║
-  ║  STORAGE → New bucket: "card-photos" (public)                        ║
-  ╚══════════════════════════════════════════════════════════════════════╝
-  */
-  _URL = 'https://iyjmtcmtbrivodqmdjmq.supabase.co';
-  _KEY = 'sb_publishable_8j1VLUrhBoIJsYIq2G3yVw_C9FOsYTV';
   _PWD = 'DatabaseCarte1010';
 
   state = {
@@ -409,20 +383,35 @@ class Component extends DCLogic {
     return { player: '', year: '', set_brand: '', variant: '', grade: 'PSA 10', serial: '', photo_url: '', photo_url_back: '', badges: [], status: 'collection', is_grail: false, price: '', notes: '' };
   }
 
-  componentDidMount() {
-    if (window.supabase) this._sb = window.supabase.createClient(this._URL, this._KEY);
-  }
-
   async _fetch() {
-    if (!this._sb) return;
     this.setState({ loading: true });
     try {
-      const { data, error } = await this._sb.from('cards').select('*').order('created_at', { ascending: false });
-      if (error) throw error;
+      const res = await fetch('/api/cards');
+      if (!res.ok) throw new Error('Errore nel caricamento carte.');
+      const data = await res.json();
       this.setState({ cards: data || [], loading: false });
     } catch (e) {
       this.setState({ loading: false });
     }
+  }
+
+  async _uploadPhoto(file, prefix) {
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const urlRes = await fetch('/api/upload-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${this._PWD}` },
+      body: JSON.stringify({ path }),
+    });
+    if (!urlRes.ok) throw new Error('Impossibile ottenere URL di upload.');
+    const { signedUrl, publicUrl } = await urlRes.json();
+    const uploadRes = await fetch(signedUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': file.type },
+      body: file,
+    });
+    if (!uploadRes.ok) throw new Error('Upload foto fallito.');
+    return publicUrl;
   }
 
   async _save() {
@@ -431,25 +420,15 @@ class Component extends DCLogic {
     this.setState({ loading: true, formErr: null });
     try {
       let photo_url = form.photo_url;
-      if (photoFile && this._sb) {
+      if (photoFile) {
         this.setState({ photoUploading: true });
-        const ext = (photoFile.name.split('.').pop() || 'jpg').toLowerCase();
-        const path = `front-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-        const { error: upErr } = await this._sb.storage.from('card-photos').upload(path, photoFile, { contentType: photoFile.type });
-        if (upErr) throw upErr;
-        const { data: urlData } = this._sb.storage.from('card-photos').getPublicUrl(path);
-        photo_url = urlData.publicUrl;
+        photo_url = await this._uploadPhoto(photoFile, 'front');
         this.setState({ photoUploading: false });
       }
       let photo_url_back = form.photo_url_back;
-      if (photoFile_back && this._sb) {
+      if (photoFile_back) {
         this.setState({ photoUploading_back: true });
-        const ext = (photoFile_back.name.split('.').pop() || 'jpg').toLowerCase();
-        const path = `back-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-        const { error: upErr } = await this._sb.storage.from('card-photos').upload(path, photoFile_back, { contentType: photoFile_back.type });
-        if (upErr) throw upErr;
-        const { data: urlData } = this._sb.storage.from('card-photos').getPublicUrl(path);
-        photo_url_back = urlData.publicUrl;
+        photo_url_back = await this._uploadPhoto(photoFile_back, 'back');
         this.setState({ photoUploading_back: false });
       }
       const row = {
@@ -459,10 +438,17 @@ class Component extends DCLogic {
         is_grail: form.is_grail, price: form.price ? parseFloat(form.price) : null,
         notes: form.notes || null, updated_at: new Date().toISOString(),
       };
-      const { error } = editCard
-        ? await this._sb.from('cards').update(row).eq('id', editCard.id)
-        : await this._sb.from('cards').insert([row]);
-      if (error) throw error;
+      const url = editCard ? `/api/cards/${editCard.id}` : '/api/cards';
+      const method = editCard ? 'PUT' : 'POST';
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${this._PWD}` },
+        body: JSON.stringify(row),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Errore nel salvataggio.');
+      }
       await this._fetch();
       this.setState({ section: 'cards', editCard: null, form: this._blank(), photoFile: null, photoPreview: null, photoFile_back: null, photoPreview_back: null, loading: false });
     } catch (e) {
@@ -471,9 +457,13 @@ class Component extends DCLogic {
   }
 
   async _delete(id) {
-    if (!this._sb) return;
-    const { error } = await this._sb.from('cards').delete().eq('id', id);
-    if (!error) this.setState({ cards: this.state.cards.filter(c => c.id !== id), deleteId: null });
+    const res = await fetch(`/api/cards/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${this._PWD}` },
+    });
+    if (res.ok || res.status === 204) {
+      this.setState({ cards: this.state.cards.filter(c => c.id !== id), deleteId: null });
+    }
   }
 
   renderVals() {

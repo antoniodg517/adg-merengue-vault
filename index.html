@@ -9,7 +9,6 @@
 <x-dc>
 
 <helmet>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="./image-slot.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -381,15 +380,6 @@
 <script type="text/x-dc" data-dc-script>
 
 class Component extends DCLogic {
-  /*
-  ══════════════════════════════════════════════════════
-  SUPABASE CONFIG — stessi valori dell'Admin panel
-  Lascia invariato se non hai ancora configurato Supabase
-  ══════════════════════════════════════════════════════
-  */
-  _URL = 'https://iyjmtcmtbrivodqmdjmq.supabase.co';
-  _KEY = 'sb_publishable_8j1VLUrhBoIJsYIq2G3yVw_C9FOsYTV';
-
   state = {
     activeFilter: 'all',
     lightboxCard: null,
@@ -418,12 +408,11 @@ class Component extends DCLogic {
   }
 
   async _fetchDB() {
-    if (!window.supabase || this._URL.includes('YOUR_PROJECT')) return;
     this.setState({ dbLoading: true });
     try {
-      if (!this._sb) this._sb = window.supabase.createClient(this._URL, this._KEY);
-      const { data, error } = await this._sb.from('cards').select('*').order('created_at', { ascending: false });
-      if (error) throw error;
+      const res = await fetch('/api/cards');
+      if (!res.ok) throw new Error('fetch failed');
+      const data = await res.json();
       this.setState({ dbCards: data || [], dbLoading: false, lastUpdated: new Date() });
     } catch (e) {
       this.setState({ dbLoading: false });
@@ -463,6 +452,7 @@ class Component extends DCLogic {
       status: c.status || 'collection',
       price: c.price || null,
       photo_url: c.photo_url || null,
+      photo_url_back: c.photo_url_back || null,
       notes: c.notes || c.desc || '',
     });
 
@@ -507,7 +497,7 @@ class Component extends DCLogic {
 
     const gridCards = activeFilter === 'all'
       ? collectionCards.filter(c => !c.is_grail)
-      : collectionCards.filter(c => c.player.toLowerCase() === activeFilter);
+      : allCards.filter(c => c.player.toLowerCase() === activeFilter);
 
     // ── Live stats ──────────────────────────────────────────────────────
     const totalCards = allCards.length;
