@@ -346,6 +346,13 @@ class Component extends DCLogic {
     const nav = document.getElementById('main-nav');
     if (nav) nav.style.boxShadow = 'none';
     this._fetchDB();
+    if (window.location.hash) {
+      const id = window.location.hash.slice(1);
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
+      }, 50);
+    }
   }
 
   componentWillUnmount() {
