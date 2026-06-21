@@ -245,13 +245,14 @@ class Component extends DCLogic {
     const collectionCards = allCards.filter(c => c.status === 'collection')
       .sort((a, b) => a.sort_order - b.sort_order);
 
-    // Free-text search across all card fields
-    const q = searchQuery.trim().toLowerCase();
+    // Free-text search across all card fields, accent-insensitive
+    const fold = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const q = fold(searchQuery.trim());
     const gridCards = !q
       ? collectionCards
       : collectionCards.filter(c => {
-          const hay = [c.player, c.year, c.set, c.variant, c.grade, c.serial, c.notes, ...(c.badges || [])]
-            .filter(Boolean).join(' ').toLowerCase();
+          const hay = fold([c.player, c.year, c.set, c.variant, c.grade, c.serial, c.notes, ...(c.badges || [])]
+            .filter(Boolean).join(' '));
           return hay.includes(q);
         });
 
