@@ -323,9 +323,21 @@
 <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
   <div style="position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 40px; animation: fadeIn 0.2s ease;" onClick="{{ closeLightbox }}">
     <div style="display: flex; gap: 56px; align-items: flex-start; max-width: 860px; width: 100%; position: relative;" onClick="{{ stopProp }}">
-      <div style="flex: none; border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.9), 0 0 60px rgba(200,167,91,0.18); background: #1A1A1A;">
-        <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Drop card photo here" shape="rect" style="width: 260px; height: 364px; display: block;"></image-slot>
-      </div>
+      <sc-if value="{{ lightboxHasBack }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; gap: 20px; flex: none;">
+          <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.9), 0 0 60px rgba(200,167,91,0.18); background: #1A1A1A;">
+            <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Fronte" shape="rect" style="width: 180px; height: 252px; display: block;"></image-slot>
+          </div>
+          <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.9), 0 0 60px rgba(200,167,91,0.18); background: #1A1A1A;">
+            <image-slot id="{{ lightboxSlotId_back }}" src="{{ lightboxPhotoSrc_back }}" placeholder="Retro" shape="rect" style="width: 180px; height: 252px; display: block;"></image-slot>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ lightboxHasBack }}" hint-placeholder-val="{{ true }}">
+        <div style="flex: none; border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.9), 0 0 60px rgba(200,167,91,0.18); background: #1A1A1A;">
+          <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Drop card photo here" shape="rect" style="width: 260px; height: 364px; display: block;"></image-slot>
+        </div>
+      </sc-if>
       <div style="flex: 1; padding-top: 4px; min-width: 0;">
         <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px;">
           <sc-for list="{{ lightboxBadges }}" as="badge" hint-placeholder-count="0">
@@ -375,8 +387,8 @@ class Component extends DCLogic {
   Lascia invariato se non hai ancora configurato Supabase
   ══════════════════════════════════════════════════════
   */
-  _URL = 'https://YOUR_PROJECT_ID.supabase.co';
-  _KEY = 'YOUR_SUPABASE_ANON_KEY';
+  _URL = 'https://iyjmtcmtbrivodqmdjmq.supabase.co';
+  _KEY = 'sb_publishable_8j1VLUrhBoIJsYIq2G3yVw_C9FOsYTV';
 
   state = {
     activeFilter: 'all',
@@ -551,6 +563,9 @@ class Component extends DCLogic {
       stopProp: (e) => e.stopPropagation(),
       lightboxSlotId: lb.id ? ('lb-' + lb.id) : 'lb-none',
       lightboxPhotoSrc: lb.photo_url || '',
+      lightboxSlotId_back: lb.id ? ('lb-back-' + lb.id) : 'lb-back-none',
+      lightboxPhotoSrc_back: lb.photo_url_back || '',
+      lightboxHasBack: !!lb.photo_url_back,
       lightboxPlayer: lb.player || '',
       lightboxYear: lb.year || '',
       lightboxSet: lb.set || '',
