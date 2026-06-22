@@ -60,8 +60,31 @@
         <img src="uploads/logo.png" alt="ADG" style="height: 28px; mix-blend-mode: screen; display: block;">
         <p style="font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: #A1A1AA; margin-top: 10px;">Gestionale</p>
       </div>
-      <nav style="flex: 1; padding: 10px 8px;">
-        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="3">
+      <nav style="flex: 1; padding: 10px 8px; overflow-y: auto;">
+        <sc-for list="{{ navTop }}" as="item" hint-placeholder-count="2">
+          <button onClick="{{ item.onClick }}" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 11px 10px; border-radius: 6px; border: none; background: {{ item.bg }}; color: {{ item.color }}; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; text-align: left; margin-bottom: 3px; transition: background 0.15s; letter-spacing: 0.01em;">
+            <span style="font-size: 15px; flex: none; line-height: 1;">{{ item.icon }}</span>
+            <span>{{ item.label }}</span>
+          </button>
+        </sc-for>
+        <div style="margin: 10px 2px 6px; display: flex; align-items: center; gap: 8px;">
+          <div style="flex: 1; height: 1px; background: #1A1A1A;"></div>
+          <span style="font-size: 8px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #3A3A3A;">CARTE</span>
+          <div style="flex: 1; height: 1px; background: #1A1A1A;"></div>
+        </div>
+        <sc-for list="{{ navCards }}" as="item" hint-placeholder-count="5">
+          <button onClick="{{ item.onClick }}" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 11px 10px; border-radius: 6px; border: none; background: {{ item.bg }}; color: {{ item.color }}; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; text-align: left; margin-bottom: 3px; transition: background 0.15s; letter-spacing: 0.01em;">
+            <span style="font-size: 15px; flex: none; line-height: 1;">{{ item.icon }}</span>
+            <span style="flex: 1;">{{ item.label }}</span>
+            <span style="font-size: 10px; font-weight: 700; color: {{ item.countColor }}; font-variant-numeric: tabular-nums; min-width: 18px; text-align: right;">{{ item.count }}</span>
+          </button>
+        </sc-for>
+        <div style="margin: 10px 2px 6px; display: flex; align-items: center; gap: 8px;">
+          <div style="flex: 1; height: 1px; background: #1A1A1A;"></div>
+          <span style="font-size: 8px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #3A3A3A;">TOOLS</span>
+          <div style="flex: 1; height: 1px; background: #1A1A1A;"></div>
+        </div>
+        <sc-for list="{{ navTools }}" as="item" hint-placeholder-count="2">
           <button onClick="{{ item.onClick }}" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 11px 10px; border-radius: 6px; border: none; background: {{ item.bg }}; color: {{ item.color }}; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; text-align: left; margin-bottom: 3px; transition: background 0.15s; letter-spacing: 0.01em;">
             <span style="font-size: 15px; flex: none; line-height: 1;">{{ item.icon }}</span>
             <span>{{ item.label }}</span>
@@ -141,13 +164,8 @@
 
         <!-- ── CARDS LIST ─────────────────────────────────────────────── -->
         <sc-if value="{{ showCards }}" hint-placeholder-val="{{ false }}">
-          <div style="display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; align-items: center;">
-            <input type="text" value="{{ searchQ }}" onChange="{{ onSearchChange }}" placeholder="Cerca giocatore, set, variante…" style="flex: 1; min-width: 180px; background: #111111; border: 1px solid #1A1A1A; border-radius: 4px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 14px; outline: none;">
-            <div style="display: flex; gap: 5px; flex-wrap: wrap;">
-              <sc-for list="{{ sFilters }}" as="f" hint-placeholder-count="4">
-                <button onClick="{{ f.onClick }}" style="background: {{ f.bg }}; color: {{ f.col }}; border-width: 1px; border-style: solid; border-color: {{ f.bc }}; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; padding: 7px 12px; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: all 0.15s;">{{ f.label }}</button>
-              </sc-for>
-            </div>
+          <div style="margin-bottom: 18px;">
+            <input type="text" value="{{ searchQ }}" onChange="{{ onSearchChange }}" placeholder="Cerca giocatore, set, variante, squadra…" style="width: 100%; background: #111111; border: 1px solid #1A1A1A; border-radius: 4px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 14px; outline: none;">
           </div>
           <div style="background: #111111; border: 1px solid #1A1A1A; border-radius: 8px; overflow: hidden;">
             <div style="display: grid; grid-template-columns: 44px 1.5fr 1.3fr 88px 70px 1fr 96px 116px; padding: 9px 16px; border-bottom: 1px solid #1A1A1A; background: #0A0A0A; gap: 8px; align-items: center;">
@@ -624,6 +642,10 @@ class Component extends DCLogic {
       return cards.filter(c => c.status === 'wishlist')
         .sort((a, b) => (a.sort_order ?? 9999) - (b.sort_order ?? 9999));
     }
+    if (group === 'sold') {
+      return cards.filter(c => c.status === 'sold')
+        .sort((a, b) => (a.sort_order ?? 9999) - (b.sort_order ?? 9999));
+    }
     return cards.filter(c => c.status === 'collection')
       .sort((a, b) => (a.sort_order ?? 9999) - (b.sort_order ?? 9999));
   }
@@ -706,8 +728,11 @@ class Component extends DCLogic {
 
     const filtered = enriched.filter(c => {
       const q = search.toLowerCase();
-      const mq = !q || [c.player, c.set_brand, c.variant].some(x => (x || '').toLowerCase().includes(q));
-      return mq && (statusFilter === 'all' || c.status === statusFilter);
+      const mq = !q || [c.player, c.set_brand, c.variant, c.team].some(x => (x || '').toLowerCase().includes(q));
+      let ms = true;
+      if (statusFilter === 'grail') ms = !!c.is_grail;
+      else if (statusFilter && statusFilter !== 'all') ms = c.status === statusFilter;
+      return mq && ms;
     });
 
     const dashStats = [
@@ -718,26 +743,39 @@ class Component extends DCLogic {
       { value: String(cards.filter(c => (c.grade || '').includes('10')).length), label: 'Gem Mint', color: '#FFF', accent: '#C8A75B' },
     ];
 
+    const cardNavItems = [
+      { icon: '★', label: 'Grails',      filter: 'grail',      color: '#C8A75B' },
+      { icon: '🏛', label: 'Collection', filter: 'collection', color: '#A1A1AA' },
+      { icon: '💚', label: 'For Sale',   filter: 'for_sale',   color: '#16A34A' },
+      { icon: '🌟', label: 'Wishlist',   filter: 'wishlist',   color: '#A78BFA' },
+      { icon: '❌', label: 'Sold',       filter: 'sold',       color: '#DC2626' },
+    ];
     const navItems = [
-      { icon: '📊', label: 'Dashboard', id: 'dashboard' },
-      { icon: '🃏', label: 'Tutte le Carte', id: 'cards' },
-      { icon: '➕', label: 'Aggiungi Carta', id: 'form' },
-      { icon: '🔀', label: 'Riordina', id: 'reorder' },
-    ].map(n => ({
-      ...n,
-      bg: section === n.id ? 'rgba(200,167,91,0.14)' : 'transparent',
-      color: section === n.id ? '#C8A75B' : '#A1A1AA',
-      onClick: () => {
-        if (n.id === 'form') {
-          this.setState({ section: 'form', editCard: null, form: this._blank(), photoPreview: null, photoFile: null, formErr: null });
-        } else if (n.id === 'reorder') {
-          this._enterReorder();
-        } else {
-          this.setState({ section: n.id });
-          this._fetch();
-        }
-      },
-    }));
+      { icon: '📊', label: 'Dashboard', id: 'dashboard', color: '#A1A1AA' },
+      ...cardNavItems.map(n => ({ ...n, id: n.filter })),
+      { icon: '➕', label: 'Aggiungi Carta', id: 'form',    color: '#A1A1AA' },
+      { icon: '🔀', label: 'Riordina',       id: 'reorder', color: '#A1A1AA' },
+    ].map(n => {
+      const isActive = n.id === 'dashboard' || n.id === 'form' || n.id === 'reorder'
+        ? section === n.id
+        : section === 'cards' && statusFilter === n.filter;
+      return {
+        ...n,
+        bg: isActive ? 'rgba(200,167,91,0.14)' : 'transparent',
+        color: isActive ? '#C8A75B' : (n.color || '#A1A1AA'),
+        onClick: () => {
+          if (n.id === 'form') {
+            this.setState({ section: 'form', editCard: null, form: this._blank(), photoPreview: null, photoFile: null, formErr: null });
+          } else if (n.id === 'reorder') {
+            this._enterReorder();
+          } else if (n.id === 'dashboard') {
+            this.setState({ section: 'dashboard' }); this._fetch();
+          } else {
+            this.setState({ section: 'cards', statusFilter: n.filter }); this._fetch();
+          }
+        },
+      };
+    });
 
     const orderCardsView = orderCards.map((c, i) => {
       const si = sInfo(c.status);
@@ -829,8 +867,22 @@ class Component extends DCLogic {
       doLogin,
       doLogout: async () => { try { await _sb.auth.signOut(); } catch (e) {} this._token = null; this.setState({ auth: false, pwInput: '', emailInput: '', cards: [] }); },
 
-      sectionTitle: section === 'dashboard' ? 'Dashboard' : section === 'cards' ? 'Tutte le Carte' : section === 'reorder' ? 'Riordina Collezione' : editCard ? `Modifica — ${editCard.player || ''}` : 'Aggiungi Carta',
-      navItems, showDashboard: section === 'dashboard', showCards: section === 'cards', showForm: section === 'form', showReorder: section === 'reorder',
+      sectionTitle: section === 'dashboard' ? 'Dashboard'
+        : section === 'reorder' ? 'Riordina Collezione'
+        : section === 'form' ? (editCard ? `Modifica — ${editCard.player || ''}` : 'Aggiungi Carta')
+        : statusFilter === 'grail' ? '★ Grails'
+        : statusFilter === 'for_sale' ? '💚 For Sale'
+        : statusFilter === 'wishlist' ? '🌟 Wishlist'
+        : statusFilter === 'sold' ? '❌ Sold'
+        : '🏛 Collection',
+      navTop: navItems.filter(n => n.id === 'dashboard'),
+      navCards: navItems.filter(n => ['grail','collection','for_sale','wishlist','sold'].includes(n.id)).map(n => {
+        const counts = { grail: cards.filter(c => c.is_grail).length, collection: cards.filter(c => c.status === 'collection').length, for_sale: cards.filter(c => c.status === 'for_sale').length, wishlist: cards.filter(c => c.status === 'wishlist').length, sold: cards.filter(c => c.status === 'sold').length };
+        const cnt = counts[n.id] || 0;
+        return { ...n, count: cnt > 0 ? String(cnt) : '', countColor: n.id === 'grail' ? '#C8A75B' : n.id === 'for_sale' ? '#16A34A' : n.id === 'wishlist' ? '#A78BFA' : n.id === 'sold' ? '#DC2626' : '#A1A1AA' };
+      }),
+      navTools: navItems.filter(n => n.id === 'form' || n.id === 'reorder'),
+      showDashboard: section === 'dashboard', showCards: section === 'cards', showForm: section === 'form', showReorder: section === 'reorder',
       isLoading: loading,
       orderCards: orderCardsView, orderSaving, orderSaved,
       reorderTabs: [
@@ -838,6 +890,7 @@ class Component extends DCLogic {
         { id: 'collection', label: '🏛 Collection' },
         { id: 'forsale', label: '💚 For Sale' },
         { id: 'wishlist', label: '🌟 Wishlist' },
+        { id: 'sold', label: '❌ Sold' },
       ].map(t => ({
         label: t.label,
         bg: this.state.reorderGroup === t.id ? '#C8A75B' : 'transparent',
@@ -850,7 +903,7 @@ class Component extends DCLogic {
       dashStats,
       recentCards: enriched.slice(0, 6),
       noCards: cards.length === 0,
-      goToCards: () => { this.setState({ section: 'cards' }); this._fetch(); },
+      goToCards: () => { this.setState({ section: 'cards', statusFilter: 'collection' }); this._fetch(); },
       goToAddForm: () => this.setState({ section: 'form', editCard: null, form: this._blank(), photoPreview: null, photoFile: null, formErr: null }),
       doRefresh: () => this._fetch(),
 
