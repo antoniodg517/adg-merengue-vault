@@ -7,7 +7,7 @@ function sb() {
 
 // Which DB column each reorder group writes to.
 // wishlist and collection are disjoint card sets, so they share sort_order.
-const COLUMN = { collection: 'sort_order', grail: 'sort_grail', forsale: 'sort_forsale', wishlist: 'sort_order' };
+const COLUMN = { collection: 'sort_order', grail: 'sort_grail', forsale: 'sort_forsale', wishlist: 'sort_order', sold: 'sort_order' };
 
 // POST { group, order: [id1, id2, ...] } — writes each card's position to the
 // column for that group. group defaults to 'collection'.
