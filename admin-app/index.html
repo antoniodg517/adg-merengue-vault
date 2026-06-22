@@ -520,7 +520,7 @@ class Component extends DCLogic {
     photoPreview: null, photoFile: null, photoUploading: false,
     photoPreview_back: null, photoFile_back: null, photoUploading_back: false,
     deleteId: null,
-    orderCards: [], dragIndex: null, orderSaving: false, orderSaved: false,
+    orderCards: [], orderSaving: false, orderSaved: false,
     reorderGroup: 'collection',
   };
 
@@ -658,8 +658,9 @@ class Component extends DCLogic {
   }
 
   _switchReorderGroup(group) {
+    this._dragIndex = null;
     this.setState({
-      reorderGroup: group, orderSaved: false, dragIndex: null,
+      reorderGroup: group, orderSaved: false,
       orderCards: this._groupCards(this.state.cards, group),
     });
   }
@@ -669,15 +670,16 @@ class Component extends DCLogic {
     const arr = [...this.state.orderCards];
     const [moved] = arr.splice(from, 1);
     arr.splice(to, 0, moved);
-    this.setState({ orderCards: arr, dragIndex: to });
+    this._dragIndex = to; // instance var — never stale in closures
+    this.setState({ orderCards: arr });
   }
 
   async _saveOrder() {
     const group = this.state.reorderGroup;
-    // wishlist and collection are disjoint sets, so they safely share sort_order.
     const col = group === 'grail' ? 'sort_grail' : group === 'forsale' ? 'sort_forsale' : 'sort_order';
     const order = this.state.orderCards.map(c => c.id);
-    this.setState({ orderSaving: true, orderSaved: false, dragIndex: null });
+    this._dragIndex = null;
+    this.setState({ orderSaving: true, orderSaved: false });
     try {
       const res = await this._api('/api/cards/reorder', {
         method: 'POST',
@@ -697,7 +699,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const { auth, pwInput, loginErr, section, cards, loading, search, statusFilter, editCard, form, formErr, photoPreview, photoUploading, deleteId, orderCards, dragIndex, orderSaving, orderSaved } = this.state;
+    const { auth, pwInput, loginErr, section, cards, loading, search, statusFilter, editCard, form, formErr, photoPreview, photoUploading, deleteId, orderCards, orderSaving, orderSaved } = this.state;
 
     const sInfo = (s) => s === 'for_sale' ? { bg: '#16A34A', col: '#FFF', lbl: 'For Sale' }
       : s === 'sold' ? { bg: '#DC2626', col: '#FFF', lbl: 'Sold' }
@@ -783,12 +785,12 @@ class Component extends DCLogic {
         ...c,
         hasPhoto: !!c.photo_url, noPhoto: !c.photo_url,
         sBg: si.bg, sCol: si.col, sLbl: si.lbl,
-        rowBg: dragIndex === i ? '#1A1A1A' : 'transparent',
-        rowOpacity: dragIndex === i ? '0.5' : '1',
-        onDragStart: () => this.setState({ dragIndex: i }),
-        onDragOver: (e) => { e.preventDefault(); if (dragIndex !== i) this._moveCard(dragIndex, i); },
-        onDrop: (e) => { e.preventDefault(); this._saveOrder(); },
-        onDragEnd: () => this._saveOrder(),
+        rowBg: this._dragIndex === i ? '#1A1A1A' : 'transparent',
+        rowOpacity: this._dragIndex === i ? '0.5' : '1',
+        onDragStart: () => { this._dragIndex = i; },
+        onDragOver: (e) => { e.preventDefault(); if (this._dragIndex !== i) this._moveCard(this._dragIndex, i); },
+        onDrop: (e) => { e.preventDefault(); },
+        onDragEnd: () => { this._saveOrder(); },
       };
     });
 
