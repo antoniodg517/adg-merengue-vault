@@ -357,6 +357,7 @@ class Component extends DCLogic {
 
     const badgeStyle = (l) => ['GRAIL', '1/1', 'GOAT'].includes(l)
       ? { bg: '#C8A75B', color: '#0A0A0A' }
+      : l === 'SUBBED' ? { bg: '#0891B2', color: '#FFF' }
       : { bg: '#2A2A2A', color: '#FFF' };
 
     const buildCard = (raw) => {
