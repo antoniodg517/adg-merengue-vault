@@ -10,30 +10,199 @@
 
 <helmet>
   <script src="./image-slot.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0A0A0A; color: #FFF; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    body { background: #050505; color: #FFF; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
     ::selection { background: #C8A75B; color: #0A0A0A; }
     :focus-visible { outline: 2px solid #C8A75B; outline-offset: 3px; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes rayDrift { from { transform: translate(-50%, -10%) rotate(0deg); } to { transform: translate(-50%, -10%) rotate(360deg); } }
+    @keyframes scrollCue { 0%,100% { transform: translateY(0); opacity: .3; } 50% { transform: translateY(6px); opacity: .8; } }
+
+    /* ── CINEMA STAGE ───────────────────────────────────────────── */
+    #cinema { position: relative; height: 480vh; background: #050505; }
+    #stage { position: relative; height: 100vh; width: 100%; overflow: hidden; background: #050505; }
+    #stage-inner { position: absolute; inset: 0; transform-origin: 50% 58%; will-change: transform; }
+    .layer { position: absolute; inset: 0; will-change: transform, opacity; }
+
+    /* Scene 1 — sky / sunset */
+    #sky { background:
+        radial-gradient(120% 80% at 50% 92%, rgba(232,160,75,0.42) 0%, rgba(200,120,60,0.18) 28%, rgba(20,16,30,0) 60%),
+        linear-gradient(180deg, #0a0c1a 0%, #14101f 38%, #2a1a24 66%, #4a2c22 88%, #6b3c1f 100%);
+    }
+    #sky::after { /* atmospheric haze band on the horizon */
+      content: ''; position: absolute; left: 0; right: 0; bottom: 8%; height: 30%;
+      background: radial-gradient(60% 100% at 50% 100%, rgba(255,196,128,0.30), transparent 70%);
+      filter: blur(8px);
+    }
+
+    /* Stadium — abstract Bernabéu: vertical louver façade + bowl glow */
+    #stadium { transform-origin: 50% 70%; }
+    #stadium .facade { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+      width: 150%; height: 62%;
+      background:
+        repeating-linear-gradient(90deg, rgba(18,18,24,0.96) 0 10px, rgba(40,40,52,0.96) 10px 12px),
+        linear-gradient(180deg, #0d0d14 0%, #1a1a24 100%);
+      border-radius: 50% 50% 0 0 / 22% 22% 0 0;
+      box-shadow: 0 -40px 120px rgba(0,0,0,0.7), inset 0 30px 80px rgba(0,0,0,0.6);
+    }
+    #stadium .rim { position: absolute; left: 50%; bottom: 60%; transform: translateX(-50%);
+      width: 138%; height: 14%; border-radius: 50%;
+      background: radial-gradient(50% 100% at 50% 0%, rgba(200,167,91,0.16), transparent 70%);
+      filter: blur(6px); }
+    #stadium .pitch { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%);
+      width: 92%; height: 30%; border-radius: 50%;
+      background: radial-gradient(60% 100% at 50% 30%, rgba(120,200,150,0.10), rgba(20,40,28,0.0) 70%);
+      filter: blur(10px); opacity: .8; }
+    .floodlight { position: absolute; bottom: 56%; width: 3px; height: 16%;
+      background: linear-gradient(180deg, rgba(255,240,210,0.9), rgba(255,240,210,0)); }
+    .floodlight::before { content:''; position:absolute; top:-10px; left:50%; transform:translateX(-50%);
+      width: 90px; height: 90px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,244,214,0.55), transparent 65%); filter: blur(4px); }
+    .floodlight.fl-1 { left: 16%; } .floodlight.fl-2 { left: 38%; }
+    .floodlight.fl-3 { right: 38%; } .floodlight.fl-4 { right: 16%; }
+
+    /* Light rays + particles */
+    #rays { pointer-events: none; opacity: .5; mix-blend-mode: screen; }
+    #rays .ray-src { position: absolute; top: 0; left: 50%; width: 160vmax; height: 160vmax;
+      background: conic-gradient(from 0deg at 50% 50%,
+        rgba(255,224,170,0) 0deg, rgba(255,224,170,0.07) 8deg, rgba(255,224,170,0) 16deg,
+        rgba(255,224,170,0) 40deg, rgba(255,224,170,0.05) 48deg, rgba(255,224,170,0) 56deg,
+        rgba(255,224,170,0) 90deg, rgba(255,224,170,0.06) 98deg, rgba(255,224,170,0) 106deg,
+        rgba(255,224,170,0) 180deg, rgba(255,224,170,0.05) 188deg, rgba(255,224,170,0) 196deg,
+        rgba(255,224,170,0) 300deg, rgba(255,224,170,0.06) 308deg, rgba(255,224,170,0) 316deg);
+      animation: rayDrift 80s linear infinite; }
+    #particles { position: absolute; inset: 0; pointer-events: none; }
+
+    /* Scene 3 — museum environment */
+    #museum { opacity: 0; }
+    #museum .floor { position: absolute; left: 0; right: 0; bottom: 0; height: 42%;
+      background: linear-gradient(180deg, rgba(10,9,12,0) 0%, #0a090c 40%, #050505 100%); }
+    #museum .floor::before { content:''; position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+      width: 70%; height: 70%; background: radial-gradient(50% 80% at 50% 0%, rgba(200,167,91,0.10), transparent 70%);
+      filter: blur(20px); }
+    #museum .col { position: absolute; top: 0; bottom: 18%; width: 7%;
+      background: linear-gradient(90deg, rgba(28,26,32,0) 0%, rgba(34,31,40,0.55) 50%, rgba(28,26,32,0) 100%); }
+    #museum .col.left { left: 4%; } #museum .col.right { right: 4%; }
+    #museum .keylight { position: absolute; left: 50%; top: -10%; transform: translateX(-50%);
+      width: 60%; height: 80%; background: radial-gradient(50% 60% at 50% 0%, rgba(255,238,205,0.12), transparent 70%);
+      filter: blur(18px); }
+
+    /* Scene 4 — Hall of Grails */
+    #hall { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    #shelf-wrap { position: relative; width: min(1080px, 92vw); opacity: 0; transform: translateY(120px); will-change: transform, opacity; }
+    #grail-shelf { display: flex; align-items: flex-end; justify-content: center; gap: clamp(20px, 4vw, 56px); position: relative; z-index: 3; perspective: 1400px; }
+    .grail-card { position: relative; width: var(--gw, 240px); flex: none; cursor: pointer;
+      transform-style: preserve-3d; will-change: transform; }
+    .grail-card .frame { position: relative; width: 100%; aspect-ratio: 5 / 7; border-radius: 12px; overflow: hidden;
+      background: linear-gradient(160deg, #1c1c22, #0e0e12);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,167,91,0.12), inset 0 0 0 1px rgba(255,255,255,0.03); }
+    .grail-card .frame img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .grail-card .ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 14px;
+      font-family: 'Anton', sans-serif; font-size: 18px; letter-spacing: .04em; color: #3a3a42; text-transform: uppercase; }
+    .grail-card .sheen { position: absolute; inset: 0; pointer-events: none; opacity: 0; mix-blend-mode: screen;
+      background: linear-gradient(115deg, transparent 30%, rgba(255,245,220,0.35) 48%, transparent 66%); }
+    .grail-card .nameplate { position: absolute; left: 50%; bottom: -34px; transform: translateX(-50%); opacity: 0;
+      white-space: nowrap; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      color: #C8A75B; transition: opacity .3s ease; }
+    .grail-card .badges { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 2; }
+    .grail-card .badges span { font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 3px 7px; border-radius: 2px; }
+    #shelf-plank { position: absolute; left: -4%; right: -4%; bottom: -28px; height: 18px; z-index: 1;
+      background: linear-gradient(180deg, #2a2530, #14111a); border-radius: 3px;
+      box-shadow: 0 22px 50px rgba(0,0,0,0.7), 0 0 60px rgba(200,167,91,0.10), inset 0 1px 0 rgba(255,255,255,0.06); }
+    #shelf-plank::after { content:''; position:absolute; left:8%; right:8%; top:18px; height:60px;
+      background: radial-gradient(50% 100% at 50% 0%, rgba(0,0,0,0.5), transparent 70%); filter: blur(4px); }
+
+    .trophy { position: absolute; bottom: 19%; width: clamp(82px, 9vw, 130px); opacity: 0; z-index: 0; color: #757581; pointer-events: none; }
+    .trophy.left { left: 3.5vw; } .trophy.right { right: 3.5vw; }
+    .trophy svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 0 30px rgba(200,167,91,0.12)); }
+
+    /* Scene 1 hero copy */
+    #hero-copy { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 0 24px; z-index: 5; will-change: transform, opacity; }
+    #hero-eyebrow { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: #C8A75B; margin-bottom: 26px; }
+    #hero-title { font-family: 'Anton', sans-serif; font-size: clamp(48px, 8vw, 128px); line-height: 0.9; text-transform: uppercase; color: #FFF;
+      text-shadow: 0 8px 40px rgba(0,0,0,0.6); margin-bottom: 26px; }
+    #hero-rule { width: 56px; height: 2px; background: #C8A75B; margin: 0 auto 26px; }
+    #hero-desc { font-family: 'Inter', sans-serif; font-size: clamp(15px, 1.4vw, 18px); font-weight: 300; line-height: 1.75; color: #C9C9CF; max-width: 480px; }
+    #scroll-cue { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 6; }
+    #scroll-cue span { font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+    #scroll-cue svg { animation: scrollCue 1.6s ease-in-out infinite; }
+
+    /* Scene title cue (chapter marker) */
+    #chapter { position: absolute; top: 96px; left: 50%; transform: translateX(-50%); z-index: 6; text-align: center; opacity: 0;
+      font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(200,167,91,0.85); }
+
+    /* ── DOSSIER (private viewing) ───────────────────────────────── */
+    #dossier { position: fixed; inset: 0; z-index: 400; display: none; align-items: center; justify-content: center; padding: 5vh 4vw;
+      background: rgba(5,5,7,0.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+    #dossier.open { display: flex; }
+    #dossier-inner { display: flex; gap: clamp(28px, 5vw, 72px); align-items: center; max-width: 1080px; width: 100%; opacity: 0; }
+    #dossier-stage { flex: none; perspective: 1600px; }
+    #dossier-card { position: relative; width: clamp(260px, 26vw, 360px); aspect-ratio: 5/7; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.7,.1,.2,1); }
+    #dossier-card.flipped { transform: rotateY(180deg); }
+    #dossier-card .face { position: absolute; inset: 0; border-radius: 16px; overflow: hidden; backface-visibility: hidden;
+      background: #14141a; box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 80px rgba(200,167,91,0.18), 0 0 0 1px rgba(200,167,91,0.18); }
+    #dossier-card .back { transform: rotateY(180deg); }
+    #dossier-card .face img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    #dossier-card .zoomwrap { position: absolute; inset: 0; overflow: hidden; }
+    #dossier-front-img { transition: transform .15s ease-out; transform-origin: center; will-change: transform; }
+    #dossier-card.zoom #dossier-front-img { transform: scale(2.4); }
+    #dossier-card .ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 18px;
+      font-family: 'Anton', sans-serif; font-size: 22px; color: #3a3a42; text-transform: uppercase; }
+
+    #dossier-panel { flex: 1; min-width: 0; max-width: 460px; }
+    #dossier-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+    #dossier-badges span { font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; }
+    #dossier-eyebrow { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: #C8A75B; margin-bottom: 12px; }
+    #dossier-player { font-family: 'Anton', sans-serif; font-size: clamp(30px, 3.4vw, 46px); line-height: 0.95; text-transform: uppercase; color: #FFF; margin-bottom: 22px; }
+    #dossier-fields { border-top: 1px solid #1c1c22; margin-bottom: 22px; }
+    .dz-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 13px 2px; border-bottom: 1px solid #1c1c22; }
+    .dz-row .k { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #8a8a92; }
+    .dz-row .v { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: #FFF; text-align: right; }
+    .dz-row .v.gold { color: #C8A75B; }
+    #dossier-desc { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 300; line-height: 1.75; color: #A1A1AA; margin-bottom: 26px; }
+    #dossier-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .dz-btn { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 15px 26px; border-radius: 3px; cursor: pointer; text-decoration: none; border: none; transition: all .2s; }
+    .dz-btn.primary { background: #C8A75B; color: #0A0A0A; } .dz-btn.primary:hover { background: #E3CE9A; }
+    .dz-btn.ghost { background: transparent; color: #C9C9CF; border: 1px solid #2a2a32; } .dz-btn.ghost:hover { border-color: #C8A75B; color: #C8A75B; }
+    #dossier-close { position: fixed; top: 24px; right: 32px; background: none; border: none; color: #A1A1AA; font-size: 30px; line-height: 1; cursor: pointer; z-index: 401; transition: color .2s; }
+    #dossier-close:hover { color: #FFF; }
+
+    /* ── Responsive: disable cinema on small screens (mobile fallback) ── */
     @media (max-width: 900px) {
-      #hero-inner { flex-direction: column !important; padding: 60px 24px !important; }
-      #hero-cards { display: none !important; }
-      #grails-row { flex-direction: column !important; align-items: center !important; }
-      #forsale-grid { flex-direction: column !important; align-items: center !important; }
-      #stats-row { flex-wrap: wrap !important; }
       #nav-links { display: none !important; }
-      #about-inner { flex-direction: column !important; }
+      #cinema { height: auto !important; }
+      #stage { position: static !important; height: auto !important; min-height: 100vh; }
+      #stage-inner { position: relative !important; }
+      #stadium, #rays, #particles { display: none !important; }
+      #museum { opacity: 1 !important; position: static; padding: 30px 0 0; }
+      #hall { position: static !important; padding: 30px 0 60px; }
+      #shelf-wrap { opacity: 1 !important; transform: none !important; }
+      #grail-shelf { flex-wrap: wrap; }
+      .grail-card { width: 150px !important; }
+      .trophy { display: none; }
+      #hero-copy { position: relative; min-height: 86vh; }
+      #scroll-cue { display: none; }
+      #dossier-inner { flex-direction: column; }
+      #forsale-grid, #grails-row, #wishlist-row { flex-direction: column !important; align-items: center !important; }
+      #about-inner { flex-direction: column !important; gap: 40px !important; }
       #about-visual { width: 100% !important; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #rays .ray-src { animation: none; }
+      #scroll-cue svg { animation: none; }
     }
   </style>
 </helmet>
 
 <!-- ── NAV ── -->
-<nav id="main-nav" style="position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 72px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; background: #0A0A0A; border-bottom: 1px solid #1A1A1A; transition: box-shadow 0.4s ease;">
+<nav id="main-nav" style="position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 72px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; background: rgba(5,5,5,0.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(26,26,26,0.6); transition: background 0.4s ease, box-shadow 0.4s ease;">
   <img src="uploads/logo.png" alt="ADG Merengue Vault" onClick="{{ scrollToTop }}" style="height: 40px; width: auto; mix-blend-mode: screen; cursor: pointer; display: block;">
   <div id="nav-links" style="display: flex; align-items: center; gap: 24px;">
     <button onClick="{{ navToGrails }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">GRAILS</button>
@@ -42,107 +211,134 @@
     <button onClick="{{ navToWishlist }}" style="background: none; border: none; color: #A78BFA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #C4B5FD;">WISHLIST</button>
     <a href="/sold/" style="background: none; border: none; color: #DC2626; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: color 0.2s;" style-hover="color: #F87171;">SOLD</a>
     <button onClick="{{ navToAbout }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">ABOUT</button>
-    <sc-if value="{{ dbLoaded }}" hint-placeholder-val="{{ false }}">
-      <button onClick="{{ doRefresh }}" title="{{ lastUpdatedText }}" style="background: none; border: none; color: #A1A1AA; font-size: 14px; cursor: pointer; padding: 4px; line-height: 1; transition: color 0.2s;" style-hover="color: #C8A75B;">↻</button>
-    </sc-if>
-    <sc-if value="{{ dbLoading }}" hint-placeholder-val="{{ false }}">
-      <div style="width: 14px; height: 14px; border: 2px solid #2A2A2A; border-top-color: #C8A75B; border-radius: 50%; animation: spin 0.7s linear infinite;"></div>
-    </sc-if>
     <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="background: #C8A75B; color: #0A0A0A; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 20px; text-decoration: none; border-radius: 2px; transition: background 0.2s;" style-hover="background: #E3CE9A;">BUY · SELL · TRADE</a>
   </div>
 </nav>
 
-<!-- ── HERO ── -->
-<section id="hero" style="min-height: 100vh; padding-top: 72px; display: flex; align-items: center; background: #0A0A0A; position: relative; overflow: hidden;">
-  <div style="position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(255,255,255,0.012) 80px, rgba(255,255,255,0.012) 81px); pointer-events: none;"></div>
-  <div id="hero-inner" style="width: 100%; max-width: 1280px; margin: 0 auto; padding: 80px 48px; display: flex; align-items: center; gap: 80px;">
-    <div style="flex: 1; min-width: 0;">
-      <p style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #C8A75B; margin-bottom: 24px; animation: fadeUp 0.7s 0.1s both;">Real Madrid · Sports Cards · Private Collection</p>
-      <h1 style="font-family: 'Anton', sans-serif; font-size: clamp(52px, 6.5vw, 90px); line-height: 0.93; text-transform: uppercase; color: #FFF; margin-bottom: 28px; animation: fadeUp 0.7s 0.25s both;">THE WHITE<br>SIDE OF<br>FOOTBALL</h1>
-      <div style="width: 48px; height: 2px; background: #C8A75B; margin-bottom: 28px; animation: fadeUp 0.7s 0.35s both;"></div>
-      <p style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 300; line-height: 1.75; color: #A1A1AA; max-width: 420px; margin-bottom: 44px; animation: fadeUp 0.7s 0.45s both;">A private vault of meticulously curated Real Madrid sports cards. Every slab, a piece of Madridista heritage.</p>
-      <div style="display: flex; gap: 16px; flex-wrap: wrap; animation: fadeUp 0.7s 0.6s both;">
-        <a href="/collection/" style="background: #C8A75B; color: #0A0A0A; border: none; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 16px 32px; border-radius: 2px; text-decoration: none; transition: background 0.2s;" style-hover="background: #E3CE9A;">EXPLORE THE VAULT</a>
-        <button onClick="{{ scrollToGrails }}" style="background: transparent; color: #FFF; border: 1px solid #2A2A2A; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; padding: 16px 32px; cursor: pointer; border-radius: 2px; transition: border-color 0.2s;" style-hover="border-color: #A1A1AA;">SEE THE GRAILS</button>
-      </div>
-    </div>
-    <div id="hero-cards" style="flex: none; position: relative; width: 340px; height: 480px;">
-      <div style="position: absolute; width: 300px; height: 300px; background: radial-gradient(ellipse, rgba(200,167,91,0.18) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none;"></div>
-      <div style="position: absolute; top: 80px; left: 8px; transform: rotate(-9deg); opacity: 0.45; filter: brightness(0.55);">
-        <div style="width: 175px; height: 245px; border-radius: 10px; overflow: hidden; background: #1A1A1A;">
-          <image-slot id="hero-b" placeholder="Card B" shape="rect" style="width: 175px; height: 245px; display: block;"></image-slot>
-        </div>
-      </div>
-      <div style="position: absolute; top: 80px; right: 8px; transform: rotate(9deg); opacity: 0.45; filter: brightness(0.55);">
-        <div style="width: 175px; height: 245px; border-radius: 10px; overflow: hidden; background: #1A1A1A;">
-          <image-slot id="hero-c" placeholder="Card C" shape="rect" style="width: 175px; height: 245px; display: block;"></image-slot>
-        </div>
-      </div>
-      <div style="position: absolute; top: 40px; left: 50%; transform: translateX(-50%); z-index: 2; border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.8), 0 0 48px rgba(200,167,91,0.22); background: #1A1A1A;">
-        <image-slot id="hero-a" placeholder="Hero Grail — drop here" shape="rect" style="width: 215px; height: 301px; display: block;"></image-slot>
-      </div>
-    </div>
-  </div>
-  <div style="position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.28; pointer-events: none;">
-    <span style="font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;">SCROLL</span>
-    <svg width="18" height="10" viewBox="0 0 18 10" fill="none"><path d="M1 1l8 8 8-8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-  </div>
-</section>
+<!-- ══ CINEMA ════════════════════════════════════════════════════════ -->
+<div id="cinema">
+  <div id="stage">
+    <div id="stage-inner">
 
-<!-- ── STATS STRIP ── -->
-<section style="background: #000; border-top: 1px solid #1A1A1A; border-bottom: 1px solid #1A1A1A;">
-  <div style="max-width: 1280px; margin: 0 auto; padding: 0 48px;">
-    <div id="stats-row" style="display: flex;">
-      <sc-for list="{{ stats }}" as="stat" hint-placeholder-count="4">
-        <div style="flex: 1; min-width: 140px; padding: 40px 32px; border-right-width: 1px; border-right-style: solid; border-right-color: {{ stat.borderRightColor }}; display: flex; flex-direction: column; gap: 10px;">
-          <span style="font-family: 'Anton', sans-serif; font-size: 52px; color: #FFF; line-height: 1; font-variant-numeric: tabular-nums;">{{ stat.value }}</span>
-          <div style="width: 32px; height: 2px; background: {{ stat.accentLine }};"></div>
-          <span style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #A1A1AA;">{{ stat.label }}</span>
-        </div>
-      </sc-for>
-    </div>
-  </div>
-</section>
+      <!-- Scene 1 — sky / sunset -->
+      <div id="sky" class="layer"></div>
 
-<!-- ── GRAILS ── -->
-<section id="grails" style="background: #0A0A0A; padding: 100px 0;">
-  <div style="max-width: 1280px; margin: 0 auto; padding: 0 48px;">
-    <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 60px; flex-wrap: wrap; gap: 16px;">
-      <div>
-        <p style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #C8A75B; margin-bottom: 12px;">The Collection</p>
-        <h2 style="font-family: 'Anton', sans-serif; font-size: 52px; text-transform: uppercase; color: #FFF; line-height: 1;">THE GRAILS</h2>
+      <!-- Stadium -->
+      <div id="stadium" class="layer">
+        <div class="pitch"></div>
+        <div class="rim"></div>
+        <div class="facade"></div>
+        <div class="floodlight fl-1"></div>
+        <div class="floodlight fl-2"></div>
+        <div class="floodlight fl-3"></div>
+        <div class="floodlight fl-4"></div>
       </div>
-      <div style="width: 40px; height: 2px; background: #C8A75B; margin-bottom: 8px;"></div>
-    </div>
-    <div id="grails-row" style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap;">
-      <sc-for list="{{ grailCards }}" as="card" hint-placeholder-count="3">
-        <div style="flex: none; width: 260px;">
-          <div onClick="{{ card.onClick }}" style="cursor: pointer; position: relative; transition: transform 0.35s ease;" style-hover="transform: scale(1.03);">
-            <div style="width: 260px; height: 364px; border-radius: 12px; overflow: hidden; background: #1A1A1A;">
-              <image-slot id="{{ card.slotId }}" src="{{ card.photoSrc }}" placeholder="{{ card.player }}" shape="rect" fit="contain" style="width: 260px; height: 364px; display: block;"></image-slot>
-            </div>
-            <div style="position: absolute; top: 12px; left: 12px; display: flex; flex-direction: column; gap: 5px; z-index: 2;">
-              <sc-for list="{{ card.badgesStyled }}" as="badge" hint-placeholder-count="0">
-                <span style="display: block; background: {{ badge.bg }}; color: {{ badge.color }}; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px;">{{ badge.label }}</span>
-              </sc-for>
-            </div>
-          </div>
-          <div style="padding: 18px 0 0; border-top: 1px solid #1A1A1A; margin-top: 1px;">
-            <p style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: #FFF; margin-bottom: 4px;">{{ card.player }}</p>
-            <p style="font-family: 'Inter', sans-serif; font-size: 12px; color: #A1A1AA; margin-bottom: 2px;">{{ card.year }} · {{ card.set }}</p>
-            <p style="font-family: 'Inter', sans-serif; font-size: 12px; color: #A1A1AA; margin-bottom: 12px;">{{ card.variant }}</p>
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #C8A75B;">{{ card.grade }}</span>
-              <sc-if value="{{ card.hasSerial }}" hint-placeholder-val="{{ true }}">
-                <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #A1A1AA; font-variant-numeric: tabular-nums;">{{ card.serial }}</span>
-              </sc-if>
-            </div>
-          </div>
+
+      <!-- Scene 1 hero copy (kept early in DOM so it leads the stacked mobile flow;
+           on desktop it is absolutely positioned with z-index:5, so order is moot) -->
+      <div id="hero-copy">
+        <p id="hero-eyebrow">Real Madrid &nbsp;•&nbsp; Sports Cards &nbsp;•&nbsp; Private Collection</p>
+        <h1 id="hero-title">THE WHITE<br>SIDE OF<br>FOOTBALL</h1>
+        <div id="hero-rule"></div>
+        <p id="hero-desc">A private vault of meticulously curated Real Madrid sports cards. Every slab, a piece of Madridista heritage.</p>
+      </div>
+
+      <!-- Museum environment -->
+      <div id="museum" class="layer">
+        <div class="keylight"></div>
+        <div class="col left"></div>
+        <div class="col right"></div>
+        <div class="floor"></div>
+      </div>
+
+      <!-- Light rays + particles -->
+      <div id="rays" class="layer"><div class="ray-src"></div></div>
+      <canvas id="particles"></canvas>
+
+      <!-- Scene 4 — Hall of Grails -->
+      <div id="hall">
+        <div class="trophy left">
+          <svg viewBox="0 0 80 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M40 12c-9 0-16 1.5-16 4 0 1.2 1.4 2 3.6 2.7C16 22 8 28 8 36c0 11 12 18 24 19v14c-6 1-11 4-11 8h38c0-4-5-7-11-8V55c12-1 24-8 24-19 0-8-8-14-19.6-17.3C54.6 18 56 17.2 56 16c0-2.5-7-4-16-4Z" stroke="currentColor" stroke-width="2.4" fill="rgba(255,255,255,0.02)"/>
+            <path d="M24 19c-9 2-15 7-15 13 0 7 7 12 15 14M56 19c9 2 15 7 15 13 0 7-7 12-15 14" stroke="currentColor" stroke-width="2.4"/>
+            <rect x="26" y="92" width="28" height="6" rx="1.5" stroke="currentColor" stroke-width="2.4"/>
+            <rect x="20" y="112" width="40" height="8" rx="2" stroke="currentColor" stroke-width="2.4"/>
+          </svg>
         </div>
-      </sc-for>
+        <div class="trophy right">
+          <svg viewBox="0 0 80 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M40 12c-9 0-16 1.5-16 4 0 1.2 1.4 2 3.6 2.7C16 22 8 28 8 36c0 11 12 18 24 19v14c-6 1-11 4-11 8h38c0-4-5-7-11-8V55c12-1 24-8 24-19 0-8-8-14-19.6-17.3C54.6 18 56 17.2 56 16c0-2.5-7-4-16-4Z" stroke="currentColor" stroke-width="2.4" fill="rgba(255,255,255,0.02)"/>
+            <path d="M24 19c-9 2-15 7-15 13 0 7 7 12 15 14M56 19c9 2 15 7 15 13 0 7-7 12-15 14" stroke="currentColor" stroke-width="2.4"/>
+            <rect x="26" y="92" width="28" height="6" rx="1.5" stroke="currentColor" stroke-width="2.4"/>
+            <rect x="20" y="112" width="40" height="8" rx="2" stroke="currentColor" stroke-width="2.4"/>
+          </svg>
+        </div>
+        <div id="shelf-wrap">
+          <div id="grail-shelf">
+            <sc-for list="{{ grailCards }}" as="card" hint-placeholder-count="3">
+              <div class="grail-card" data-id="{{ card.id }}" onClick="{{ card.onSelect }}">
+                <div class="badges">
+                  <sc-for list="{{ card.badgesStyled }}" as="badge" hint-placeholder-count="0">
+                    <span style="background: {{ badge.bg }}; color: {{ badge.color }};">{{ badge.label }}</span>
+                  </sc-for>
+                </div>
+                <div class="frame">
+                  <sc-if value="{{ card.hasPhoto }}" hint-placeholder-val="{{ true }}">
+                    <img src="{{ card.photoSrc }}" alt="{{ card.player }}" draggable="false">
+                  </sc-if>
+                  <sc-if value="{{ card.noPhoto }}" hint-placeholder-val="{{ false }}">
+                    <div class="ph">{{ card.player }}</div>
+                  </sc-if>
+                  <div class="sheen"></div>
+                </div>
+                <div class="nameplate">{{ card.player }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div id="shelf-plank"></div>
+        </div>
+      </div>
+
+      <!-- Chapter marker -->
+      <p id="chapter">The Hall of Grails</p>
+
+      <!-- Scroll cue -->
+      <div id="scroll-cue">
+        <span>Scroll</span>
+        <svg width="18" height="10" viewBox="0 0 18 10" fill="none"><path d="M1 1l8 8 8-8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+
     </div>
   </div>
-</section>
+</div>
+
+<!-- ══ DOSSIER OVERLAY (private viewing room) ════════════════════════ -->
+<div id="dossier">
+  <div id="dossier-inner">
+    <div id="dossier-stage">
+      <div id="dossier-card">
+        <div class="face front">
+          <div class="zoomwrap"><img id="dossier-front-img" alt="" draggable="false" style="display:none;"><div class="ph" id="dossier-front-ph"></div></div>
+        </div>
+        <div class="face back">
+          <img id="dossier-back-img" alt="" draggable="false" style="width:100%;height:100%;object-fit:contain;display:none;">
+        </div>
+      </div>
+    </div>
+    <div id="dossier-panel">
+      <div id="dossier-badges"></div>
+      <p id="dossier-eyebrow">Vault Dossier</p>
+      <h2 id="dossier-player"></h2>
+      <div id="dossier-fields"></div>
+      <p id="dossier-desc"></p>
+      <div id="dossier-actions">
+        <button type="button" class="dz-btn ghost" id="dossier-flip">↻ View Back</button>
+        <a class="dz-btn primary" id="dossier-cta" href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener">Enquire via Instagram DM</a>
+      </div>
+    </div>
+  </div>
+  <button type="button" id="dossier-close" aria-label="Close">×</button>
+</div>
 
 <!-- ── FOR SALE ── -->
 <section id="forsale" style="background: #0A0A0A; padding: 100px 0; border-top: 1px solid #1A1A1A;">
@@ -295,7 +491,7 @@
         <p style="font-family: 'Inter', sans-serif; font-size: 13px; color: #A1A1AA; font-style: italic;">The White Side of Football (&amp; more)</p>
       </div>
       <div style="display: flex; gap: 32px; flex-wrap: wrap; align-items: center;">
-        <button onClick="{{ scrollToGrails }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">Grails</button>
+        <button onClick="{{ navToGrails }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">Grails</button>
         <a href="/collection/" style="color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; transition: color 0.2s;" style-hover="color: #FFF;">Collection</a>
         <button onClick="{{ navToForSale }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">For Sale</button>
         <button onClick="{{ navToWishlist }}" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: color 0.2s;" style-hover="color: #FFF;">Wishlist</button>
@@ -309,7 +505,7 @@
   </div>
 </footer>
 
-<!-- ── LIGHTBOX ── -->
+<!-- ── LIGHTBOX (for-sale / wishlist) ── -->
 <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
   <div style="position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 40px; animation: fadeIn 0.2s ease;" onClick="{{ closeLightbox }}">
     <div style="display: flex; gap: 56px; align-items: flex-start; max-width: 860px; width: 100%; position: relative;" onClick="{{ stopProp }}">
@@ -413,7 +609,6 @@
 class Component extends DCLogic {
   state = {
     lightboxCard: null,
-    navScrolled: false,
     dbCards: null,
     dbLoading: false,
     lastUpdated: null,
@@ -422,28 +617,263 @@ class Component extends DCLogic {
   };
 
   componentDidMount() {
-    this._onScroll = () => this.setState({ navScrolled: window.scrollY > 50 });
-    window.addEventListener('scroll', this._onScroll, { passive: true });
-    const nav = document.getElementById('main-nav');
-    if (nav) nav.style.boxShadow = 'none';
     this._fetchDB();
-    if (window.location.hash) {
-      const id = window.location.hash.slice(1);
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
-      }, 50);
+  }
+
+  componentDidUpdate() {
+    // Lightbox (for-sale/wishlist) scroll-lock only; the dossier manages its own lock.
+    if (!this._dossierOpen) {
+      document.body.style.overflow = this.state.lightboxCard ? 'hidden' : '';
+    }
+    // Build the cinema once the grail cards have rendered into the DOM.
+    if (this.state.dbCards !== null && !this._cinemaInited) {
+      this._cinemaInited = true;
+      this._waitForGsap(() => this._initCinema());
     }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this._onScroll);
+    if (this._st) this._st.forEach(t => t.kill());
+    if (this._raf) cancelAnimationFrame(this._raf);
   }
 
-  componentDidUpdate() {
-    document.body.style.overflow = this.state.lightboxCard ? 'hidden' : '';
+  // ── GSAP loader guard (CDN scripts load async via <helmet>) ──────────
+  _waitForGsap(cb, tries) {
+    tries = tries || 0;
+    if (window.gsap && window.ScrollTrigger) return cb();
+    if (tries > 80) return; // ~8s; give up silently, page still works statically
+    setTimeout(() => this._waitForGsap(cb, tries + 1), 100);
+  }
+
+  // ── Build the scroll-driven cinematic timeline ───────────────────────
+  _initCinema() {
+    const gsap = window.gsap, ST = window.ScrollTrigger;
+    gsap.registerPlugin(ST);
+    this._st = [];
+    this._gsap = gsap;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const desktop = window.matchMedia('(min-width: 901px)').matches;
+    if (!desktop) { this._restState(); return; }   // mobile = static fallback (CSS)
+    if (reduce) { this._restState(); this._startParticles(true); return; }
+
+    this._startParticles(false);
+
+    // Nav background strengthens after leaving the hero.
     const nav = document.getElementById('main-nav');
-    if (nav) nav.style.boxShadow = this.state.navScrolled ? '0 8px 32px rgba(0,0,0,0.6)' : 'none';
+    this._st.push(ST.create({
+      trigger: '#cinema', start: 'top+=60 top', end: 'bottom bottom',
+      onUpdate: (self) => { if (nav) nav.style.boxShadow = self.progress > 0.02 ? '0 8px 32px rgba(0,0,0,0.6)' : 'none'; },
+    }));
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: { trigger: '#cinema', start: 'top top', end: 'bottom bottom', scrub: 1, pin: '#stage', anticipatePin: 1 },
+    });
+
+    // Scene 1 → 2: camera pushes toward the stadium; hero copy lifts away.
+    tl.to('#hero-copy', { opacity: 0, y: -60, filter: 'blur(6px)', duration: 0.18 }, 0)
+      .to('#scroll-cue', { opacity: 0, duration: 0.06 }, 0)
+      .to('#sky', { scale: 1.25, yPercent: -6, duration: 0.5 }, 0)
+      .to('#stadium', { scale: 1.7, yPercent: 8, duration: 0.5 }, 0)
+      // Scene 3: stadium recedes, museum fades in.
+      .to('#stadium', { opacity: 0.12, duration: 0.2 }, 0.4)
+      .to('#sky', { opacity: 0.35, duration: 0.2 }, 0.42)
+      .fromTo('#museum', { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.44)
+      .fromTo('#chapter', { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.1 }, 0.56)
+      // Scene 4: the shelf rises, trophies fade in, grails settle.
+      .fromTo('#shelf-wrap', { opacity: 0, y: 120 }, { opacity: 1, y: 0, duration: 0.22 }, 0.6)
+      .fromTo('.trophy.left',  { opacity: 0, x: -40 }, { opacity: 0.26, x: 0, duration: 0.2 }, 0.64)
+      .fromTo('.trophy.right', { opacity: 0, x: 40 },  { opacity: 0.26, x: 0, duration: 0.2 }, 0.64)
+      .fromTo('.grail-card',
+        { opacity: 0, y: 90, rotationX: 24 },
+        { opacity: 1, y: 0, rotationX: 0, duration: 0.3, stagger: 0.05 }, 0.68)
+      .to('#chapter', { opacity: 0, duration: 0.08 }, 0.92);
+
+    // Ambient: the stage keeps breathing even when the scroll is still.
+    this._amb = gsap.to('#stage-inner', { scale: 1.014, duration: 7, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+
+    this._bindGrailHover();
+    requestAnimationFrame(() => ST.refresh());
+    // Re-refresh once grail images have decoded (layout shifts).
+    document.querySelectorAll('#grail-shelf img').forEach(img => {
+      if (!img.complete) img.addEventListener('load', () => ST.refresh(), { once: true });
+    });
+  }
+
+  // Put the scene in its resting (fully-revealed) state — mobile / reduced motion.
+  _restState() {
+    const set = (sel, o) => { const el = document.querySelector(sel); if (el) Object.assign(el.style, o); };
+    set('#hero-copy', { position: 'relative' });
+    set('#museum', { opacity: '1' });
+    set('#shelf-wrap', { opacity: '1', transform: 'none' });
+    document.querySelectorAll('.grail-card').forEach(c => { c.style.opacity = '1'; });
+    document.querySelectorAll('.trophy').forEach(t => { t.style.opacity = '0.26'; });
+    this._bindGrailHover();
+  }
+
+  // ── Premium hover: elevate, scale, tilt toward cursor, sheen + nameplate ──
+  _bindGrailHover() {
+    const gsap = window.gsap;
+    document.querySelectorAll('.grail-card').forEach(card => {
+      if (card._hoverBound) return; card._hoverBound = true;
+      const frame = card.querySelector('.frame');
+      const sheen = card.querySelector('.sheen');
+      const plate = card.querySelector('.nameplate');
+      const enter = () => { if (gsap) gsap.to(card, { y: -14, scale: 1.06, duration: 0.4, ease: 'power3.out' }); if (plate) plate.style.opacity = '1'; };
+      const leave = () => {
+        if (gsap) gsap.to(card, { y: 0, scale: 1, rotateX: 0, rotateY: 0, duration: 0.5, ease: 'power3.out' });
+        if (sheen) sheen.style.opacity = '0';
+        if (plate) plate.style.opacity = '0';
+      };
+      const move = (e) => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        if (gsap) gsap.to(card, { rotationY: px * 16, rotationX: -py * 16, duration: 0.3, ease: 'power2.out' });
+        if (sheen) { sheen.style.opacity = '0.6'; sheen.style.backgroundPosition = (px * 100) + '% 0'; }
+      };
+      card.addEventListener('mouseenter', enter);
+      card.addEventListener('mousemove', move);
+      card.addEventListener('mouseleave', leave);
+    });
+  }
+
+  // ── Particle ambience (gold dust) ────────────────────────────────────
+  _startParticles(idle) {
+    const cv = document.getElementById('particles');
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let W, H, parts;
+    const resize = () => {
+      W = cv.clientWidth; H = cv.clientHeight;
+      cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    this._onResizeP = resize; window.addEventListener('resize', resize, { passive: true });
+    const N = idle ? 18 : 42;
+    parts = Array.from({ length: N }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 1.6 + 0.4, s: Math.random() * 0.25 + 0.05,
+      a: Math.random() * 0.4 + 0.1, dx: (Math.random() - 0.5) * 0.15,
+    }));
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      for (const p of parts) {
+        p.y -= p.s; p.x += p.dx;
+        if (p.y < -4) { p.y = H + 4; p.x = Math.random() * W; }
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(200,167,91,' + p.a + ')'; ctx.fill();
+      }
+      this._raf = requestAnimationFrame(draw);
+    };
+    draw();
+  }
+
+  // ── DOSSIER: open a card in the private viewing room (imperative) ─────
+  _openDossier(card) {
+    const gsap = window.gsap;
+    this._dossierOpen = true;
+    const $ = (id) => document.getElementById(id);
+    const dossier = $('dossier'); if (!dossier) return;
+
+    // Front image / placeholder
+    const fimg = $('dossier-front-img'), fph = $('dossier-front-ph');
+    if (card.photo_url) { fimg.src = card.photo_url; fimg.style.display = 'block'; fph.style.display = 'none'; fph.textContent = ''; }
+    else { fimg.style.display = 'none'; fimg.removeAttribute('src'); fph.style.display = 'flex'; fph.textContent = card.player || ''; }
+
+    // Back image / flip availability
+    const bimg = $('dossier-back-img'), flip = $('dossier-flip'), dcard = $('dossier-card');
+    dcard.classList.remove('flipped', 'zoom');
+    if (card.photo_url_back) { bimg.src = card.photo_url_back; bimg.style.display = 'block'; flip.style.display = ''; }
+    else { bimg.style.display = 'none'; bimg.removeAttribute('src'); flip.style.display = 'none'; }
+
+    // Badges
+    const bwrap = $('dossier-badges'); bwrap.textContent = '';
+    (card.badgesStyled || []).forEach(b => {
+      const s = document.createElement('span'); s.textContent = b.label;
+      s.style.background = b.bg; s.style.color = b.color; bwrap.appendChild(s);
+    });
+
+    // Title + dossier fields (only those that exist)
+    $('dossier-player').textContent = card.player || 'Untitled';
+    const fields = $('dossier-fields'); fields.textContent = '';
+    const row = (k, v, gold) => {
+      if (v == null || v === '') return;
+      const r = document.createElement('div'); r.className = 'dz-row';
+      const ke = document.createElement('span'); ke.className = 'k'; ke.textContent = k;
+      const ve = document.createElement('span'); ve.className = 'v' + (gold ? ' gold' : ''); ve.textContent = v;
+      r.appendChild(ke); r.appendChild(ve); fields.appendChild(r);
+    };
+    row('Year', card.year);
+    row('Set', card.set);
+    row('Card N°', card.serial);
+    row('Team', card.team);
+    row('Grade', card.grade, true);
+    $('dossier-desc').textContent = card.notes || '';
+
+    dossier.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (gsap) {
+      gsap.killTweensOf(['#dossier-inner', '#dossier-card', '#stage-inner']);
+      gsap.fromTo('#dossier-inner', { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'power3.out', overwrite: 'auto' });
+      gsap.fromTo('#dossier-card', { rotationY: -18, y: 30 }, { rotationY: 0, y: 0, duration: 0.7, ease: 'power3.out', overwrite: 'auto' });
+      if (this._amb) this._amb.pause();
+      gsap.to('#stage-inner', { filter: 'blur(8px) brightness(0.5)', duration: 0.4, overwrite: 'auto' });
+    }
+  }
+
+  _closeDossier() {
+    if (!this._dossierOpen) return;
+    const gsap = window.gsap;
+    const dossier = document.getElementById('dossier');
+    let done = false;
+    const finish = () => {
+      if (done) return; done = true;
+      dossier.classList.remove('open');
+      const dc = document.getElementById('dossier-card');
+      if (dc) dc.classList.remove('flipped', 'zoom');
+      const flip = document.getElementById('dossier-flip');
+      if (flip) flip.textContent = '↻ View Back';
+      this._dossierOpen = false;
+      document.body.style.overflow = this.state.lightboxCard ? 'hidden' : '';
+    };
+    if (gsap) {
+      gsap.killTweensOf(['#dossier-inner', '#stage-inner']);
+      gsap.to('#stage-inner', { filter: 'blur(0px) brightness(1)', duration: 0.4, overwrite: 'auto', onComplete: () => gsap.set('#stage-inner', { clearProps: 'filter' }) });
+      if (this._amb) this._amb.resume();
+      gsap.to('#dossier-inner', { opacity: 0, scale: 0.97, duration: 0.3, ease: 'power2.in', overwrite: 'auto', onComplete: finish });
+      setTimeout(finish, 480); // fallback — never leave the overlay stuck open
+    } else { finish(); }
+  }
+
+  _bindDossierControls() {
+    if (this._dossierBound) return; this._dossierBound = true;
+    const $ = (id) => document.getElementById(id);
+    const close = $('dossier-close'), flip = $('dossier-flip'), dcard = $('dossier-card');
+    if (close) close.addEventListener('click', () => this._closeDossier());
+    if (flip) flip.addEventListener('click', () => {
+      dcard.classList.toggle('flipped'); dcard.classList.remove('zoom');
+      flip.textContent = dcard.classList.contains('flipped') ? '↻ View Front' : '↻ View Back';
+    });
+    // Mouse-zoom inspection on the front face.
+    const wrap = dcard ? dcard.querySelector('.front .zoomwrap') : null;
+    const fimg = $('dossier-front-img');
+    if (wrap && fimg) {
+      wrap.addEventListener('mouseenter', () => { if (!dcard.classList.contains('flipped')) dcard.classList.add('zoom'); });
+      wrap.addEventListener('mouseleave', () => { dcard.classList.remove('zoom'); fimg.style.transformOrigin = 'center'; });
+      wrap.addEventListener('mousemove', (e) => {
+        const r = wrap.getBoundingClientRect();
+        fimg.style.transformOrigin = ((e.clientX - r.left) / r.width * 100) + '% ' + ((e.clientY - r.top) / r.height * 100) + '%';
+      });
+    }
+    // Escape closes.
+    this._escClose = (e) => { if (e.key === 'Escape' && this._dossierOpen) this._closeDossier(); };
+    document.addEventListener('keydown', this._escClose);
+    // Click on backdrop (outside inner) closes.
+    const dossier = $('dossier');
+    if (dossier) dossier.addEventListener('click', (e) => { if (e.target === dossier) this._closeDossier(); });
   }
 
   async _fetchDB() {
@@ -483,23 +913,17 @@ class Component extends DCLogic {
   renderVals() {
     const { lightboxCard, dbCards, dbLoading, lastUpdated, contactOpen, contactName, contactEmail, contactMsg, contactCardId, contactSending, contactSent, contactError } = this.state;
 
-    // ── Fallback hardcoded data ─────────────────────────────────────────
+    // Bind dossier controls once the dossier markup exists in the DOM.
+    if (typeof document !== 'undefined') setTimeout(() => this._bindDossierControls(), 0);
+
     const FALLBACK = [
-      { id: 'c01', player: 'Cristiano Ronaldo', year: '2023', set: 'Stadium Club', variant: 'Porsche Refractor', grade: 'PSA 10', serial: '01/25', badges: ['GRAIL', 'AUTO'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2023 Topps Stadium Club Chrome Cristiano Ronaldo Porsche Refractor — numbered 01/25.' },
-      { id: 'c02', player: 'Cristiano Ronaldo', year: '2019', set: 'Panini Immaculate', variant: 'On-Card Auto Patch', grade: 'PSA 10', serial: '1/1', badges: ['GRAIL', '1/1', 'AUTO', 'PATCH'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2019 Panini Immaculate on-card auto patch — the only copy in existence.' },
-      { id: 'c03', player: 'Karim Benzema', year: '2022', set: 'Topps Museum', variant: 'Gold Frame Quad Patch Auto', grade: 'PSA 10', serial: '10/10', badges: ['GRAIL', 'AUTO', 'PATCH'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2022 Topps Museum Collection Benzema gold frame quad patch auto, numbered /10.' },
-      { id: 'c04', player: 'Luka Modrić', year: '2021', set: 'Topps Chrome', variant: 'Gold Refractor', grade: 'PSA 10', serial: '08/50', badges: ['FEATURED'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2021 Topps Chrome Modrić Gold Refractor /50, gem-mint condition.' },
-      { id: 'c05', player: 'Karim Benzema', year: '2020', set: 'Panini Prizm', variant: 'Silver Prizm', grade: 'PSA 10', serial: null, badges: [], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2020 Panini Prizm Benzema Silver Prizm — pristine PSA 10 slab.' },
-      { id: 'c06', player: 'Sergio Ramos', year: '2018', set: 'Topps Chrome', variant: 'Blue Wave Refractor', grade: 'PSA 9', serial: '45/199', badges: ['ROOKIE'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2018 Topps Chrome Ramos Blue Wave Refractor /199, PSA 9.' },
-      { id: 'c07', player: 'Cristiano Ronaldo', year: '2018', set: 'Panini Immaculate', variant: 'Patch Auto', grade: 'PSA 9', serial: '12/25', badges: ['PATCH', 'AUTO'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2018 Panini Immaculate Ronaldo patch auto /25, PSA 9.' },
-      { id: 'c08', player: 'Vinícius Jr.', year: '2023', set: 'Topps NOW', variant: 'Gold Parallel', grade: 'BGS 9.5', serial: null, badges: ['ROOKIE'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2023 Topps NOW Vinícius Jr. Gold Parallel.' },
-      { id: 'c09', player: 'Luka Modrić', year: '2018', set: 'Stadium Club', variant: 'Crystal Parallel', grade: 'PSA 10', serial: null, badges: [], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2018 Stadium Club Modrić Crystal Parallel — gem-mint slab.' },
-      { id: 'c10', player: 'Sergio Ramos', year: '2020', set: 'Topps Museum', variant: 'Silver Frame', grade: 'PSA 10', serial: '22/75', badges: [], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2020 Topps Museum Ramos Silver Frame /75, gem mint.' },
-      { id: 'c11', player: 'Karim Benzema', year: '2021', set: 'Panini Prizm', variant: 'Gold Prizm', grade: 'PSA 10', serial: '8/10', badges: ['FEATURED', 'PATCH'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2021 Panini Prizm Benzema Gold Prizm /10 — ultra scarce.' },
-      { id: 'c12', player: 'Jude Bellingham', year: '2023', set: 'Topps Chrome', variant: 'Atomic Refractor', grade: 'PSA 10', serial: '5/25', badges: ['ROOKIE', 'FEATURED'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2023 Topps Chrome Bellingham Atomic Refractor /25 — debut season.' },
+      { id: 'c01', player: 'Cristiano Ronaldo', year: '2023', set: 'Stadium Club', variant: 'Porsche Refractor', grade: 'PSA 10', serial: '01/25', badges: ['GRAIL', 'AUTO'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2023 Topps Stadium Club Chrome Cristiano Ronaldo Porsche Refractor — numbered 01/25.', team: 'Real Madrid' },
+      { id: 'c02', player: 'Cristiano Ronaldo', year: '2019', set: 'Panini Immaculate', variant: 'On-Card Auto Patch', grade: 'PSA 10', serial: '1/1', badges: ['GRAIL', '1/1', 'AUTO', 'PATCH'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2019 Panini Immaculate on-card auto patch — the only copy in existence.', team: 'Real Madrid' },
+      { id: 'c03', player: 'Karim Benzema', year: '2022', set: 'Topps Museum', variant: 'Gold Frame Quad Patch Auto', grade: 'PSA 10', serial: '10/10', badges: ['GRAIL', 'AUTO', 'PATCH'], is_grail: true, status: 'collection', price: null, photo_url: null, notes: '2022 Topps Museum Collection Benzema gold frame quad patch auto, numbered /10.', team: 'Real Madrid' },
+      { id: 'c04', player: 'Luka Modrić', year: '2021', set: 'Topps Chrome', variant: 'Gold Refractor', grade: 'PSA 10', serial: '08/50', badges: ['GOAT'], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2021 Topps Chrome Modrić Gold Refractor /50, gem-mint condition.', team: 'Real Madrid' },
+      { id: 'c05', player: 'Karim Benzema', year: '2020', set: 'Panini Prizm', variant: 'Silver Prizm', grade: 'PSA 10', serial: null, badges: [], is_grail: false, status: 'collection', price: null, photo_url: null, notes: '2020 Panini Prizm Benzema Silver Prizm — pristine PSA 10 slab.', team: 'Real Madrid' },
     ];
 
-    // ── Normalize raw (fallback) or DB row to unified card object ───────
     const normalize = (c) => ({
       id: c.id,
       player: c.player || '',
@@ -515,6 +939,7 @@ class Component extends DCLogic {
       photo_url: c.photo_url || null,
       photo_url_back: c.photo_url_back || null,
       notes: c.notes || c.desc || '',
+      team: c.team || null,
       sort_order: c.sort_order != null ? c.sort_order : 9999,
       sort_grail: c.sort_grail != null ? c.sort_grail : 9999,
       sort_forsale: c.sort_forsale != null ? c.sort_forsale : 9999,
@@ -526,71 +951,65 @@ class Component extends DCLogic {
 
     const buildCard = (raw) => {
       const c = normalize(raw);
-      return {
+      const full = {
         ...c,
         slotId: 'slot-' + c.id,
         photoSrc: c.photo_url || '',
+        hasPhoto: !!c.photo_url,
+        noPhoto: !c.photo_url,
         hasSerial: !!c.serial,
         hasPrice: !!c.price,
         priceLabel: c.price ? `€ ${Number(c.price).toLocaleString('it-IT')}` : '',
         badgesStyled: c.badges.map(b => ({ label: b, ...badgeStyle(b) })),
-        onClick: () => this.setState({ lightboxCard: c }),
       };
+      // Pass the full built object (with badgesStyled) to both flows, not the bare normalized `c`.
+      full.onClick = () => this.setState({ lightboxCard: full });
+      full.onSelect = () => this._openDossier(full);
+      return full;
     };
 
     const source = dbCards !== null ? dbCards : FALLBACK;
     const allCards = source.map(buildCard);
 
-    // ── Partition by status, each ordered by its own sort field ─────────
     const byField = (f) => (a, b) => a[f] - b[f];
     const collectionCards = allCards.filter(c => c.status === 'collection').sort(byField('sort_order'));
     const forSaleCards = allCards.filter(c => c.status === 'for_sale').sort(byField('sort_forsale'));
     const wishlistCards = allCards.filter(c => c.status === 'wishlist').sort(byField('sort_order'));
     const grailCards = allCards.filter(c => c.is_grail).sort(byField('sort_grail'));
 
-    // ── Live stats ──────────────────────────────────────────────────────
     const totalCards = allCards.length;
     const uniquePlayersCount = new Set(allCards.map(c => c.player)).size;
     const gemMintCount = allCards.filter(c => (c.grade || '').includes('10')).length;
     const grailCount = allCards.filter(c => c.is_grail).length;
 
-    const stats = [
-      { value: String(totalCards), label: 'Cards in Vault', accentLine: '#C8A75B', borderRightColor: '#1A1A1A' },
-      { value: String(uniquePlayersCount), label: 'Unique Players', accentLine: 'transparent', borderRightColor: '#1A1A1A' },
-      { value: String(gemMintCount), label: 'Gem Mint', accentLine: '#C8A75B', borderRightColor: '#1A1A1A' },
-      { value: String(grailCount), label: 'Grails', accentLine: '#C8A75B', borderRightColor: 'transparent' },
-    ];
-
-    // ── Lightbox ────────────────────────────────────────────────────────
     const closeLightbox = () => this.setState({ lightboxCard: null });
     const lb = lightboxCard || {};
     const lbBadges = (lb.badgesStyled || []);
 
-    // ── Scroll helpers ──────────────────────────────────────────────────
     const scrollTo = (id) => {
       const el = document.getElementById(id);
       if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
     };
+    const scrollToGrails = () => {
+      const c = document.getElementById('cinema');
+      if (!c) return;
+      const y = c.offsetTop + c.offsetHeight - window.innerHeight * 1.05;
+      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+    };
 
-    // ── Last updated text ───────────────────────────────────────────────
     const lastUpdatedText = lastUpdated
       ? `Aggiornato: ${lastUpdated.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}`
       : '';
 
     return {
-      // Stats
-      stats,
-      // Sections
       grailCards,
       forSaleCards,
       noForSale: forSaleCards.length === 0,
       wishlistCards,
       noWishlist: wishlistCards.length === 0,
-      // About live numbers
       aboutTotal: String(totalCards || 127),
       aboutGrails: String(grailCount || 8),
       aboutGemMint: String(gemMintCount || 41),
-      // Supabase
       dbLoaded: dbCards !== null,
       dbLoading,
       lastUpdatedText,
@@ -643,11 +1062,11 @@ class Component extends DCLogic {
       },
       // Navigation
       scrollToTop: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
-      navToGrails: () => scrollTo('grails'),
+      navToGrails: scrollToGrails,
       navToForSale: () => scrollTo('forsale'),
       navToWishlist: () => scrollTo('wishlist'),
       navToAbout: () => scrollTo('about'),
-      scrollToGrails: () => scrollTo('grails'),
+      scrollToGrails,
     };
   }
 }
