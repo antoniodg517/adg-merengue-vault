@@ -25,7 +25,7 @@
   );
   nav.innerHTML =
     '<a href="/" style="display:block;line-height:0;">' +
-      '<img src="/uploads/logo.png" alt="ADG Merengue Vault" style="height:40px;width:auto;mix-blend-mode:screen;display:block;">' +
+      '<img src="/logo.png" alt="ADG Merengue Vault" style="height:40px;width:auto;mix-blend-mode:screen;display:block;">' +
     '</a>' +
     '<div id="nav-links" style="display:flex;align-items:center;gap:24px;">' +
       lnk('/', 'HOME', '#A1A1AA', '600', isHome) +
