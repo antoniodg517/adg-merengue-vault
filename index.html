@@ -116,22 +116,22 @@
       </div>
       <div style="position:relative;z-index:2;display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:clamp(26px,5vw,80px);padding:0 24px;">
         <div style="text-align:center;">
-          <div id="num0" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">0</div>
-          <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">Slabs Curated</div>
+          <div id="num0" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">—</div>
+          <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">Slabs in the Vault</div>
           <div style="margin:14px auto 0;width:28px;height:2px;background:#C9A24B;opacity:.6;"></div>
         </div>
         <div style="text-align:center;">
-          <div id="num1" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">0</div>
-          <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">PSA 10 Gems</div>
+          <div id="num1" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">—</div>
+          <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">PSA 10 Gem-Mint</div>
           <div style="margin:14px auto 0;width:28px;height:2px;background:#C9A24B;opacity:.6;"></div>
         </div>
         <div style="text-align:center;">
-          <div id="num2" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">0</div>
+          <div id="num2" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">—</div>
           <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">One of Ones</div>
           <div style="margin:14px auto 0;width:28px;height:2px;background:#C9A24B;opacity:.6;"></div>
         </div>
         <div style="text-align:center;">
-          <div id="num3" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">0</div>
+          <div id="num3" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">—</div>
           <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">On-Card Autos</div>
           <div style="margin:14px auto 0;width:28px;height:2px;background:#C9A24B;opacity:.6;"></div>
         </div>
@@ -387,9 +387,30 @@
 class Component extends DCLogic {
   state = {
     inspectOpen: false, idx: 0, flipped: false,
+    dbCards: null,
     contactOpen: false, contactName: '', contactEmail: '', contactMsg: '',
     contactSending: false, contactSent: false, contactError: '',
   };
+
+  async _fetchDB() {
+    try {
+      const res = await fetch('/api/cards');
+      if (!res.ok) return;
+      const data = await res.json();
+      this.setState({ dbCards: data || [] });
+    } catch (_) {}
+  }
+
+  get _stats() {
+    const cards = this.state.dbCards || [];
+    const badges = (c) => Array.isArray(c.badges) ? c.badges : [];
+    return [
+      cards.length,
+      cards.filter(c => /\b10\b/.test(c.grade || '')).length,
+      cards.filter(c => badges(c).includes('1/1')).length,
+      cards.filter(c => badges(c).includes('AUTO') || badges(c).includes('ON CARD')).length,
+    ];
+  }
 
   get cards() {
     return [
@@ -499,6 +520,7 @@ class Component extends DCLogic {
     this.onScroll = () => { if (!this.scheduled) { this.scheduled = true; requestAnimationFrame(tick); } };
     window.addEventListener('scroll', this.onScroll, { passive:true });
     window.addEventListener('resize', this.onScroll);
+    this._fetchDB();
     this.update();
     [120, 500, 1200].forEach(t => setTimeout(() => this.update(), t));
   }
@@ -545,8 +567,11 @@ class Component extends DCLogic {
     // SCENE 2 — Vault Ledger
     { const p = prog('sc2');
       if (E.s2head) E.s2head.style.opacity = String(seg(p,0.05,0.2));
-      const tg=[47,12,3,5];
-      for(let i=0;i<4;i++){ const el=E['num'+i]; if(!el) continue; const t=seg(p,0.12+i*0.06,0.40+i*0.06); el.textContent=String(Math.round(tg[i]*t)); }
+      const tg = this._stats;
+      const loaded = this.state.dbCards !== null;
+      for(let i=0;i<4;i++){ const el=E['num'+i]; if(!el) continue;
+        if (!loaded) { el.textContent = '—'; }
+        else { const t=seg(p,0.12+i*0.06,0.40+i*0.06); el.textContent=String(Math.round(tg[i]*t)); } }
       if (E.s2foot) E.s2foot.style.opacity = String(seg(p,0.5,0.7)); }
 
     // SCENE 3 — Hall of Grails
