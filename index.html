@@ -10,7 +10,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@200;300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@200;300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{background:#070708;}
@@ -39,22 +39,21 @@
 
 <div id="film" style="position:relative;background:#070708;color:#fff;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;">
 
-  <!-- ===== FIXED CHROME ===== -->
-  <header id="nav" style="position:fixed;top:0;left:0;right:0;z-index:120;display:flex;align-items:center;justify-content:space-between;padding:22px clamp(26px,4.5vw,60px);background:rgba(8,8,10,0);border-bottom:1px solid rgba(255,255,255,0);transition:background .6s ease,border-color .6s ease,backdrop-filter .6s ease;">
-    <a href="#sc1" style="display:flex;align-items:center;gap:16px;text-decoration:none;">
-      <img src="/assets/logo.png" alt="ADG Merengue Vault" style="height:28px;width:auto;display:block;filter:drop-shadow(0 2px 8px rgba(0,0,0,.6));">
-      <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.26em;color:rgba(255,255,255,.5);text-transform:uppercase;border-left:1px solid rgba(255,255,255,.18);padding-left:16px;">Private<br>Collection</span>
+  <!-- ===== NAV ===== -->
+  <nav id="nav" style="position:fixed;top:0;left:0;right:0;z-index:200;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#0A0A0A;border-bottom:1px solid #1A1A1A;box-shadow:0 8px 32px rgba(0,0,0,.6);">
+    <a href="/" style="display:block;line-height:0;">
+      <img src="/uploads/logo.png" alt="ADG Merengue Vault" style="height:40px;width:auto;mix-blend-mode:screen;display:block;">
     </a>
-    <nav style="display:flex;align-items:center;gap:clamp(16px,2.2vw,30px);">
-      <span id="navlinks" style="display:flex;align-items:center;gap:clamp(16px,2.2vw,30px);">
-        <a href="/collection/" style="color:#cfcfd4;text-decoration:none;font-family:'Space Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;">Collection</a>
-        <a href="#sc8" style="color:#cfcfd4;text-decoration:none;font-family:'Space Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;">For Sale</a>
-        <a href="#sc8" style="color:#cfcfd4;text-decoration:none;font-family:'Space Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;">Wishlist</a>
-        <a href="/sold/" style="color:#cfcfd4;text-decoration:none;font-family:'Space Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;">Sold</a>
-      </span>
-      <a href="{{ igUrl }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.4);text-decoration:none;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:9px 16px;border-radius:1px;">Buy · Sell · Trade</a>
-    </nav>
-  </header>
+    <div id="navlinks" style="display:flex;align-items:center;gap:24px;">
+      <a href="#sc5" style="color:#A1A1AA;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:color .2s;">GRAILS</a>
+      <a href="/collection/" style="color:#A1A1AA;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:color .2s;">COLLECTION</a>
+      <a href="/collection/" style="color:#16A34A;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:color .2s;">FOR SALE</a>
+      <a href="/collection/" style="color:#A78BFA;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:color .2s;">WISHLIST</a>
+      <a href="/sold/" style="color:#DC2626;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:color .2s;">SOLD</a>
+      <a href="#sc8" style="color:#A1A1AA;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:color .2s;">ABOUT</a>
+      <a href="{{ igUrl }}" target="_blank" rel="noopener" style="background:#C8A75B;color:#0A0A0A;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:10px 20px;text-decoration:none;border-radius:2px;transition:background .2s;">BUY · SELL · TRADE</a>
+    </div>
+  </nav>
 
   <!-- numeric scene index -->
   <div id="dots" style="position:fixed;right:clamp(26px,3vw,42px);top:50%;transform:translateY(-50%);z-index:115;display:flex;flex-direction:column;gap:11px;align-items:flex-end;">
@@ -84,8 +83,8 @@
   <div id="hudCap" style="position:fixed;right:clamp(26px,3vw,42px);bottom:26px;z-index:113;pointer-events:none;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);">The White Side of Football</div>
 
   <!-- ===================== SCENE 1 — THE MANIFESTO ===================== -->
-  <section id="sc1" data-screen-label="01 Manifesto" style="position:relative;height:180vh;">
-    <div style="position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;background:#070708;">
+  <section id="sc1" data-screen-label="01 Manifesto" style="position:relative;height:110vh;">
+    <div style="position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;background:#070708;padding-top:72px;">
       <div id="s1glow" style="position:absolute;inset:0;opacity:0;background:radial-gradient(80% 60% at 70% 80%,rgba(201,162,75,.16),transparent 60%);pointer-events:none;"></div>
       <div id="s1dust" style="position:absolute;inset:0;opacity:0;pointer-events:none;">
         <span style="position:absolute;left:18%;top:40%;width:3px;height:3px;border-radius:50%;background:#E8D9A8;animation:dustFloat 6s ease-in infinite;"></span>
@@ -108,7 +107,7 @@
   </section>
 
   <!-- ===================== SCENE 2 — THE VAULT LEDGER ===================== -->
-  <section id="sc2" data-screen-label="02 The Ledger" style="position:relative;height:220vh;">
+  <section id="sc2" data-screen-label="02 The Ledger" style="position:relative;height:140vh;">
     <div style="position:sticky;top:0;height:100vh;overflow:hidden;background:#070708;display:flex;flex-direction:column;align-items:center;justify-content:center;">
       <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(60% 50% at 50% 50%,rgba(201,162,75,.08),transparent 65%);"></div>
       <div id="s2head" style="position:relative;z-index:2;text-align:center;opacity:0;margin-bottom:clamp(30px,5vh,64px);">
@@ -142,7 +141,7 @@
   </section>
 
   <!-- ===================== SCENE 3 — THE HALL OF GRAILS ===================== -->
-  <section id="sc5" data-screen-label="03 Hall of Grails" style="position:relative;height:300vh;">
+  <section id="sc5" data-screen-label="03 Hall of Grails" style="position:relative;height:180vh;">
     <div style="position:sticky;top:0;height:100vh;overflow:hidden;background:radial-gradient(130% 90% at 50% 30%,#16161c 0%,#0b0b0f 50%,#060608 100%);">
       <div style="position:absolute;inset:0;background:radial-gradient(60% 50% at 50% 30%,rgba(232,217,168,.06),transparent 70%);pointer-events:none;"></div>
 
@@ -219,7 +218,7 @@
   </section>
 
   <!-- ===================== SCENE 4 — ANATOMY OF A GRAIL ===================== -->
-  <section id="sc7" data-screen-label="04 Anatomy" style="position:relative;height:300vh;">
+  <section id="sc7" data-screen-label="04 Anatomy" style="position:relative;height:180vh;">
     <div style="position:sticky;top:0;height:100vh;overflow:hidden;background:radial-gradient(120% 85% at 50% 42%,#181820 0%,#0a0a0e 62%,#060608 100%);display:flex;align-items:center;justify-content:center;">
       <div id="s7kick" style="position:absolute;top:10vh;left:0;right:0;text-align:center;z-index:5;opacity:0;padding:0 24px;">
         <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°04 / 05 · Anatomy of a Grail</div>
@@ -446,7 +445,7 @@ class Component extends DCLogic {
   cache() {
     const $ = (id) => document.getElementById(id);
     this.E = {
-      nav:$('nav'), cue:$('cue'),
+      cue:$('cue'),
       s1head:$('s1head'), s1glow:$('s1glow'), s1dust:$('s1dust'),
       s2head:$('s2head'), s2foot:$('s2foot'), num0:$('num0'), num1:$('num1'), num2:$('num2'), num3:$('num3'),
       s5shelf:$('s5shelf'), s5kicker:$('s5kicker'), s5cupL:$('s5cupL'), s5cupR:$('s5cupR'), s5sheenL:$('s5sheenL'), s5sheenR:$('s5sheenR'),
@@ -469,7 +468,6 @@ class Component extends DCLogic {
     const prog = (id) => { const s = document.getElementById(id); if (!s) return 0; const r = s.getBoundingClientRect(); const d = s.offsetHeight - vh; return d<=0 ? cl(-r.top/Math.max(1,s.offsetHeight)) : cl(-r.top/d); };
     const sY = window.scrollY || window.pageYOffset || 0;
 
-    if (E.nav) { const on = sY > vh*0.55; E.nav.style.background = on?'rgba(8,8,10,.72)':'rgba(8,8,10,0)'; E.nav.style.borderBottomColor = on?'rgba(255,255,255,.08)':'rgba(255,255,255,0)'; E.nav.style.backdropFilter = on?'blur(14px)':'none'; E.nav.style.webkitBackdropFilter = on?'blur(14px)':'none'; }
     if (E.cue) E.cue.style.opacity = String(cl(1 - sY/(vh*0.35)));
 
     // SCENE 1
