@@ -214,7 +214,7 @@
       </div>
 
       <!-- ── THE PITCH ── -->
-      <div style="position:relative;flex:1 1 560px;width:100%;max-width:620px;aspect-ratio:68/90;border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#0c1a10,#08130b 60%,#060f08);border:1px solid rgba(255,255,255,.08);box-shadow:0 50px 110px rgba(0,0,0,.7),inset 0 0 80px rgba(0,0,0,.5);">
+      <div style="position:relative;flex:1 1 580px;width:100%;max-width:660px;aspect-ratio:68/102;container-type:inline-size;border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#0c1a10,#08130b 60%,#060f08);border:1px solid rgba(255,255,255,.08);box-shadow:0 50px 110px rgba(0,0,0,.7),inset 0 0 80px rgba(0,0,0,.5);">
         <!-- mowing stripes -->
         <div style="position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(255,255,255,.018) 0 9%,transparent 9% 18%);pointer-events:none;"></div>
         <!-- field markings -->
@@ -232,17 +232,17 @@
             <sc-if value="{{ slot.hasCard }}" hint-placeholder-val="{{ false }}">
               <div onClick="{{ slot.onClick }}" onMouseMove="{{ onCardMove }}" onMouseLeave="{{ onCardLeave }}" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;">
                 <div data-lift style="transition:transform .22s ease-out;will-change:transform;transform:perspective(900px);">
-                  <img src="{{ slot.img }}" alt="{{ slot.player }}" style="width:clamp(54px,7.2vw,94px);display:block;border-radius:6px;box-shadow:0 14px 32px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08);">
+                  <img src="{{ slot.img }}" alt="{{ slot.player }}" style="width:14.5cqw;display:block;border-radius:6px;box-shadow:0 14px 32px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08);">
                 </div>
-                <div style="margin-top:6px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:#C9A24B;text-transform:uppercase;white-space:nowrap;">{{ slot.label }}</div>
+                <div style="margin-top:clamp(3px,1cqw,7px);font-family:'Space Mono',monospace;font-size:clamp(8px,1.7cqw,11px);letter-spacing:.14em;color:#C9A24B;text-transform:uppercase;white-space:nowrap;">{{ slot.label }}</div>
               </div>
             </sc-if>
             <sc-if value="{{ slot.noCard }}" hint-placeholder-val="{{ true }}">
               <div style="display:flex;flex-direction:column;align-items:center;">
-                <div style="width:clamp(54px,7.2vw,94px);aspect-ratio:5/7;border:1px dashed rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);">
-                  <span style="font-family:'Anton',sans-serif;font-size:clamp(8px,1vw,11px);letter-spacing:.06em;color:rgba(255,255,255,.42);text-transform:uppercase;text-align:center;line-height:1.05;">Coming<br>Soon</span>
+                <div style="width:14.5cqw;aspect-ratio:5/7;border:1px dashed rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);">
+                  <span style="font-family:'Anton',sans-serif;font-size:clamp(8px,2cqw,12px);letter-spacing:.06em;color:rgba(255,255,255,.42);text-transform:uppercase;text-align:center;line-height:1.05;">Coming<br>Soon</span>
                 </div>
-                <div style="margin-top:6px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:rgba(255,255,255,.32);text-transform:uppercase;white-space:nowrap;">{{ slot.label }}</div>
+                <div style="margin-top:clamp(3px,1cqw,7px);font-family:'Space Mono',monospace;font-size:clamp(8px,1.7cqw,11px);letter-spacing:.14em;color:rgba(255,255,255,.32);text-transform:uppercase;white-space:nowrap;">{{ slot.label }}</div>
               </div>
             </sc-if>
           </div>
@@ -397,7 +397,7 @@
 // evenly top→bottom, players within a line share a fixed horizontal step.
 // Keep buildFormation + FORMATIONS identical in admin-app/index.html.
 function buildFormation(label, lines) {
-  const BOTTOM = 88, VSTEP = 19, STEP = 18; // fixed gap between lines in every module
+  const BOTTOM = 88, VSTEP = 19, STEP = 20; // fixed gap between lines in every module
   const n = lines.length;
   const slots = [];
   lines.forEach((line, i) => {

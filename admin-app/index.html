@@ -288,7 +288,7 @@
             </div>
 
             <!-- right: pitch -->
-            <div style="position: relative; flex: 1 1 480px; width: 100%; max-width: 560px; aspect-ratio: 68/90; border-radius: 14px; overflow: hidden; background: linear-gradient(180deg,#0c1a10,#08130b 60%,#060f08); border: 1px solid #1A1A1A; box-shadow: 0 30px 70px rgba(0,0,0,0.5);">
+            <div style="position: relative; flex: 1 1 480px; width: 100%; max-width: 560px; aspect-ratio: 68/102; container-type: inline-size; border-radius: 14px; overflow: hidden; background: linear-gradient(180deg,#0c1a10,#08130b 60%,#060f08); border: 1px solid #1A1A1A; box-shadow: 0 30px 70px rgba(0,0,0,0.5);">
               <div style="position: absolute; inset: 0; background: repeating-linear-gradient(180deg,rgba(255,255,255,0.018) 0 9%,transparent 9% 18%); pointer-events: none;"></div>
               <div style="position: absolute; inset: 12px; border: 1.5px solid rgba(255,255,255,0.14); border-radius: 6px; pointer-events: none;"></div>
               <div style="position: absolute; left: 12px; right: 12px; top: 50%; height: 1.5px; background: rgba(255,255,255,0.14); pointer-events: none;"></div>
@@ -300,14 +300,14 @@
                 <div onDragOver="{{ slot.onDragOver }}" onDrop="{{ slot.onDrop }}" style="position: absolute; left: {{ slot.left }}; top: {{ slot.top }}; transform: translate(-50%,-50%); z-index: 3;">
                   <sc-if value="{{ slot.hasCard }}" hint-placeholder-val="{{ false }}">
                     <div draggable="true" onDragStart="{{ slot.onDragStart }}" onDragEnd="{{ slot.onDragEnd }}" onClick="{{ slot.onPick }}" style="cursor: grab; display: flex; flex-direction: column; align-items: center; position: relative;">
-                      <img src="{{ slot.img }}" style="width: clamp(52px,12vw,86px); display: block; border-radius: 5px; box-shadow: 0 10px 24px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.1); pointer-events: none;">
+                      <img src="{{ slot.img }}" style="width: 14.5cqw; display: block; border-radius: 5px; box-shadow: 0 10px 24px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.1); pointer-events: none;">
                       <button onClick="{{ slot.onClear }}" style="position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; border-radius: 50%; background: #DC2626; border: 2px solid #0A0A0A; color: #FFF; font-size: 11px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
                       <div style="margin-top: 5px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: #C8A75B; text-transform: uppercase;">{{ slot.label }}</div>
                     </div>
                   </sc-if>
                   <sc-if value="{{ slot.noCard }}" hint-placeholder-val="{{ true }}">
                     <div onClick="{{ slot.onPick }}" style="cursor: pointer; display: flex; flex-direction: column; align-items: center;">
-                      <div style="width: clamp(52px,12vw,86px); aspect-ratio: 5/7; border: 1px dashed rgba(255,255,255,0.28); border-radius: 5px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); transition: all 0.15s;" style-hover="border-color: #C8A75B; background: rgba(200,167,91,0.08);">
+                      <div style="width: 14.5cqw; aspect-ratio: 5/7; border: 1px dashed rgba(255,255,255,0.28); border-radius: 5px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); transition: all 0.15s;" style-hover="border-color: #C8A75B; background: rgba(200,167,91,0.08);">
                         <span style="font-size: 18px; color: rgba(255,255,255,0.45); line-height: 1;">+</span>
                       </div>
                       <div style="margin-top: 5px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); text-transform: uppercase;">{{ slot.label }}</div>
@@ -598,7 +598,7 @@ const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Built from line definitions so spacing is uniform everywhere.
 // Keep buildFormation + FORMATIONS identical in index.html (public homepage).
 function buildFormation(label, lines) {
-  const BOTTOM = 88, VSTEP = 19, STEP = 18; // fixed gap between lines in every module
+  const BOTTOM = 88, VSTEP = 19, STEP = 20; // fixed gap between lines in every module
   const n = lines.length;
   const slots = [];
   lines.forEach((line, i) => {
