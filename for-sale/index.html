@@ -89,10 +89,6 @@
               <span style="display: block; background: {{ badge.bg }}; color: {{ badge.color }}; font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 7px; border-radius: 2px;">{{ badge.label }}</span>
             </sc-for>
           </div>
-          <!-- price badge top-right -->
-          <sc-if value="{{ card.hasPrice }}" hint-placeholder-val="{{ false }}">
-            <span style="position: absolute; top: 10px; right: 10px; z-index: 2; background: #16A34A; color: #FFF; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 8px; border-radius: 2px;">€{{ card.priceLabel }}</span>
-          </sc-if>
         </div>
         <div style="padding: 12px 0 0; border-top: 1px solid #1A1A1A; margin-top: 1px;">
           <p style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #FFF; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.player }}</p>
