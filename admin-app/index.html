@@ -594,87 +594,61 @@ const SUPABASE_URL = 'https://iyjmtcmtbrivodqmdjmq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5am10Y210YnJpdm9kcW1kam1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NjI2MzAsImV4cCI6MjA5NzUzODYzMH0.UpxNykyn57Pkgl4SbrV1mt08zamvpQzsX0u4nTPQ-_w'; // public anon key (safe in client)
 const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Famous formations — vertical pitch (GK bottom, attack top). 11 slots each.
-// Keep identical in index.html (public homepage).
+// Famous formations — vertical pitch (GK bottom, attack top), 11 slots each.
+// Built from line definitions so spacing is uniform everywhere.
+// Keep buildFormation + FORMATIONS identical in index.html (public homepage).
+function buildFormation(label, lines) {
+  const TOP = 12, BOTTOM = 88, STEP = 18;
+  const n = lines.length;
+  const slots = [];
+  lines.forEach((line, i) => {
+    const top = n === 1 ? 50 : TOP + i * (BOTTOM - TOP) / (n - 1);
+    const k = line.length;
+    line.forEach((p, j) => {
+      const left = k === 1 ? 50 : 50 + (j - (k - 1) / 2) * STEP;
+      slots.push({ pos: p.pos, label: p.label, top: top.toFixed(1) + '%', left: left.toFixed(1) + '%' });
+    });
+  });
+  return { label, slots };
+}
 const FORMATIONS = {
-  '433': { label: '4-3-3', slots: [
-    { pos:'ST',  label:'ST', top:'13%', left:'50%' },
-    { pos:'LW',  label:'LW', top:'23%', left:'18%' },
-    { pos:'RW',  label:'RW', top:'23%', left:'82%' },
-    { pos:'CM1', label:'CM', top:'45%', left:'30%' },
-    { pos:'CM2', label:'CM', top:'41%', left:'50%' },
-    { pos:'CM3', label:'CM', top:'45%', left:'70%' },
-    { pos:'LB',  label:'LB', top:'66%', left:'13%' },
-    { pos:'CB1', label:'CB', top:'68%', left:'38%' },
-    { pos:'CB2', label:'CB', top:'68%', left:'62%' },
-    { pos:'RB',  label:'RB', top:'66%', left:'87%' },
-    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
-  ]},
-  '442': { label: '4-4-2', slots: [
-    { pos:'ST1', label:'ST', top:'14%', left:'36%' },
-    { pos:'ST2', label:'ST', top:'14%', left:'64%' },
-    { pos:'LM',  label:'LM', top:'40%', left:'14%' },
-    { pos:'CM1', label:'CM', top:'42%', left:'39%' },
-    { pos:'CM2', label:'CM', top:'42%', left:'61%' },
-    { pos:'RM',  label:'RM', top:'40%', left:'86%' },
-    { pos:'LB',  label:'LB', top:'66%', left:'13%' },
-    { pos:'CB1', label:'CB', top:'68%', left:'38%' },
-    { pos:'CB2', label:'CB', top:'68%', left:'62%' },
-    { pos:'RB',  label:'RB', top:'66%', left:'87%' },
-    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
-  ]},
-  '4231': { label: '4-2-3-1', slots: [
-    { pos:'ST',   label:'ST',  top:'11%', left:'50%' },
-    { pos:'LAM',  label:'LW',  top:'29%', left:'19%' },
-    { pos:'CAM',  label:'CAM', top:'30%', left:'50%' },
-    { pos:'RAM',  label:'RW',  top:'29%', left:'81%' },
-    { pos:'CDM1', label:'CDM', top:'49%', left:'38%' },
-    { pos:'CDM2', label:'CDM', top:'49%', left:'62%' },
-    { pos:'LB',   label:'LB',  top:'67%', left:'13%' },
-    { pos:'CB1',  label:'CB',  top:'68%', left:'38%' },
-    { pos:'CB2',  label:'CB',  top:'68%', left:'62%' },
-    { pos:'RB',   label:'RB',  top:'67%', left:'87%' },
-    { pos:'GK',   label:'GK',  top:'88%', left:'50%' },
-  ]},
-  '352': { label: '3-5-2', slots: [
-    { pos:'ST1', label:'ST', top:'14%', left:'36%' },
-    { pos:'ST2', label:'ST', top:'14%', left:'64%' },
-    { pos:'LM',  label:'LM', top:'37%', left:'12%' },
-    { pos:'CM1', label:'CM', top:'43%', left:'32%' },
-    { pos:'CM2', label:'CM', top:'40%', left:'50%' },
-    { pos:'CM3', label:'CM', top:'43%', left:'68%' },
-    { pos:'RM',  label:'RM', top:'37%', left:'88%' },
-    { pos:'CB1', label:'CB', top:'67%', left:'28%' },
-    { pos:'CB2', label:'CB', top:'68%', left:'50%' },
-    { pos:'CB3', label:'CB', top:'67%', left:'72%' },
-    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
-  ]},
-  '343': { label: '3-4-3', slots: [
-    { pos:'LW',  label:'LW', top:'15%', left:'20%' },
-    { pos:'ST',  label:'ST', top:'13%', left:'50%' },
-    { pos:'RW',  label:'RW', top:'15%', left:'80%' },
-    { pos:'LM',  label:'LM', top:'42%', left:'15%' },
-    { pos:'CM1', label:'CM', top:'44%', left:'38%' },
-    { pos:'CM2', label:'CM', top:'44%', left:'62%' },
-    { pos:'RM',  label:'RM', top:'42%', left:'85%' },
-    { pos:'CB1', label:'CB', top:'67%', left:'28%' },
-    { pos:'CB2', label:'CB', top:'68%', left:'50%' },
-    { pos:'CB3', label:'CB', top:'67%', left:'72%' },
-    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
-  ]},
-  '532': { label: '5-3-2', slots: [
-    { pos:'ST1', label:'ST', top:'14%', left:'36%' },
-    { pos:'ST2', label:'ST', top:'14%', left:'64%' },
-    { pos:'CM1', label:'CM', top:'42%', left:'30%' },
-    { pos:'CM2', label:'CM', top:'39%', left:'50%' },
-    { pos:'CM3', label:'CM', top:'42%', left:'70%' },
-    { pos:'LWB', label:'LWB',top:'61%', left:'10%' },
-    { pos:'CB1', label:'CB', top:'67%', left:'31%' },
-    { pos:'CB2', label:'CB', top:'68%', left:'50%' },
-    { pos:'CB3', label:'CB', top:'67%', left:'69%' },
-    { pos:'RWB', label:'RWB',top:'61%', left:'90%' },
-    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
-  ]},
+  '433':  buildFormation('4-3-3', [
+    [{pos:'LW',label:'LW'},{pos:'ST',label:'ST'},{pos:'RW',label:'RW'}],
+    [{pos:'CM1',label:'CM'},{pos:'CM2',label:'CM'},{pos:'CM3',label:'CM'}],
+    [{pos:'LB',label:'LB'},{pos:'CB1',label:'CB'},{pos:'CB2',label:'CB'},{pos:'RB',label:'RB'}],
+    [{pos:'GK',label:'GK'}],
+  ]),
+  '442':  buildFormation('4-4-2', [
+    [{pos:'ST1',label:'ST'},{pos:'ST2',label:'ST'}],
+    [{pos:'LM',label:'LM'},{pos:'CM1',label:'CM'},{pos:'CM2',label:'CM'},{pos:'RM',label:'RM'}],
+    [{pos:'LB',label:'LB'},{pos:'CB1',label:'CB'},{pos:'CB2',label:'CB'},{pos:'RB',label:'RB'}],
+    [{pos:'GK',label:'GK'}],
+  ]),
+  '4231': buildFormation('4-2-3-1', [
+    [{pos:'ST',label:'ST'}],
+    [{pos:'LAM',label:'LW'},{pos:'CAM',label:'CAM'},{pos:'RAM',label:'RW'}],
+    [{pos:'CDM1',label:'CDM'},{pos:'CDM2',label:'CDM'}],
+    [{pos:'LB',label:'LB'},{pos:'CB1',label:'CB'},{pos:'CB2',label:'CB'},{pos:'RB',label:'RB'}],
+    [{pos:'GK',label:'GK'}],
+  ]),
+  '352':  buildFormation('3-5-2', [
+    [{pos:'ST1',label:'ST'},{pos:'ST2',label:'ST'}],
+    [{pos:'LM',label:'LM'},{pos:'CM1',label:'CM'},{pos:'CM2',label:'CM'},{pos:'CM3',label:'CM'},{pos:'RM',label:'RM'}],
+    [{pos:'CB1',label:'CB'},{pos:'CB2',label:'CB'},{pos:'CB3',label:'CB'}],
+    [{pos:'GK',label:'GK'}],
+  ]),
+  '343':  buildFormation('3-4-3', [
+    [{pos:'LW',label:'LW'},{pos:'ST',label:'ST'},{pos:'RW',label:'RW'}],
+    [{pos:'LM',label:'LM'},{pos:'CM1',label:'CM'},{pos:'CM2',label:'CM'},{pos:'RM',label:'RM'}],
+    [{pos:'CB1',label:'CB'},{pos:'CB2',label:'CB'},{pos:'CB3',label:'CB'}],
+    [{pos:'GK',label:'GK'}],
+  ]),
+  '532':  buildFormation('5-3-2', [
+    [{pos:'ST1',label:'ST'},{pos:'ST2',label:'ST'}],
+    [{pos:'CM1',label:'CM'},{pos:'CM2',label:'CM'},{pos:'CM3',label:'CM'}],
+    [{pos:'LWB',label:'LWB'},{pos:'CB1',label:'CB'},{pos:'CB2',label:'CB'},{pos:'CB3',label:'CB'},{pos:'RWB',label:'RWB'}],
+    [{pos:'GK',label:'GK'}],
+  ]),
 };
 
 class Component extends DCLogic {

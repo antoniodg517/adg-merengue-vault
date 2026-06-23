@@ -205,16 +205,16 @@
 
   <!-- ===================== SCENE 4 — THE STARTING XI ===================== -->
   <section id="sc7" data-screen-label="04 Top XI" style="position:relative;min-height:100vh;background:radial-gradient(120% 85% at 50% 30%,#0d0f0e 0%,#0a0a0e 58%,#060608 100%);display:flex;align-items:center;justify-content:center;padding:clamp(96px,13vh,150px) clamp(16px,4vw,60px) clamp(48px,8vh,90px);overflow:hidden;">
-    <div id="s7inner" style="position:relative;z-index:2;width:100%;max-width:1120px;display:flex;align-items:center;justify-content:center;gap:clamp(28px,5vw,72px);flex-wrap:wrap;opacity:0;transform:translateY(40px);will-change:transform,opacity;">
+    <div id="s7inner" style="position:relative;z-index:2;width:100%;max-width:1200px;display:flex;align-items:flex-start;justify-content:center;gap:clamp(24px,3.5vw,56px);flex-wrap:wrap;opacity:0;transform:translateY(40px);will-change:transform,opacity;">
 
-      <div style="flex:1 1 300px;min-width:280px;max-width:460px;">
+      <div style="flex:1 1 300px;min-width:280px;max-width:440px;padding-top:clamp(0px,2vh,18px);">
         <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°04 / 05 · The Starting XI</div>
         <div style="margin-top:12px;font-family:'Anton',sans-serif;font-size:clamp(40px,5.6vw,86px);line-height:.9;color:#fff;text-transform:uppercase;">La Mia<br>Top XI</div>
         <p style="margin:20px 0 0;max-width:420px;color:#9a9aa1;font-size:clamp(14px,1.1vw,17px);line-height:1.65;">Il meglio della collezione, schierato <span style="color:#fff;font-weight:600;">{{ formationLabel }}</span>. Passa il mouse per sollevare · clicca per ispezionare.</p>
       </div>
 
       <!-- ── THE PITCH ── -->
-      <div style="position:relative;flex:1 1 440px;width:100%;max-width:520px;aspect-ratio:68/90;border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#0c1a10,#08130b 60%,#060f08);border:1px solid rgba(255,255,255,.08);box-shadow:0 50px 110px rgba(0,0,0,.7),inset 0 0 80px rgba(0,0,0,.5);">
+      <div style="position:relative;flex:1 1 560px;width:100%;max-width:620px;aspect-ratio:68/90;border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#0c1a10,#08130b 60%,#060f08);border:1px solid rgba(255,255,255,.08);box-shadow:0 50px 110px rgba(0,0,0,.7),inset 0 0 80px rgba(0,0,0,.5);">
         <!-- mowing stripes -->
         <div style="position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(255,255,255,.018) 0 9%,transparent 9% 18%);pointer-events:none;"></div>
         <!-- field markings -->
@@ -232,14 +232,14 @@
             <sc-if value="{{ slot.hasCard }}" hint-placeholder-val="{{ false }}">
               <div onClick="{{ slot.onClick }}" onMouseMove="{{ onCardMove }}" onMouseLeave="{{ onCardLeave }}" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;">
                 <div data-lift style="transition:transform .22s ease-out;will-change:transform;transform:perspective(900px);">
-                  <img src="{{ slot.img }}" alt="{{ slot.player }}" style="width:clamp(50px,6.5vw,84px);display:block;border-radius:6px;box-shadow:0 14px 32px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08);">
+                  <img src="{{ slot.img }}" alt="{{ slot.player }}" style="width:clamp(54px,7.2vw,94px);display:block;border-radius:6px;box-shadow:0 14px 32px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08);">
                 </div>
                 <div style="margin-top:6px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:#C9A24B;text-transform:uppercase;white-space:nowrap;">{{ slot.label }}</div>
               </div>
             </sc-if>
             <sc-if value="{{ slot.noCard }}" hint-placeholder-val="{{ true }}">
               <div style="display:flex;flex-direction:column;align-items:center;">
-                <div style="width:clamp(50px,6.5vw,84px);aspect-ratio:5/7;border:1px dashed rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);">
+                <div style="width:clamp(54px,7.2vw,94px);aspect-ratio:5/7;border:1px dashed rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);">
                   <span style="font-family:'Anton',sans-serif;font-size:clamp(8px,1vw,11px);letter-spacing:.06em;color:rgba(255,255,255,.42);text-transform:uppercase;text-align:center;line-height:1.05;">Coming<br>Soon</span>
                 </div>
                 <div style="margin-top:6px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:rgba(255,255,255,.32);text-transform:uppercase;white-space:nowrap;">{{ slot.label }}</div>
@@ -392,87 +392,62 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;ctaUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://instagram.com/adgmerenguevault&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
-// Famous formations — vertical pitch (GK bottom, attack top). 11 slots each.
-// Keep identical in admin-app/index.html.
+// Famous formations — vertical pitch (GK bottom, attack top), 11 slots each.
+// Built from line definitions so spacing is uniform everywhere: lines spread
+// evenly top→bottom, players within a line share a fixed horizontal step.
+// Keep buildFormation + FORMATIONS identical in admin-app/index.html.
+function buildFormation(label, lines) {
+  const TOP = 12, BOTTOM = 88, STEP = 18;
+  const n = lines.length;
+  const slots = [];
+  lines.forEach((line, i) => {
+    const top = n === 1 ? 50 : TOP + i * (BOTTOM - TOP) / (n - 1);
+    const k = line.length;
+    line.forEach((p, j) => {
+      const left = k === 1 ? 50 : 50 + (j - (k - 1) / 2) * STEP;
+      slots.push({ pos: p.pos, label: p.label, top: top.toFixed(1) + '%', left: left.toFixed(1) + '%' });
+    });
+  });
+  return { label, slots };
+}
 const FORMATIONS = {
-  '433': { label: '4-3-3', slots: [
-    { pos:'ST',  label:'ST', top:'13%', left:'50%' },
-    { pos:'LW',  label:'LW', top:'23%', left:'18%' },
-    { pos:'RW',  label:'RW', top:'23%', left:'82%' },
-    { pos:'CM1', label:'CM', top:'45%', left:'30%' },
-    { pos:'CM2', label:'CM', top:'41%', left:'50%' },
-    { pos:'CM3', label:'CM', top:'45%', left:'70%' },
-    { pos:'LB',  label:'LB', top:'66%', left:'13%' },
-    { pos:'CB1', label:'CB', top:'68%', left:'38%' },
-    { pos:'CB2', label:'CB', top:'68%', left:'62%' },
-    { pos:'RB',  label:'RB', top:'66%', left:'87%' },
-    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
-  ]},
-  '442': { label: '4-4-2', slots: [
-    { pos:'ST1', label:'ST', top:'14%', left:'36%' },
-    { pos:'ST2', label:'ST', top:'14%', left:'64%' },
-    { pos:'LM',  label:'LM', top:'40%', left:'14%' },
-    { pos:'CM1', label:'CM', top:'42%', left:'39%' },
-    { pos:'CM2', label:'CM', top:'42%', left:'61%' },
-    { pos:'RM',  label:'RM', top:'40%', left:'86%' },
-    { pos:'LB',  label:'LB', top:'66%', left:'13%' },
-    { pos:'CB1', label:'CB', top:'68%', left:'38%' },
-    { pos:'CB2', label:'CB', top:'68%', left:'62%' },
-    { pos:'RB',  label:'RB', top:'66%', left:'87%' },
-    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
-  ]},
-  '4231': { label: '4-2-3-1', slots: [
-    { pos:'ST',   label:'ST',  top:'11%', left:'50%' },
-    { pos:'LAM',  label:'LW',  top:'29%', left:'19%' },
-    { pos:'CAM',  label:'CAM', top:'30%', left:'50%' },
-    { pos:'RAM',  label:'RW',  top:'29%', left:'81%' },
-    { pos:'CDM1', label:'CDM', top:'49%', left:'38%' },
-    { pos:'CDM2', label:'CDM', top:'49%', left:'62%' },
-    { pos:'LB',   label:'LB',  top:'67%', left:'13%' },
-    { pos:'CB1',  label:'CB',  top:'68%', left:'38%' },
-    { pos:'CB2',  label:'CB',  top:'68%', left:'62%' },
-    { pos:'RB',   label:'RB',  top:'67%', left:'87%' },
-    { pos:'GK',   label:'GK',  top:'88%', left:'50%' },
-  ]},
-  '352': { label: '3-5-2', slots: [
-    { pos:'ST1', label:'ST', top:'14%', left:'36%' },
-    { pos:'ST2', label:'ST', top:'14%', left:'64%' },
-    { pos:'LM',  label:'LM', top:'37%', left:'12%' },
-    { pos:'CM1', label:'CM', top:'43%', left:'32%' },
-    { pos:'CM2', label:'CM', top:'40%', left:'50%' },
-    { pos:'CM3', label:'CM', top:'43%', left:'68%' },
-    { pos:'RM',  label:'RM', top:'37%', left:'88%' },
-    { pos:'CB1', label:'CB', top:'67%', left:'28%' },
-    { pos:'CB2', label:'CB', top:'68%', left:'50%' },
-    { pos:'CB3', label:'CB', top:'67%', left:'72%' },
-    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
-  ]},
-  '343': { label: '3-4-3', slots: [
-    { pos:'LW',  label:'LW', top:'15%', left:'20%' },
-    { pos:'ST',  label:'ST', top:'13%', left:'50%' },
-    { pos:'RW',  label:'RW', top:'15%', left:'80%' },
-    { pos:'LM',  label:'LM', top:'42%', left:'15%' },
-    { pos:'CM1', label:'CM', top:'44%', left:'38%' },
-    { pos:'CM2', label:'CM', top:'44%', left:'62%' },
-    { pos:'RM',  label:'RM', top:'42%', left:'85%' },
-    { pos:'CB1', label:'CB', top:'67%', left:'28%' },
-    { pos:'CB2', label:'CB', top:'68%', left:'50%' },
-    { pos:'CB3', label:'CB', top:'67%', left:'72%' },
-    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
-  ]},
-  '532': { label: '5-3-2', slots: [
-    { pos:'ST1', label:'ST', top:'14%', left:'36%' },
-    { pos:'ST2', label:'ST', top:'14%', left:'64%' },
-    { pos:'CM1', label:'CM', top:'42%', left:'30%' },
-    { pos:'CM2', label:'CM', top:'39%', left:'50%' },
-    { pos:'CM3', label:'CM', top:'42%', left:'70%' },
-    { pos:'LWB', label:'LWB',top:'61%', left:'10%' },
-    { pos:'CB1', label:'CB', top:'67%', left:'31%' },
-    { pos:'CB2', label:'CB', top:'68%', left:'50%' },
-    { pos:'CB3', label:'CB', top:'67%', left:'69%' },
-    { pos:'RWB', label:'RWB',top:'61%', left:'90%' },
-    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
-  ]},
+  '433':  buildFormation('4-3-3', [
+    [{pos:'LW',label:'LW'},{pos:'ST',label:'ST'},{pos:'RW',label:'RW'}],
+    [{pos:'CM1',label:'CM'},{pos:'CM2',label:'CM'},{pos:'CM3',label:'CM'}],
+    [{pos:'LB',label:'LB'},{pos:'CB1',label:'CB'},{pos:'CB2',label:'CB'},{pos:'RB',label:'RB'}],
+    [{pos:'GK',label:'GK'}],
+  ]),
+  '442':  buildFormation('4-4-2', [
+    [{pos:'ST1',label:'ST'},{pos:'ST2',label:'ST'}],
+    [{pos:'LM',label:'LM'},{pos:'CM1',label:'CM'},{pos:'CM2',label:'CM'},{pos:'RM',label:'RM'}],
+    [{pos:'LB',label:'LB'},{pos:'CB1',label:'CB'},{pos:'CB2',label:'CB'},{pos:'RB',label:'RB'}],
+    [{pos:'GK',label:'GK'}],
+  ]),
+  '4231': buildFormation('4-2-3-1', [
+    [{pos:'ST',label:'ST'}],
+    [{pos:'LAM',label:'LW'},{pos:'CAM',label:'CAM'},{pos:'RAM',label:'RW'}],
+    [{pos:'CDM1',label:'CDM'},{pos:'CDM2',label:'CDM'}],
+    [{pos:'LB',label:'LB'},{pos:'CB1',label:'CB'},{pos:'CB2',label:'CB'},{pos:'RB',label:'RB'}],
+    [{pos:'GK',label:'GK'}],
+  ]),
+  '352':  buildFormation('3-5-2', [
+    [{pos:'ST1',label:'ST'},{pos:'ST2',label:'ST'}],
+    [{pos:'LM',label:'LM'},{pos:'CM1',label:'CM'},{pos:'CM2',label:'CM'},{pos:'CM3',label:'CM'},{pos:'RM',label:'RM'}],
+    [{pos:'CB1',label:'CB'},{pos:'CB2',label:'CB'},{pos:'CB3',label:'CB'}],
+    [{pos:'GK',label:'GK'}],
+  ]),
+  '343':  buildFormation('3-4-3', [
+    [{pos:'LW',label:'LW'},{pos:'ST',label:'ST'},{pos:'RW',label:'RW'}],
+    [{pos:'LM',label:'LM'},{pos:'CM1',label:'CM'},{pos:'CM2',label:'CM'},{pos:'RM',label:'RM'}],
+    [{pos:'CB1',label:'CB'},{pos:'CB2',label:'CB'},{pos:'CB3',label:'CB'}],
+    [{pos:'GK',label:'GK'}],
+  ]),
+  '532':  buildFormation('5-3-2', [
+    [{pos:'ST1',label:'ST'},{pos:'ST2',label:'ST'}],
+    [{pos:'CM1',label:'CM'},{pos:'CM2',label:'CM'},{pos:'CM3',label:'CM'}],
+    [{pos:'LWB',label:'LWB'},{pos:'CB1',label:'CB'},{pos:'CB2',label:'CB'},{pos:'CB3',label:'CB'},{pos:'RWB',label:'RWB'}],
+    [{pos:'GK',label:'GK'}],
+  ]),
 };
 
 class Component extends DCLogic {
