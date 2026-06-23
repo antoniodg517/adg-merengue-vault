@@ -31,16 +31,6 @@
 </helmet>
 
 <!-- ── NAV (injected by /nav.js before <x-dc>) ── -->
-<div style="position:fixed;top:0;right:240px;height:72px;display:flex;align-items:center;gap:8px;z-index:201;pointer-events:none;">
-  <div style="pointer-events:auto;display:flex;align-items:center;gap:8px;">
-    <sc-if value="{{ dbLoaded }}" hint-placeholder-val="{{ false }}">
-      <button onClick="{{ doRefresh }}" title="{{ lastUpdatedText }}" style="background:none;border:none;color:#A1A1AA;font-size:14px;cursor:pointer;padding:4px;line-height:1;transition:color .2s;" style-hover="color:#C8A75B;">↻</button>
-    </sc-if>
-    <sc-if value="{{ dbLoading }}" hint-placeholder-val="{{ false }}">
-      <div style="width:14px;height:14px;border:2px solid #2A2A2A;border-top-color:#C8A75B;border-radius:50%;animation:spin 0.7s linear infinite;"></div>
-    </sc-if>
-  </div>
-</div>
 
 <!-- ── PAGE HEADER ── -->
 <div id="page-header" style="padding-top: 72px; background: #0A0A0A; border-bottom: 1px solid #1A1A1A;">
