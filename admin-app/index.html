@@ -598,11 +598,11 @@ const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Built from line definitions so spacing is uniform everywhere.
 // Keep buildFormation + FORMATIONS identical in index.html (public homepage).
 function buildFormation(label, lines) {
-  const TOP = 12, BOTTOM = 88, STEP = 18;
+  const BOTTOM = 88, VSTEP = 19, STEP = 18; // fixed gap between lines in every module
   const n = lines.length;
   const slots = [];
   lines.forEach((line, i) => {
-    const top = n === 1 ? 50 : TOP + i * (BOTTOM - TOP) / (n - 1);
+    const top = n === 1 ? 50 : BOTTOM - (n - 1 - i) * VSTEP;
     const k = line.length;
     line.forEach((p, j) => {
       const left = k === 1 ? 50 : 50 + (j - (k - 1) / 2) * STEP;

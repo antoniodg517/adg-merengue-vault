@@ -397,11 +397,11 @@
 // evenly top→bottom, players within a line share a fixed horizontal step.
 // Keep buildFormation + FORMATIONS identical in admin-app/index.html.
 function buildFormation(label, lines) {
-  const TOP = 12, BOTTOM = 88, STEP = 18;
+  const BOTTOM = 88, VSTEP = 19, STEP = 18; // fixed gap between lines in every module
   const n = lines.length;
   const slots = [];
   lines.forEach((line, i) => {
-    const top = n === 1 ? 50 : TOP + i * (BOTTOM - TOP) / (n - 1);
+    const top = n === 1 ? 50 : BOTTOM - (n - 1 - i) * VSTEP;
     const k = line.length;
     line.forEach((p, j) => {
       const left = k === 1 ? 50 : 50 + (j - (k - 1) / 2) * STEP;
