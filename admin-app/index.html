@@ -805,7 +805,7 @@ class Component extends DCLogic {
       onClick: () => this.setState({ statusFilter: f.id }),
     }));
 
-    const GRADES = ['PSA 10','PSA 9.5','PSA 9','PSA 8.5','PSA 8','PSA 7','BGS 10','BGS 9.5','BGS 9','BGS 8.5','SGC 10','SGC 9','Raw'];
+    const GRADES = ['PSA 10','PSA 9.5','PSA 9','PSA 8.5','PSA 8','PSA 7','BGS 10','BGS 9.5','BGS 9','BGS 8.5','SGC 10','SGC 9','Raw','AUTH'];
     const gradeChips = GRADES.map(g => ({
       label: g,
       bg: form.grade === g ? '#C8A75B' : 'transparent',
@@ -827,7 +827,7 @@ class Component extends DCLogic {
       onClick: () => this.setState({ form: { ...form, status: s.id } }),
     }));
 
-    const badgeChips = ['GOAT','AUTO','PATCH','ROOKIE','1/1','SIGNED','RC','SUBBED'].map(b => ({
+    const badgeChips = ['GOAT','AUTO','ON CARD','PATCH','ROOKIE','1/1','SIGNED','RC','SUBBED'].map(b => ({
       label: b,
       bg: form.badges.includes(b) ? '#C8A75B' : 'transparent',
       col: form.badges.includes(b) ? '#0A0A0A' : '#A1A1AA',
