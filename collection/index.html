@@ -81,9 +81,6 @@
 
     <!-- TUTTI -->
     <div onClick="{{ tuttiItem.onClick }}" style="display: flex; align-items: center; gap: 9px; padding: 7px 8px; border-radius: 6px; cursor: pointer; background: {{ tuttiItem.itemBg }}; margin-bottom: 3px; transition: background 0.12s;" style-hover="background: #111111;">
-      <div style="width: 24px; height: 28px; background: {{ tuttiItem.badgeBg }}; clip-path: polygon(50% 0%, 100% 18%, 100% 70%, 50% 100%, 0% 70%, 0% 18%); display: flex; align-items: center; justify-content: center; padding-top: 2px; flex: none;">
-        <span style="font-size: 9px; font-weight: 800; color: {{ tuttiItem.badgeText }}; line-height: 1;">★</span>
-      </div>
       <span style="font-size: 12px; color: {{ tuttiItem.nameColor }}; font-weight: {{ tuttiItem.nameFw }}; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Tutte</span>
       <span style="font-size: 10px; color: #555; flex: none; font-variant-numeric: tabular-nums;">{{ tuttiItem.count }}</span>
     </div>
@@ -96,9 +93,6 @@
     <!-- Top 10 teams -->
     <sc-for list="{{ sideTeams }}" as="t" hint-placeholder-count="0">
       <div onClick="{{ t.onClick }}" style="display: flex; align-items: center; gap: 9px; padding: 7px 8px; border-radius: 6px; cursor: pointer; background: {{ t.itemBg }}; margin-bottom: 3px; transition: background 0.12s;" style-hover="background: #111111;">
-        <div style="width: 24px; height: 28px; background: {{ t.badgeBg }}; clip-path: polygon(50% 0%, 100% 18%, 100% 70%, 50% 100%, 0% 70%, 0% 18%); display: flex; align-items: center; justify-content: center; padding-top: 2px; flex: none;">
-          <span style="font-size: 6px; font-weight: 800; color: {{ t.badgeText }}; letter-spacing: -0.02em; line-height: 1;">{{ t.initials }}</span>
-        </div>
         <span style="font-size: 12px; color: {{ t.nameColor }}; font-weight: {{ t.nameFw }}; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ t.name }}</span>
         <span style="font-size: 10px; color: #555; flex: none; font-variant-numeric: tabular-nums;">{{ t.count }}</span>
       </div>
@@ -108,9 +102,6 @@
     <sc-if value="{{ hasAltro }}" hint-placeholder-val="{{ false }}">
       <div style="position: relative; margin-top: 3px;">
         <button onMouseEnter="{{ onAltroEnter }}" onMouseLeave="{{ onAltroLeave }}" style="width: 100%; display: flex; align-items: center; gap: 9px; padding: 7px 8px; border-radius: 6px; border: none; background: transparent; cursor: pointer; color: #555; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; transition: all 0.15s;" style-hover="background: #111111; color: #A1A1AA;">
-          <div style="width: 24px; height: 28px; background: #1A1A1A; clip-path: polygon(50% 0%, 100% 18%, 100% 70%, 50% 100%, 0% 70%, 0% 18%); display: flex; align-items: center; justify-content: center; padding-top: 2px; flex: none;">
-            <span style="font-size: 8px; color: #555; line-height: 1; letter-spacing: 0;">···</span>
-          </div>
           <span style="flex: 1; text-align: left;">ALTRO</span>
           <span style="font-size: 9px; color: #555;">▾</span>
         </button>
@@ -118,9 +109,6 @@
           <div onMouseEnter="{{ onAltroEnter }}" onMouseLeave="{{ onAltroLeave }}" style="position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 50; background: #0D0D0D; border: 1px solid #2A2A2A; border-radius: 8px; padding: 6px; box-shadow: 0 16px 40px rgba(0,0,0,0.8); animation: fadeIn 0.15s ease; max-height: 260px; overflow-y: auto;">
             <sc-for list="{{ altroSideTeams }}" as="t" hint-placeholder-count="0">
               <div onClick="{{ t.onClick }}" style="display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 5px; cursor: pointer; background: {{ t.itemBg }}; transition: background 0.12s;" style-hover="background: #1A1A1A;">
-                <div style="width: 21px; height: 25px; background: {{ t.badgeBg }}; clip-path: polygon(50% 0%, 100% 18%, 100% 70%, 50% 100%, 0% 70%, 0% 18%); display: flex; align-items: center; justify-content: center; padding-top: 2px; flex: none;">
-                  <span style="font-size: 5px; font-weight: 800; color: {{ t.badgeText }}; letter-spacing: -0.02em; line-height: 1;">{{ t.initials }}</span>
-                </div>
                 <span style="font-size: 12px; color: {{ t.nameColor }}; font-weight: {{ t.nameFw }}; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ t.name }}</span>
                 <span style="font-size: 10px; color: #555; flex: none; font-variant-numeric: tabular-nums;">{{ t.count }}</span>
               </div>
@@ -401,8 +389,13 @@ class Component extends DCLogic {
       };
     };
 
+    const isPoke = (n) => /pok[eé]/i.test(n);
     const teamsSorted = Object.entries(teamMap)
-      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .sort((a, b) => {
+        if (isPoke(a[0]) && !isPoke(b[0])) return 1;
+        if (!isPoke(a[0]) && isPoke(b[0])) return -1;
+        return b[1] - a[1] || a[0].localeCompare(b[0]);
+      })
       .map(([n, c]) => makeTeamItem(n, c));
 
     const sideTeams = teamsSorted.slice(0, 10);
