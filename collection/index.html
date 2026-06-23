@@ -6,6 +6,7 @@
 <script src="/support.js"></script>
 </head>
 <body>
+<script src="/nav.js"></script>
 <x-dc>
 
 <helmet>
@@ -29,8 +30,7 @@
   </style>
 </helmet>
 
-<!-- ── NAV ── -->
-<script src="/nav.js"></script>
+<!-- ── NAV (injected by /nav.js before <x-dc>) ── -->
 <div style="position:fixed;top:0;right:240px;height:72px;display:flex;align-items:center;gap:8px;z-index:201;pointer-events:none;">
   <div style="pointer-events:auto;display:flex;align-items:center;gap:8px;">
     <sc-if value="{{ dbLoaded }}" hint-placeholder-val="{{ false }}">
