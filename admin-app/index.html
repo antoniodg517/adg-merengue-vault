@@ -270,32 +270,46 @@
 
         <!-- ── TOP XI (LINEUP) ────────────────────────────────────────── -->
         <sc-if value="{{ showLineup }}" hint-placeholder-val="{{ false }}">
-          <p style="font-size: 13px; color: #A1A1AA; line-height: 1.6; margin-bottom: 22px; max-width: 560px;">Componi la tua Top XI in 4-3-3. Clicca una posizione per assegnare una carta della collezione; le posizioni vuote mostreranno <span style="color:#C8A75B;">“Coming Soon”</span> sul sito.</p>
-          <div style="position: relative; width: 100%; max-width: 440px; aspect-ratio: 68/90; border-radius: 14px; overflow: hidden; background: linear-gradient(180deg,#0c1a10,#08130b 60%,#060f08); border: 1px solid #1A1A1A; box-shadow: 0 30px 70px rgba(0,0,0,0.5);">
-            <div style="position: absolute; inset: 0; background: repeating-linear-gradient(180deg,rgba(255,255,255,0.018) 0 9%,transparent 9% 18%); pointer-events: none;"></div>
-            <div style="position: absolute; inset: 12px; border: 1.5px solid rgba(255,255,255,0.14); border-radius: 6px; pointer-events: none;"></div>
-            <div style="position: absolute; left: 12px; right: 12px; top: 50%; height: 1.5px; background: rgba(255,255,255,0.14); pointer-events: none;"></div>
-            <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 24%; aspect-ratio: 1; border: 1.5px solid rgba(255,255,255,0.14); border-radius: 50%; pointer-events: none;"></div>
+          <div style="display: flex; gap: 36px; align-items: flex-start; flex-wrap: wrap;">
 
-            <sc-for list="{{ lineupSlots }}" as="slot" hint-placeholder-count="11">
-              <div style="position: absolute; left: {{ slot.left }}; top: {{ slot.top }}; transform: translate(-50%,-50%); z-index: 3;">
-                <sc-if value="{{ slot.hasCard }}" hint-placeholder-val="{{ false }}">
-                  <div onClick="{{ slot.onPick }}" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; position: relative;">
-                    <img src="{{ slot.img }}" style="width: clamp(46px,11vw,74px); display: block; border-radius: 5px; box-shadow: 0 10px 24px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.1);">
-                    <button onClick="{{ slot.onClear }}" style="position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; border-radius: 50%; background: #DC2626; border: 2px solid #0A0A0A; color: #FFF; font-size: 11px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
-                    <div style="margin-top: 5px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: #C8A75B; text-transform: uppercase;">{{ slot.label }}</div>
-                  </div>
-                </sc-if>
-                <sc-if value="{{ slot.noCard }}" hint-placeholder-val="{{ true }}">
-                  <div onClick="{{ slot.onPick }}" style="cursor: pointer; display: flex; flex-direction: column; align-items: center;">
-                    <div style="width: clamp(46px,11vw,74px); aspect-ratio: 5/7; border: 1px dashed rgba(255,255,255,0.28); border-radius: 5px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); transition: all 0.15s;" style-hover="border-color: #C8A75B; background: rgba(200,167,91,0.08);">
-                      <span style="font-size: 18px; color: rgba(255,255,255,0.45); line-height: 1;">+</span>
+            <!-- left: title + description -->
+            <div style="flex: 1 1 280px; min-width: 260px; max-width: 420px; padding-top: 8px;">
+              <p style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #C8A75B; margin-bottom: 12px;">Formazione 4-3-3</p>
+              <h2 style="font-family: 'Anton', sans-serif; font-size: clamp(30px,4vw,46px); line-height: 0.95; text-transform: uppercase; color: #FFF; margin-bottom: 18px;">La Mia Top XI</h2>
+              <p style="font-size: 13px; color: #A1A1AA; line-height: 1.7; margin-bottom: 16px;">Componi l'undici titolare scegliendo tra le carte in <span style="color:#FFF;">Collection</span>. Clicca una posizione per assegnare una carta, oppure <span style="color:#FFF;">trascina</span> una carta da una posizione all'altra per scambiarle.</p>
+              <p style="font-size: 13px; color: #A1A1AA; line-height: 1.7;">Le posizioni lasciate vuote mostreranno <span style="color:#C8A75B;">“Coming Soon”</span> sul sito pubblico.</p>
+            </div>
+
+            <!-- right: pitch -->
+            <div style="position: relative; flex: 1 1 480px; width: 100%; max-width: 560px; aspect-ratio: 68/90; border-radius: 14px; overflow: hidden; background: linear-gradient(180deg,#0c1a10,#08130b 60%,#060f08); border: 1px solid #1A1A1A; box-shadow: 0 30px 70px rgba(0,0,0,0.5);">
+              <div style="position: absolute; inset: 0; background: repeating-linear-gradient(180deg,rgba(255,255,255,0.018) 0 9%,transparent 9% 18%); pointer-events: none;"></div>
+              <div style="position: absolute; inset: 12px; border: 1.5px solid rgba(255,255,255,0.14); border-radius: 6px; pointer-events: none;"></div>
+              <div style="position: absolute; left: 12px; right: 12px; top: 50%; height: 1.5px; background: rgba(255,255,255,0.14); pointer-events: none;"></div>
+              <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 24%; aspect-ratio: 1; border: 1.5px solid rgba(255,255,255,0.14); border-radius: 50%; pointer-events: none;"></div>
+              <div style="position: absolute; left: 50%; top: 12px; transform: translateX(-50%); width: 46%; height: 13%; border: 1.5px solid rgba(255,255,255,0.14); border-top: none; border-radius: 0 0 5px 5px; pointer-events: none;"></div>
+              <div style="position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); width: 46%; height: 13%; border: 1.5px solid rgba(255,255,255,0.14); border-bottom: none; border-radius: 5px 5px 0 0; pointer-events: none;"></div>
+
+              <sc-for list="{{ lineupSlots }}" as="slot" hint-placeholder-count="11">
+                <div onDragOver="{{ slot.onDragOver }}" onDrop="{{ slot.onDrop }}" style="position: absolute; left: {{ slot.left }}; top: {{ slot.top }}; transform: translate(-50%,-50%); z-index: 3;">
+                  <sc-if value="{{ slot.hasCard }}" hint-placeholder-val="{{ false }}">
+                    <div draggable="true" onDragStart="{{ slot.onDragStart }}" onDragEnd="{{ slot.onDragEnd }}" onClick="{{ slot.onPick }}" style="cursor: grab; display: flex; flex-direction: column; align-items: center; position: relative;">
+                      <img src="{{ slot.img }}" style="width: clamp(52px,12vw,86px); display: block; border-radius: 5px; box-shadow: 0 10px 24px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.1); pointer-events: none;">
+                      <button onClick="{{ slot.onClear }}" style="position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; border-radius: 50%; background: #DC2626; border: 2px solid #0A0A0A; color: #FFF; font-size: 11px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
+                      <div style="margin-top: 5px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: #C8A75B; text-transform: uppercase;">{{ slot.label }}</div>
                     </div>
-                    <div style="margin-top: 5px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); text-transform: uppercase;">{{ slot.label }}</div>
-                  </div>
-                </sc-if>
-              </div>
-            </sc-for>
+                  </sc-if>
+                  <sc-if value="{{ slot.noCard }}" hint-placeholder-val="{{ true }}">
+                    <div onClick="{{ slot.onPick }}" style="cursor: pointer; display: flex; flex-direction: column; align-items: center;">
+                      <div style="width: clamp(52px,12vw,86px); aspect-ratio: 5/7; border: 1px dashed rgba(255,255,255,0.28); border-radius: 5px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); transition: all 0.15s;" style-hover="border-color: #C8A75B; background: rgba(200,167,91,0.08);">
+                        <span style="font-size: 18px; color: rgba(255,255,255,0.45); line-height: 1;">+</span>
+                      </div>
+                      <div style="margin-top: 5px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); text-transform: uppercase;">{{ slot.label }}</div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+
           </div>
 
           <!-- card picker overlay -->
@@ -594,17 +608,17 @@ class Component extends DCLogic {
   // 4-3-3 — vertical pitch (GK bottom, attack top). Mirrors the public homepage.
   get _formation() {
     return [
-      { pos:'ST',  label:'ST',  top:'9%',  left:'50%' },
-      { pos:'LW',  label:'LW',  top:'20%', left:'19%' },
-      { pos:'RW',  label:'RW',  top:'20%', left:'81%' },
-      { pos:'CM1', label:'CM',  top:'40%', left:'26%' },
-      { pos:'CM2', label:'CM',  top:'36%', left:'50%' },
-      { pos:'CM3', label:'CM',  top:'40%', left:'74%' },
-      { pos:'LB',  label:'LB',  top:'64%', left:'13%' },
-      { pos:'CB1', label:'CB',  top:'66%', left:'38%' },
-      { pos:'CB2', label:'CB',  top:'66%', left:'62%' },
-      { pos:'RB',  label:'RB',  top:'64%', left:'87%' },
-      { pos:'GK',  label:'GK',  top:'87%', left:'50%' },
+      { pos:'ST',  label:'ST',  top:'13%', left:'50%' },
+      { pos:'LW',  label:'LW',  top:'24%', left:'19%' },
+      { pos:'RW',  label:'RW',  top:'24%', left:'81%' },
+      { pos:'CM1', label:'CM',  top:'44%', left:'26%' },
+      { pos:'CM2', label:'CM',  top:'40%', left:'50%' },
+      { pos:'CM3', label:'CM',  top:'44%', left:'74%' },
+      { pos:'LB',  label:'LB',  top:'66%', left:'13%' },
+      { pos:'CB1', label:'CB',  top:'68%', left:'38%' },
+      { pos:'CB2', label:'CB',  top:'68%', left:'62%' },
+      { pos:'RB',  label:'RB',  top:'66%', left:'87%' },
+      { pos:'GK',  label:'GK',  top:'88%', left:'50%' },
     ];
   }
 
@@ -639,6 +653,24 @@ class Component extends DCLogic {
     }
   }
 
+  async _lineupSwap(fromPos, toPos) {
+    const list = this.state.cards || [];
+    const a = list.find(c => c.lineup_pos === fromPos);
+    if (!a) return;
+    const b = list.find(c => c.lineup_pos === toPos);
+    this.setState({ loading: true });
+    try {
+      if (b) {
+        await this._api(`/api/cards/${b.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lineup_pos: fromPos }) });
+      }
+      await this._api(`/api/cards/${a.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lineup_pos: toPos }) });
+      await this._fetch();
+      this.setState({ loading: false });
+    } catch (e) {
+      this.setState({ loading: false });
+    }
+  }
+
   _lineupVals(cards) {
     const list = cards || [];
     const byPos = {};
@@ -646,20 +678,25 @@ class Component extends DCLogic {
 
     const lineupSlots = this._formation.map(p => {
       const c = byPos[p.pos];
+      const hasCard = !!(c && c.photo_url);
       return {
         pos: p.pos, label: p.label, left: p.left, top: p.top,
-        hasCard: !!(c && c.photo_url), noCard: !(c && c.photo_url),
+        hasCard, noCard: !hasCard,
         img: c ? (c.photo_url || '') : '',
         player: c ? (c.player || '') : '',
         onPick: () => this.setState({ lineupPickFor: p.pos, lineupSearch: '' }),
         onClear: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this._clearLineup(p.pos); },
+        onDragStart: (e) => { this._lineupDragPos = p.pos; if (e && e.dataTransfer) e.dataTransfer.effectAllowed = 'move'; },
+        onDragOver: (e) => { e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'; },
+        onDrop: (e) => { e.preventDefault(); const from = this._lineupDragPos; this._lineupDragPos = null; if (from && from !== p.pos) this._lineupSwap(from, p.pos); },
+        onDragEnd: () => { this._lineupDragPos = null; },
       };
     });
 
     const pickFor = this.state.lineupPickFor;
     const q = (this.state.lineupSearch || '').toLowerCase().trim();
     const pickList = !pickFor ? [] : list
-      .filter(c => c.photo_url)
+      .filter(c => c.photo_url && c.status === 'collection')
       .filter(c => !q || [c.player, c.set_brand, c.variant, c.team, c.year].some(x => (x || '').toString().toLowerCase().includes(q)))
       .map(c => ({
         id: c.id, player: c.player || '—', img: c.photo_url || '',
