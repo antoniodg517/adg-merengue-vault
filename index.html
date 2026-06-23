@@ -28,7 +28,7 @@
   }
   /* ── Mobile breakpoints (the handoff shipped desktop-only) ── */
   @media (max-width:760px){
-    #navlinks{display:none!important;}
+    #nav-links{display:none!important;}
     #dots{display:none!important;}
     #hudCap{display:none!important;}
   }
@@ -41,18 +41,7 @@
 <div id="film" style="position:relative;background:#070708;color:#fff;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;">
 
   <!-- ===== NAV ===== -->
-  <nav id="nav" style="position:fixed;top:0;left:0;right:0;z-index:200;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#0A0A0A;border-bottom:1px solid #1A1A1A;box-shadow:0 8px 32px rgba(0,0,0,.6);">
-    <a href="/" style="display:block;line-height:0;">
-      <img src="/uploads/logo.png" alt="ADG Merengue Vault" style="height:40px;width:auto;mix-blend-mode:screen;display:block;">
-    </a>
-    <div id="navlinks" style="display:flex;align-items:center;gap:24px;">
-      <span style="color:#A1A1AA;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;">HOME</span>
-      <a href="/collection/" style="color:#A1A1AA;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:color .2s;">COLLECTION</a>
-      <a href="/for-sale/" style="color:#16A34A;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:color .2s;">FOR SALE</a>
-      <a href="/sold/" style="color:#DC2626;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:color .2s;">SOLD</a>
-      <a href="{{ igUrl }}" target="_blank" rel="noopener" style="background:#C8A75B;color:#0A0A0A;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:10px 20px;text-decoration:none;border-radius:2px;transition:background .2s;">BUY · SELL · TRADE</a>
-    </div>
-  </nav>
+  <script src="/nav.js"></script>
 
   <!-- numeric scene index -->
   <div id="dots" style="position:fixed;right:clamp(26px,3vw,42px);top:50%;transform:translateY(-50%);z-index:115;display:flex;flex-direction:column;gap:11px;align-items:flex-end;">
