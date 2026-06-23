@@ -92,11 +92,12 @@
         </div>
         <div style="padding: 12px 0 0; border-top: 1px solid #1A1A1A; margin-top: 1px;">
           <p style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #FFF; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.player }}</p>
-          <p style="font-family: 'Inter', sans-serif; font-size: 11px; color: #A1A1AA; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.year }} · {{ card.set }}</p>
+          <p style="font-family: 'Inter', sans-serif; font-size: 11px; color: #A1A1AA; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.year }} · {{ card.set }}</p>
+          <p style="font-family: 'Inter', sans-serif; font-size: 11px; color: #6A6A6A; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.variant }}</p>
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px;">
             <span style="font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: #C8A75B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1 1 0; min-width: 0;">{{ card.grade }}</span>
             <sc-if value="{{ card.hasPrice }}" hint-placeholder-val="{{ true }}">
-              <span style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: #16A34A; flex: none;">€{{ card.priceLabel }}</span>
+              <span style="font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 700; color: #16A34A; flex: none;">€ {{ card.priceLabel }}</span>
             </sc-if>
           </div>
           <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; background: #16A34A; color: #FFF; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 9px 12px; border-radius: 4px; text-decoration: none; transition: background 0.2s;" style-hover="background: #15803D;">Acquista — Instagram DM</a>
