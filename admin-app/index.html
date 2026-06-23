@@ -268,6 +268,72 @@
           </div>
         </sc-if>
 
+        <!-- ── TOP XI (LINEUP) ────────────────────────────────────────── -->
+        <sc-if value="{{ showLineup }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size: 13px; color: #A1A1AA; line-height: 1.6; margin-bottom: 22px; max-width: 560px;">Componi la tua Top XI in 4-3-3. Clicca una posizione per assegnare una carta della collezione; le posizioni vuote mostreranno <span style="color:#C8A75B;">“Coming Soon”</span> sul sito.</p>
+          <div style="position: relative; width: 100%; max-width: 440px; aspect-ratio: 68/90; border-radius: 14px; overflow: hidden; background: linear-gradient(180deg,#0c1a10,#08130b 60%,#060f08); border: 1px solid #1A1A1A; box-shadow: 0 30px 70px rgba(0,0,0,0.5);">
+            <div style="position: absolute; inset: 0; background: repeating-linear-gradient(180deg,rgba(255,255,255,0.018) 0 9%,transparent 9% 18%); pointer-events: none;"></div>
+            <div style="position: absolute; inset: 12px; border: 1.5px solid rgba(255,255,255,0.14); border-radius: 6px; pointer-events: none;"></div>
+            <div style="position: absolute; left: 12px; right: 12px; top: 50%; height: 1.5px; background: rgba(255,255,255,0.14); pointer-events: none;"></div>
+            <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 24%; aspect-ratio: 1; border: 1.5px solid rgba(255,255,255,0.14); border-radius: 50%; pointer-events: none;"></div>
+
+            <sc-for list="{{ lineupSlots }}" as="slot" hint-placeholder-count="11">
+              <div style="position: absolute; left: {{ slot.left }}; top: {{ slot.top }}; transform: translate(-50%,-50%); z-index: 3;">
+                <sc-if value="{{ slot.hasCard }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ slot.onPick }}" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; position: relative;">
+                    <img src="{{ slot.img }}" style="width: clamp(46px,11vw,74px); display: block; border-radius: 5px; box-shadow: 0 10px 24px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.1);">
+                    <button onClick="{{ slot.onClear }}" style="position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; border-radius: 50%; background: #DC2626; border: 2px solid #0A0A0A; color: #FFF; font-size: 11px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;">×</button>
+                    <div style="margin-top: 5px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: #C8A75B; text-transform: uppercase;">{{ slot.label }}</div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ slot.noCard }}" hint-placeholder-val="{{ true }}">
+                  <div onClick="{{ slot.onPick }}" style="cursor: pointer; display: flex; flex-direction: column; align-items: center;">
+                    <div style="width: clamp(46px,11vw,74px); aspect-ratio: 5/7; border: 1px dashed rgba(255,255,255,0.28); border-radius: 5px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); transition: all 0.15s;" style-hover="border-color: #C8A75B; background: rgba(200,167,91,0.08);">
+                      <span style="font-size: 18px; color: rgba(255,255,255,0.45); line-height: 1;">+</span>
+                    </div>
+                    <div style="margin-top: 5px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); text-transform: uppercase;">{{ slot.label }}</div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- card picker overlay -->
+          <sc-if value="{{ lineupPicking }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ closeLineupPick }}" style="position: fixed; inset: 0; z-index: 400; background: rgba(0,0,0,0.82); display: flex; align-items: center; justify-content: center; padding: 24px;">
+              <div onClick="{{ lineupStop }}" style="background: #111111; border: 1px solid #2A2A2A; border-radius: 12px; width: min(680px,100%); max-height: 82vh; display: flex; flex-direction: column; overflow: hidden;">
+                <div style="padding: 16px 20px; border-bottom: 1px solid #1A1A1A; display: flex; align-items: center; justify-content: space-between;">
+                  <p style="font-family: 'Anton', sans-serif; font-size: 16px; text-transform: uppercase; letter-spacing: 0.05em;">Scegli carta — {{ lineupPickLabel }}</p>
+                  <button onClick="{{ closeLineupPick }}" style="background: none; border: none; color: #A1A1AA; font-size: 24px; cursor: pointer; line-height: 1; padding: 0;">×</button>
+                </div>
+                <div style="padding: 14px 20px; border-bottom: 1px solid #1A1A1A;">
+                  <input type="text" value="{{ lineupSearch }}" onChange="{{ onLineupSearch }}" placeholder="Cerca giocatore, set, variante…" style="width: 100%; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 4px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 14px; outline: none;">
+                </div>
+                <div style="overflow-y: auto; padding: 8px;">
+                  <sc-if value="{{ lineupNoPickCards }}" hint-placeholder-val="{{ false }}">
+                    <div style="padding: 40px 20px; text-align: center; color: #A1A1AA; font-size: 13px;">Nessuna carta con foto trovata.</div>
+                  </sc-if>
+                  <sc-for list="{{ lineupPickCards }}" as="card" hint-placeholder-count="0">
+                    <div onClick="{{ card.onChoose }}" style="display: flex; align-items: center; gap: 14px; padding: 10px 12px; border-radius: 6px; cursor: pointer; transition: background 0.15s;" style-hover="background: #1A1A1A;">
+                      <div style="width: 34px; height: 48px; border-radius: 3px; overflow: hidden; background: #1A1A1A; flex: none;">
+                        <img src="{{ card.img }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                      </div>
+                      <div style="flex: 1; min-width: 0;">
+                        <p style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.player }}</p>
+                        <p style="font-size: 11px; color: #A1A1AA; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.sub }}</p>
+                      </div>
+                      <sc-if value="{{ card.inLineup }}" hint-placeholder-val="{{ false }}">
+                        <span style="background: rgba(200,167,91,0.16); color: #C8A75B; font-size: 8px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 7px; border-radius: 2px; flex: none;">In campo · {{ card.posTag }}</span>
+                      </sc-if>
+                      <span style="font-size: 12px; font-weight: 700; color: #C8A75B; flex: none;">{{ card.grade }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+        </sc-if>
+
         <!-- ── FORM ───────────────────────────────────────────────────── -->
         <sc-if value="{{ showForm }}" hint-placeholder-val="{{ false }}">
           <div style="display: grid; grid-template-columns: 1fr 252px; gap: 20px; max-width: 980px; align-items: flex-start;">
@@ -522,7 +588,101 @@ class Component extends DCLogic {
     deleteId: null,
     orderCards: [], orderSaving: false, orderSaved: false,
     reorderGroup: 'collection',
+    lineupPickFor: null, lineupSearch: '',
   };
+
+  // 4-3-3 — vertical pitch (GK bottom, attack top). Mirrors the public homepage.
+  get _formation() {
+    return [
+      { pos:'ST',  label:'ST',  top:'9%',  left:'50%' },
+      { pos:'LW',  label:'LW',  top:'20%', left:'19%' },
+      { pos:'RW',  label:'RW',  top:'20%', left:'81%' },
+      { pos:'CM1', label:'CM',  top:'40%', left:'26%' },
+      { pos:'CM2', label:'CM',  top:'36%', left:'50%' },
+      { pos:'CM3', label:'CM',  top:'40%', left:'74%' },
+      { pos:'LB',  label:'LB',  top:'64%', left:'13%' },
+      { pos:'CB1', label:'CB',  top:'66%', left:'38%' },
+      { pos:'CB2', label:'CB',  top:'66%', left:'62%' },
+      { pos:'RB',  label:'RB',  top:'64%', left:'87%' },
+      { pos:'GK',  label:'GK',  top:'87%', left:'50%' },
+    ];
+  }
+
+  async _assignLineup(cardId, pos) {
+    this.setState({ loading: true });
+    try {
+      // free up whoever currently holds this slot
+      const prev = (this.state.cards || []).find(c => c.lineup_pos === pos && c.id !== cardId);
+      if (prev) {
+        await this._api(`/api/cards/${prev.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lineup_pos: null }) });
+      }
+      // a card holds only one slot (single column), so this also moves it if reassigned
+      const res = await this._api(`/api/cards/${cardId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lineup_pos: pos }) });
+      if (!res.ok) throw new Error('save failed');
+      await this._fetch();
+      this.setState({ lineupPickFor: null, lineupSearch: '', loading: false });
+    } catch (e) {
+      this.setState({ loading: false, lineupPickFor: null });
+    }
+  }
+
+  async _clearLineup(pos) {
+    const card = (this.state.cards || []).find(c => c.lineup_pos === pos);
+    if (!card) return;
+    this.setState({ loading: true });
+    try {
+      await this._api(`/api/cards/${card.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lineup_pos: null }) });
+      await this._fetch();
+      this.setState({ loading: false });
+    } catch (e) {
+      this.setState({ loading: false });
+    }
+  }
+
+  _lineupVals(cards) {
+    const list = cards || [];
+    const byPos = {};
+    list.forEach(c => { if (c.lineup_pos) byPos[c.lineup_pos] = c; });
+
+    const lineupSlots = this._formation.map(p => {
+      const c = byPos[p.pos];
+      return {
+        pos: p.pos, label: p.label, left: p.left, top: p.top,
+        hasCard: !!(c && c.photo_url), noCard: !(c && c.photo_url),
+        img: c ? (c.photo_url || '') : '',
+        player: c ? (c.player || '') : '',
+        onPick: () => this.setState({ lineupPickFor: p.pos, lineupSearch: '' }),
+        onClear: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this._clearLineup(p.pos); },
+      };
+    });
+
+    const pickFor = this.state.lineupPickFor;
+    const q = (this.state.lineupSearch || '').toLowerCase().trim();
+    const pickList = !pickFor ? [] : list
+      .filter(c => c.photo_url)
+      .filter(c => !q || [c.player, c.set_brand, c.variant, c.team, c.year].some(x => (x || '').toString().toLowerCase().includes(q)))
+      .map(c => ({
+        id: c.id, player: c.player || '—', img: c.photo_url || '',
+        sub: [c.year, c.set_brand, c.variant].filter(Boolean).join(' · '),
+        grade: c.grade || '',
+        inLineup: !!c.lineup_pos, posTag: c.lineup_pos || '',
+        onChoose: () => this._assignLineup(c.id, pickFor),
+      }));
+
+    const labelMap = {}; this._formation.forEach(p => labelMap[p.pos] = p.label);
+
+    return {
+      lineupSlots,
+      lineupPicking: !!pickFor,
+      lineupPickLabel: pickFor ? (labelMap[pickFor] || pickFor) : '',
+      lineupPickCards: pickList,
+      lineupNoPickCards: pickList.length === 0,
+      lineupSearch: this.state.lineupSearch || '',
+      onLineupSearch: (e) => this.setState({ lineupSearch: e.target.value }),
+      closeLineupPick: () => this.setState({ lineupPickFor: null, lineupSearch: '' }),
+      lineupStop: (e) => e.stopPropagation(),
+    };
+  }
 
   _blank() {
     return { player: '', year: '', set_brand: '', variant: '', grade: 'PSA 10', serial: '', photo_url: '', photo_url_back: '', badges: [], status: 'collection', is_grail: false, price: '', notes: '', team: '' };
@@ -755,10 +915,11 @@ class Component extends DCLogic {
     const navItems = [
       { icon: '📊', label: 'Dashboard', id: 'dashboard', color: '#A1A1AA' },
       ...cardNavItems.map(n => ({ ...n, id: n.filter })),
+      { icon: '⚽', label: 'Top XI',         id: 'lineup',  color: '#A1A1AA' },
       { icon: '➕', label: 'Aggiungi Carta', id: 'form',    color: '#A1A1AA' },
       { icon: '🔀', label: 'Riordina',       id: 'reorder', color: '#A1A1AA' },
     ].map(n => {
-      const isActive = n.id === 'dashboard' || n.id === 'form' || n.id === 'reorder'
+      const isActive = n.id === 'dashboard' || n.id === 'form' || n.id === 'reorder' || n.id === 'lineup'
         ? section === n.id
         : section === 'cards' && statusFilter === n.filter;
       return {
@@ -770,6 +931,8 @@ class Component extends DCLogic {
             this.setState({ section: 'form', editCard: null, form: this._blank(), photoPreview: null, photoFile: null, formErr: null });
           } else if (n.id === 'reorder') {
             this._enterReorder();
+          } else if (n.id === 'lineup') {
+            this.setState({ section: 'lineup', lineupPickFor: null, lineupSearch: '' }); this._fetch();
           } else if (n.id === 'dashboard') {
             this.setState({ section: 'dashboard' }); this._fetch();
           } else {
@@ -871,6 +1034,7 @@ class Component extends DCLogic {
 
       sectionTitle: section === 'dashboard' ? 'Dashboard'
         : section === 'reorder' ? 'Riordina Collezione'
+        : section === 'lineup' ? '⚽ La Mia Top XI'
         : section === 'form' ? (editCard ? `Modifica — ${editCard.player || ''}` : 'Aggiungi Carta')
         : statusFilter === 'grail' ? '★ Grails'
         : statusFilter === 'for_sale' ? '💚 For Sale'
@@ -883,8 +1047,9 @@ class Component extends DCLogic {
         const cnt = counts[n.id] || 0;
         return { ...n, count: cnt > 0 ? String(cnt) : '', countColor: n.id === 'grail' ? '#C8A75B' : n.id === 'for_sale' ? '#16A34A' : n.id === 'wishlist' ? '#A78BFA' : n.id === 'sold' ? '#DC2626' : '#A1A1AA' };
       }),
-      navTools: navItems.filter(n => n.id === 'form' || n.id === 'reorder'),
-      showDashboard: section === 'dashboard', showCards: section === 'cards', showForm: section === 'form', showReorder: section === 'reorder',
+      navTools: navItems.filter(n => n.id === 'lineup' || n.id === 'form' || n.id === 'reorder'),
+      showDashboard: section === 'dashboard', showCards: section === 'cards', showForm: section === 'form', showReorder: section === 'reorder', showLineup: section === 'lineup',
+      ...this._lineupVals(cards),
       isLoading: loading,
       orderCards: orderCardsView, orderSaving, orderSaved,
       reorderTabs: [

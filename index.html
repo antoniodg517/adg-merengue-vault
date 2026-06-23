@@ -203,41 +203,52 @@
     </div>
   </section>
 
-  <!-- ===================== SCENE 4 — ANATOMY OF A GRAIL ===================== -->
-  <section id="sc7" data-screen-label="04 Anatomy" style="position:relative;height:180vh;">
-    <div style="position:sticky;top:0;height:100vh;overflow:hidden;background:radial-gradient(120% 85% at 50% 42%,#181820 0%,#0a0a0e 62%,#060608 100%);display:flex;align-items:center;justify-content:center;">
-      <div id="s7kick" style="position:absolute;top:10vh;left:0;right:0;text-align:center;z-index:5;opacity:0;padding:0 24px;">
-        <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°04 / 05 · Anatomy of a Grail</div>
-        <div style="margin-top:10px;font-family:'Anton',sans-serif;font-size:clamp(30px,4.6vw,72px);line-height:.92;color:#fff;text-transform:uppercase;">The One of One</div>
+  <!-- ===================== SCENE 4 — THE STARTING XI ===================== -->
+  <section id="sc7" data-screen-label="04 Top XI" style="position:relative;min-height:100vh;background:radial-gradient(120% 85% at 50% 30%,#0d0f0e 0%,#0a0a0e 58%,#060608 100%);display:flex;align-items:center;justify-content:center;padding:clamp(96px,13vh,150px) clamp(16px,4vw,60px) clamp(48px,8vh,90px);overflow:hidden;">
+    <div id="s7inner" style="position:relative;z-index:2;width:100%;max-width:1080px;opacity:0;transform:translateY(40px);will-change:transform,opacity;">
+
+      <div style="text-align:center;margin-bottom:clamp(26px,4vh,46px);">
+        <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°04 / 05 · The Starting XI</div>
+        <div style="margin-top:10px;font-family:'Anton',sans-serif;font-size:clamp(34px,5.2vw,82px);line-height:.92;color:#fff;text-transform:uppercase;">La Mia Top XI</div>
+        <p style="margin:16px auto 0;max-width:440px;color:#9a9aa1;font-size:clamp(13px,1.05vw,16px);line-height:1.6;">Il meglio della collezione, schierato 4-3-3. Passa il mouse per sollevare · clicca per ispezionare.</p>
       </div>
 
-      <div id="s7glow" style="position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);width:62vh;height:62vh;border-radius:50%;background:radial-gradient(circle,rgba(201,162,75,.28),transparent 62%);opacity:0;filter:blur(24px);pointer-events:none;z-index:1;"></div>
+      <!-- ── THE PITCH ── -->
+      <div style="position:relative;width:100%;max-width:560px;margin:0 auto;aspect-ratio:68/90;border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#0c1a10,#08130b 60%,#060f08);border:1px solid rgba(255,255,255,.08);box-shadow:0 50px 110px rgba(0,0,0,.7),inset 0 0 80px rgba(0,0,0,.5);">
+        <!-- mowing stripes -->
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(255,255,255,.018) 0 9%,transparent 9% 18%);pointer-events:none;"></div>
+        <!-- field markings -->
+        <div style="position:absolute;inset:14px;border:1.5px solid rgba(255,255,255,.14);border-radius:6px;pointer-events:none;"></div>
+        <div style="position:absolute;left:14px;right:14px;top:50%;height:1.5px;background:rgba(255,255,255,.14);pointer-events:none;"></div>
+        <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:24%;aspect-ratio:1;border:1.5px solid rgba(255,255,255,.14);border-radius:50%;pointer-events:none;"></div>
+        <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.22);pointer-events:none;"></div>
+        <!-- penalty boxes -->
+        <div style="position:absolute;left:50%;top:14px;transform:translateX(-50%);width:46%;height:13%;border:1.5px solid rgba(255,255,255,.14);border-top:none;border-radius:0 0 5px 5px;pointer-events:none;"></div>
+        <div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:46%;height:13%;border:1.5px solid rgba(255,255,255,.14);border-bottom:none;border-radius:5px 5px 0 0;pointer-events:none;"></div>
 
-      <div id="s7card" style="position:relative;z-index:3;will-change:transform;transform:perspective(1400px);">
-        <img src="/assets/cards/camavinga-front.jpg" alt="Eduardo Camavinga — Black Lasers 1/1" style="height:min(62vh,560px);width:auto;display:block;border-radius:12px;box-shadow:0 50px 100px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.08);">
-        <div id="s7sheen" style="position:absolute;inset:0;border-radius:12px;opacity:0;mix-blend-mode:screen;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.55) 50%,transparent 62%);"></div>
+        <!-- player slots -->
+        <sc-for list="{{ pitchSlots }}" as="slot" hint-placeholder-count="11">
+          <div style="position:absolute;left:{{ slot.left }};top:{{ slot.top }};transform:translate(-50%,-50%);z-index:3;">
+            <sc-if value="{{ slot.hasCard }}" hint-placeholder-val="{{ false }}">
+              <div onClick="{{ slot.onClick }}" onMouseMove="{{ onCardMove }}" onMouseLeave="{{ onCardLeave }}" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;">
+                <div data-lift style="transition:transform .22s ease-out;will-change:transform;transform:perspective(900px);">
+                  <img src="{{ slot.img }}" alt="{{ slot.player }}" style="width:clamp(56px,8vw,96px);display:block;border-radius:6px;box-shadow:0 14px 32px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08);">
+                </div>
+                <div style="margin-top:6px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:#C9A24B;text-transform:uppercase;white-space:nowrap;">{{ slot.label }}</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ slot.noCard }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;align-items:center;">
+                <div style="width:clamp(56px,8vw,96px);aspect-ratio:5/7;border:1px dashed rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);">
+                  <span style="font-family:'Anton',sans-serif;font-size:clamp(8px,1vw,11px);letter-spacing:.06em;color:rgba(255,255,255,.42);text-transform:uppercase;text-align:center;line-height:1.05;">Coming<br>Soon</span>
+                </div>
+                <div style="margin-top:6px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:rgba(255,255,255,.32);text-transform:uppercase;white-space:nowrap;">{{ slot.label }}</div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
       </div>
 
-      <div style="position:absolute;inset:0;z-index:4;pointer-events:none;">
-        <div id="sp0" style="position:absolute;left:clamp(20px,9vw,150px);top:25%;opacity:0;text-align:right;transform:translateY(12px);">
-          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;color:#C9A24B;text-transform:uppercase;">The Set</div>
-          <div style="margin-top:6px;font-family:'Anton',sans-serif;font-size:clamp(18px,1.9vw,32px);color:#fff;text-transform:uppercase;line-height:1;">Score FIFA<br>2022-23</div>
-        </div>
-        <div id="sp1" style="position:absolute;right:clamp(20px,9vw,150px);top:25%;opacity:0;text-align:left;transform:translateY(12px);">
-          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;color:#C9A24B;text-transform:uppercase;">Parallel</div>
-          <div style="margin-top:6px;font-family:'Anton',sans-serif;font-size:clamp(18px,1.9vw,32px);color:#fff;text-transform:uppercase;line-height:1;">Black<br>Lasers</div>
-        </div>
-        <div id="sp2" style="position:absolute;left:clamp(20px,9vw,150px);top:60%;opacity:0;text-align:right;transform:translateY(12px);">
-          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;color:#C9A24B;text-transform:uppercase;">Grade</div>
-          <div style="margin-top:6px;font-family:'Anton',sans-serif;font-size:clamp(18px,1.9vw,32px);color:#fff;text-transform:uppercase;line-height:1;">PSA 10<br>Gem-Mint</div>
-        </div>
-        <div id="sp3" style="position:absolute;right:clamp(20px,9vw,150px);top:60%;opacity:0;text-align:left;transform:translateY(12px);">
-          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;color:#C9A24B;text-transform:uppercase;">Serial</div>
-          <div style="margin-top:6px;font-family:'Anton',sans-serif;font-size:clamp(18px,1.9vw,32px);color:#fff;text-transform:uppercase;line-height:1;">1 of 1<br>The Only One</div>
-        </div>
-      </div>
-
-      <a href="{{ igUrl }}" target="_blank" rel="noopener" id="s7cta" style="position:absolute;bottom:9vh;left:50%;transform:translateX(-50%);z-index:5;display:inline-flex;align-items:center;gap:8px;background:#C9A24B;color:#070708;text-decoration:none;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:12px 22px;border-radius:2px;opacity:0;">Enquire on this piece →</a>
     </div>
   </section>
 
@@ -383,7 +394,7 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;ctaUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://instagram.com/adgmerenguevault&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
   state = {
-    inspectOpen: false, idx: 0, flipped: false,
+    inspectOpen: false, idx: 0, flipped: false, modalSource: 'grails',
     dbCards: null,
     contactOpen: false, contactName: '', contactEmail: '', contactMsg: '',
     contactSending: false, contactSent: false, contactError: '',
@@ -426,6 +437,57 @@ class Component extends DCLogic {
     ];
   }
 
+  // 4-3-3 formation, vertical pitch (GK at the bottom, attack at the top)
+  get _formation() {
+    return [
+      { pos:'ST',  label:'ST',  top:'9%',  left:'50%' },
+      { pos:'LW',  label:'LW',  top:'20%', left:'19%' },
+      { pos:'RW',  label:'RW',  top:'20%', left:'81%' },
+      { pos:'CM1', label:'CM',  top:'40%', left:'26%' },
+      { pos:'CM2', label:'CM',  top:'36%', left:'50%' },
+      { pos:'CM3', label:'CM',  top:'40%', left:'74%' },
+      { pos:'LB',  label:'LB',  top:'64%', left:'13%' },
+      { pos:'CB1', label:'CB',  top:'66%', left:'38%' },
+      { pos:'CB2', label:'CB',  top:'66%', left:'62%' },
+      { pos:'RB',  label:'RB',  top:'64%', left:'87%' },
+      { pos:'GK',  label:'GK',  top:'87%', left:'50%' },
+    ];
+  }
+
+  _toModal(c, posLabel) {
+    return {
+      player: c.player || '',
+      line: [c.year, c.set_brand].filter(Boolean).join(' · '),
+      variant: c.variant || '',
+      grade: c.grade || '',
+      serial: c.serial || '',
+      badge: posLabel || 'Top XI',
+      front: c.photo_url || '',
+      back: c.photo_url_back || c.photo_url || '',
+      desc: c.notes || '',
+    };
+  }
+
+  // Build the 11 pitch slots + the ordered list of assigned cards (for the modal)
+  _lineupData() {
+    const cards = this.state.dbCards || [];
+    const byPos = {};
+    cards.forEach(c => { if (c.lineup_pos) byPos[c.lineup_pos] = c; });
+    const modalCards = [];
+    const slots = this._formation.map(p => {
+      const c = byPos[p.pos];
+      if (c && c.photo_url) {
+        const cardIdx = modalCards.length;
+        modalCards.push(this._toModal(c, p.label));
+        return { ...p, hasCard: true, noCard: false, img: c.photo_url, player: c.player || '',
+                 onClick: () => this.setState({ inspectOpen: true, modalSource: 'lineup', idx: cardIdx, flipped: false }) };
+      }
+      return { ...p, hasCard: false, noCard: true, img: '', player: '' };
+    });
+    this._luModal = modalCards;
+    return slots;
+  }
+
   async _sendContact() {
     const { contactName, contactEmail, contactMsg } = this.state;
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((contactEmail || '').trim());
@@ -447,20 +509,23 @@ class Component extends DCLogic {
 
   renderVals() {
     const { contactOpen, contactName, contactEmail, contactMsg, contactSending, contactSent, contactError } = this.state;
-    const c = this.cards[this.state.idx] || this.cards[0];
+    const pitchSlots = this._lineupData();
+    const activeList = this.state.modalSource === 'lineup' ? (this._luModal || []) : this.cards;
+    const c = activeList[this.state.idx] || activeList[0] || {};
     return {
       cards: this.cards,
+      pitchSlots,
       inspectOpen: this.state.inspectOpen,
       flipped: this.state.flipped,
       cur: c,
       curImg: this.state.flipped ? c.back : c.front,
       flipLabel: this.state.flipped ? 'View Front' : 'View Back',
       igUrl: this.props.ctaUrl ?? 'https://instagram.com/adgmerenguevault',
-      onCardClick: (e) => { const i = +(e.currentTarget.dataset.idx || 0); this.setState({ inspectOpen:true, idx:i, flipped:false }); },
+      onCardClick: (e) => { const i = +(e.currentTarget.dataset.idx || 0); this.setState({ inspectOpen:true, modalSource:'grails', idx:i, flipped:false }); },
       closeInspect: () => this.setState({ inspectOpen:false }),
       flip: () => this.setState(s => ({ flipped: !s.flipped })),
-      prev: () => this.setState(s => ({ idx:(s.idx + this.cards.length - 1) % this.cards.length, flipped:false })),
-      next: () => this.setState(s => ({ idx:(s.idx + 1) % this.cards.length, flipped:false })),
+      prev: () => this.setState(s => ({ idx:(s.idx + activeList.length - 1) % activeList.length, flipped:false })),
+      next: () => this.setState(s => ({ idx:(s.idx + 1) % activeList.length, flipped:false })),
       stop: (e) => e.stopPropagation(),
       contactOpen,
       contactFabIcon: contactOpen ? '×' : '✉',
@@ -536,7 +601,7 @@ class Component extends DCLogic {
       s5shelf:$('s5shelf'), s5kicker:$('s5kicker'), s5cupL:$('s5cupL'), s5cupR:$('s5cupR'), s5sheenL:$('s5sheenL'), s5sheenR:$('s5sheenR'),
       s5spot0:$('s5spot0'), s5spot1:$('s5spot1'), s5spot2:$('s5spot2'), s5spot3:$('s5spot3'),
       s5card0:$('s5card0'), s5card1:$('s5card1'), s5card2:$('s5card2'), s5card3:$('s5card3'),
-      s7kick:$('s7kick'), s7glow:$('s7glow'), s7card:$('s7card'), s7sheen:$('s7sheen'), s7cta:$('s7cta'), sp0:$('sp0'), sp1:$('sp1'), sp2:$('sp2'), sp3:$('sp3'),
+      s7inner:$('s7inner'),
       s8inner:$('s8inner'),
       hudFig:$('hudFig'), hudMeta:$('hudMeta'),
       dots:[$('dot0'),$('dot1'),$('dot2'),$('dot3'),$('dot4')],
@@ -585,15 +650,8 @@ class Component extends DCLogic {
       if (E.s5sheenL) E.s5sheenL.style.opacity = String(0.2 + sh*0.55);
       if (E.s5sheenR) E.s5sheenR.style.opacity = String(0.2 + (1-sh)*0.55); }
 
-    // SCENE 4 — Anatomy of a Grail
-    { const p = prog('sc7');
-      if (E.s7kick) E.s7kick.style.opacity = String(seg(p,0.05,0.18));
-      if (E.s7glow) E.s7glow.style.opacity = String(seg(p,0.1,0.4)*0.9);
-      if (E.s7card) { const rot=lerp(-20,20,p); const sc=lerp(0.9,1.05,seg(p,0,0.5)); E.s7card.style.transform=`perspective(1400px) rotateY(${rot}deg) scale(${sc})`; }
-      if (E.s7sheen) E.s7sheen.style.opacity = String(cl(Math.sin(p*Math.PI))*0.8);
-      const sth=[0.18,0.28,0.40,0.52];
-      for(let i=0;i<4;i++){ const el=E['sp'+i]; if(!el) continue; const t=seg(p,sth[i],sth[i]+0.12); el.style.opacity=String(t); el.style.transform=`translateY(${lerp(12,0,t)}px)`; }
-      if (E.s7cta) { const t=seg(p,0.62,0.78); E.s7cta.style.opacity=String(t); E.s7cta.style.pointerEvents = t>0.5?'auto':'none'; } }
+    // SCENE 4 — The Starting XI (pitch fade-in)
+    { const s = document.getElementById('sc7'); if (s && E.s7inner) { const r = s.getBoundingClientRect(); const t = cl((vh - r.top)/(vh*0.55)); E.s7inner.style.opacity = String(t); E.s7inner.style.transform = `translateY(${lerp(40,0,t)}px)`; } }
 
     // SCENE 5 — Navigation entrance
     { const s = document.getElementById('sc8'); if (s && E.s8inner) { const r = s.getBoundingClientRect(); const t = cl((vh - r.top)/(vh*0.55)); E.s8inner.style.opacity = String(t); E.s8inner.style.transform = `translateY(${lerp(40,0,t)}px)`; } }
@@ -609,7 +667,7 @@ class Component extends DCLogic {
       ['FIG·01','Manifesto · La Casa Blanca'],
       ['FIG·02','The Vault Ledger'],
       ['FIG·03','The Hall of Grails'],
-      ['FIG·04','Anatomy of a Grail'],
+      ['FIG·04','The Starting XI'],
       ['FIG·05','Choose Your Way In'],
     ];
     const h = hud[active] || hud[0];
