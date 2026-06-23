@@ -141,46 +141,90 @@
 
 <!-- ── LIGHTBOX ── -->
 <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
-  <div style="position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 40px; animation: fadeIn 0.2s ease;" onClick="{{ closeLightbox }}">
-    <div style="display: flex; gap: 56px; align-items: flex-start; max-width: 860px; width: 100%; position: relative;" onClick="{{ stopProp }}">
-      <sc-if value="{{ lightboxHasBack }}" hint-placeholder-val="{{ false }}">
-        <div style="display: flex; gap: 20px; flex: none;">
-          <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.9), 0 0 60px rgba(200,167,91,0.18); background: #1A1A1A;">
-            <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Fronte" shape="rect" fit="contain" style="width: 180px; height: 252px; display: block;"></image-slot>
+  <div style="position: fixed; inset: 0; background: radial-gradient(120% 90% at 50% 20%, #0c0c0e 0%, #050506 70%); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 40px 24px; animation: fadeIn 0.2s ease; overflow-y: auto;" onClick="{{ closeLightbox }}">
+    <div style="display: flex; gap: clamp(20px,3vw,48px); align-items: stretch; justify-content: center; max-width: 1120px; width: 100%; flex-wrap: wrap; position: relative;" onClick="{{ stopProp }}">
+
+      <!-- LEFT — REVERSE -->
+      <div style="flex: 0 1 270px; display: flex; flex-direction: column; gap: 12px; align-self: center;">
+        <div style="display: flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #6f6f76;">
+          <span style="width: 14px; height: 1px; background: #C8A75B;"></span>Retro · Reverse
+        </div>
+        <div style="position: relative; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; background: #0d0d10; box-shadow: 0 30px 70px rgba(0,0,0,0.8);">
+          <sc-if value="{{ lightboxHasBack }}" hint-placeholder-val="{{ false }}">
+            <image-slot id="{{ lightboxSlotId_back }}" src="{{ lightboxPhotoSrc_back }}" placeholder="Retro" shape="rect" fit="contain" style="width: 100%; aspect-ratio: 5/7; display: block;"></image-slot>
+          </sc-if>
+          <sc-if value="{{ lightboxNoBack }}" hint-placeholder-val="{{ false }}">
+            <div style="width: 100%; aspect-ratio: 5/7; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: #3a3a40; text-transform: uppercase; text-align: center; padding: 20px;">Retro non<br>disponibile</div>
+          </sc-if>
+        </div>
+      </div>
+
+      <!-- CENTER — DOSSIER -->
+      <div style="flex: 1 1 360px; min-width: 290px; max-width: 460px; align-self: center; background: linear-gradient(180deg,#101012,#0b0b0d); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: clamp(22px,2.4vw,34px); box-shadow: 0 40px 90px rgba(0,0,0,0.6);">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid rgba(200,167,91,0.28); margin-bottom: 18px;">
+          <span style="font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #C8A75B;">● Vault Dossier</span>
+          <span style="font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.16em; color: #6f6f76;">FILE Nº {{ lightboxCaseNo }}</span>
+        </div>
+
+        <sc-if value="{{ lightboxHasBadges }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;">
+            <sc-for list="{{ lightboxBadges }}" as="badge" hint-placeholder-count="0">
+              <span style="background: {{ badge.bg }}; color: {{ badge.color }}; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px;">{{ badge.label }}</span>
+            </sc-for>
           </div>
-          <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.9), 0 0 60px rgba(200,167,91,0.18); background: #1A1A1A;">
-            <image-slot id="{{ lightboxSlotId_back }}" src="{{ lightboxPhotoSrc_back }}" placeholder="Retro" shape="rect" fit="contain" style="width: 180px; height: 252px; display: block;"></image-slot>
-          </div>
-        </div>
-      </sc-if>
-      <sc-if value="{{ lightboxHasBack }}" hint-placeholder-val="{{ true }}">
-        <div style="flex: none; border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.9), 0 0 60px rgba(200,167,91,0.18); background: #1A1A1A;">
-          <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Drop card photo here" shape="rect" fit="contain" style="width: 260px; height: 364px; display: block;"></image-slot>
-        </div>
-      </sc-if>
-      <div style="flex: 1; padding-top: 4px; min-width: 0;">
-        <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px;">
-          <sc-for list="{{ lightboxBadges }}" as="badge" hint-placeholder-count="0">
-            <span style="background: {{ badge.bg }}; color: {{ badge.color }}; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px;">{{ badge.label }}</span>
-          </sc-for>
-        </div>
-        <h3 style="font-family: 'Anton', sans-serif; font-size: 36px; text-transform: uppercase; color: #FFF; line-height: 0.95; margin-bottom: 8px;">{{ lightboxPlayer }}</h3>
-        <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: #A1A1AA; margin-bottom: 32px; line-height: 1.6;">{{ lightboxYear }} · {{ lightboxSet }}<br>{{ lightboxVariant }}</p>
-        <div style="background: #111111; border-radius: 8px; border: 1px solid #1A1A1A; overflow: hidden; margin-bottom: 28px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px;">
-            <span style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #A1A1AA;">Grade</span>
-            <span style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: #C8A75B;">{{ lightboxGrade }}</span>
+        </sc-if>
+
+        <div style="font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: #6f6f76; margin-bottom: 6px;">Subject</div>
+        <h3 style="font-family: 'Anton', sans-serif; font-size: clamp(30px,3.4vw,46px); text-transform: uppercase; color: #FFF; line-height: 0.92; margin-bottom: 6px;">{{ lightboxPlayer }}</h3>
+        <div style="font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #9a9aa1; margin-bottom: 22px;">{{ lightboxYear }} · {{ lightboxSet }}</div>
+
+        <div style="margin-bottom: 22px;">
+          <sc-if value="{{ lightboxHasVariant }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; align-items: baseline; gap: 10px; padding: 8px 0;">
+              <span style="font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #6f6f76; flex: none;">Parallel</span>
+              <span style="flex: 1; border-bottom: 1px dotted rgba(255,255,255,0.16); transform: translateY(-3px);"></span>
+              <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: #FFF; text-align: right;">{{ lightboxVariant }}</span>
+            </div>
+          </sc-if>
+          <div style="display: flex; align-items: baseline; gap: 10px; padding: 8px 0;">
+            <span style="font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #6f6f76; flex: none;">Grade</span>
+            <span style="flex: 1; border-bottom: 1px dotted rgba(255,255,255,0.16); transform: translateY(-3px);"></span>
+            <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #C8A75B; text-align: right;">{{ lightboxGrade }}</span>
           </div>
           <sc-if value="{{ lightboxHasSerial }}" hint-placeholder-val="{{ true }}">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-top: 1px solid #1A1A1A;">
-              <span style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #A1A1AA;">Numbered</span>
-              <span style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: #FFF; font-variant-numeric: tabular-nums;">{{ lightboxSerial }}</span>
+            <div style="display: flex; align-items: baseline; gap: 10px; padding: 8px 0;">
+              <span style="font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #6f6f76; flex: none;">Serial</span>
+              <span style="flex: 1; border-bottom: 1px dotted rgba(255,255,255,0.16); transform: translateY(-3px);"></span>
+              <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #FFF; font-variant-numeric: tabular-nums; text-align: right;">{{ lightboxSerial }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ lightboxHasTeam }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; align-items: baseline; gap: 10px; padding: 8px 0;">
+              <span style="font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #6f6f76; flex: none;">Club</span>
+              <span style="flex: 1; border-bottom: 1px dotted rgba(255,255,255,0.16); transform: translateY(-3px);"></span>
+              <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: #FFF; text-align: right;">{{ lightboxTeam }}</span>
             </div>
           </sc-if>
         </div>
-        <p style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 300; line-height: 1.75; color: #A1A1AA; margin-bottom: 28px;">{{ lightboxDesc }}</p>
-        <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="display: inline-block; background: #C8A75B; color: #0A0A0A; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 16px 32px; border-radius: 2px; text-decoration: none; transition: background 0.2s;" style-hover="background: #E3CE9A;">ENQUIRE VIA INSTAGRAM DM</a>
+
+        <sc-if value="{{ lightboxHasDesc }}" hint-placeholder-val="{{ false }}">
+          <div style="font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: #6f6f76; margin-bottom: 8px;">Field Notes</div>
+          <p style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 300; line-height: 1.7; color: #b4b4ba; margin-bottom: 24px;">{{ lightboxDesc }}</p>
+        </sc-if>
+
+        <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="display: block; text-align: center; background: #C8A75B; color: #0A0A0A; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 15px 28px; border-radius: 2px; text-decoration: none; transition: background 0.2s;" style-hover="background: #E3CE9A;">Enquire via Instagram DM</a>
       </div>
+
+      <!-- RIGHT — OBVERSE -->
+      <div style="flex: 0 1 290px; display: flex; flex-direction: column; gap: 12px; align-self: center;">
+        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #6f6f76;">
+          Fronte · Obverse<span style="width: 14px; height: 1px; background: #C8A75B;"></span>
+        </div>
+        <div style="position: relative; border: 1px solid rgba(200,167,91,0.28); border-radius: 4px; overflow: hidden; background: #0d0d10; box-shadow: 0 36px 80px rgba(0,0,0,0.85), 0 0 50px rgba(200,167,91,0.12);">
+          <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Fronte" shape="rect" fit="contain" style="width: 100%; aspect-ratio: 5/7; display: block;"></image-slot>
+        </div>
+      </div>
+
     </div>
     <button onClick="{{ closeLightbox }}" style="position: fixed; top: 24px; right: 32px; background: none; border: none; color: #A1A1AA; font-size: 28px; cursor: pointer; line-height: 1; font-family: 'Inter', sans-serif; transition: color 0.2s; z-index: 301;" style-hover="color: #FFF;">×</button>
   </div>
@@ -483,6 +527,7 @@ class Component extends DCLogic {
       lightboxSlotId_back: lb.id ? ('lb-back-' + lb.id) : 'lb-back-none',
       lightboxPhotoSrc_back: lb.photo_url_back || '',
       lightboxHasBack: !!lb.photo_url_back,
+      lightboxNoBack: !lb.photo_url_back,
       lightboxPlayer: lb.player || '',
       lightboxYear: lb.year || '',
       lightboxSet: lb.set || '',
@@ -491,7 +536,13 @@ class Component extends DCLogic {
       lightboxSerial: lb.serial || '',
       lightboxHasSerial: !!lb.serial,
       lightboxDesc: lb.notes || '',
+      lightboxHasDesc: !!lb.notes,
+      lightboxHasVariant: !!lb.variant,
+      lightboxTeam: lb.team || '',
+      lightboxHasTeam: !!lb.team,
+      lightboxCaseNo: (lb.id ? String(lb.id).replace(/[^a-z0-9]/gi, '').slice(-6).toUpperCase() : '—'),
       lightboxBadges: (lb.badgesStyled || []),
+      lightboxHasBadges: ((lb.badgesStyled || []).length > 0),
     };
   }
 }
