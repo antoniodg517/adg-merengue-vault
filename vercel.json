@@ -7,6 +7,8 @@
     { "source": "/collection", "destination": "/collection/index.html" },
     { "source": "/collection/", "destination": "/collection/index.html" },
     { "source": "/sold", "destination": "/sold/index.html" },
-    { "source": "/sold/", "destination": "/sold/index.html" }
+    { "source": "/sold/", "destination": "/sold/index.html" },
+    { "source": "/for-sale", "destination": "/for-sale/index.html" },
+    { "source": "/for-sale/", "destination": "/for-sale/index.html" }
   ]
 }

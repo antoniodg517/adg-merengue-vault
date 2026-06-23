@@ -14,7 +14,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #0A0A0A; color: #FFF; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-    ::selection { background: #C8A75B; color: #0A0A0A; }
+    ::selection { background: #16A34A; color: #FFF; }
     :focus-visible { outline: 2px solid #C8A75B; outline-offset: 3px; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -34,11 +34,11 @@
     <img src="/uploads/logo.png" alt="ADG Merengue Vault" style="height: 40px; width: auto; mix-blend-mode: screen; display: block;">
   </a>
   <div id="nav-links" style="display: flex; align-items: center; gap: 24px;">
-    <a href="/#grails" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: color 0.2s;">GRAILS</a>
-    <a href="/collection/" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: color 0.2s;">COLLECTION</a>
-    <a href="/for-sale/" style="background: none; border: none; color: #16A34A; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: color 0.2s;">FOR SALE</a>
-    <span style="color: #DC2626; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; border-bottom: 1px solid #DC2626; padding-bottom: 2px;">SOLD</span>
-    <a href="/#about" style="background: none; border: none; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: color 0.2s;">ABOUT</a>
+    <a href="/#grails" style="color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; transition: color 0.2s;">GRAILS</a>
+    <a href="/collection/" style="color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; transition: color 0.2s;">COLLECTION</a>
+    <span style="color: #16A34A; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; border-bottom: 1px solid #16A34A; padding-bottom: 2px;">FOR SALE</span>
+    <a href="/sold/" style="color: #DC2626; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; transition: color 0.2s;">SOLD</a>
+    <a href="/#about" style="color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; transition: color 0.2s;">ABOUT</a>
     <sc-if value="{{ dbLoaded }}" hint-placeholder-val="{{ false }}">
       <button onClick="{{ doRefresh }}" title="{{ lastUpdatedText }}" style="background: none; border: none; color: #A1A1AA; font-size: 14px; cursor: pointer; padding: 4px; line-height: 1; transition: color 0.2s;" style-hover="color: #C8A75B;">↻</button>
     </sc-if>
@@ -52,11 +52,11 @@
 <!-- ── PAGE HEADER ── -->
 <div id="page-header" style="padding-top: 72px; background: #0A0A0A; border-bottom: 1px solid #1A1A1A;">
   <div style="max-width: 1280px; margin: 0 auto; padding: 56px 48px 40px;">
-    <p style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #DC2626; margin-bottom: 12px;">Hall of Fame</p>
+    <p style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #16A34A; margin-bottom: 12px;">Available Now</p>
     <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
       <div>
-        <h1 style="font-family: 'Anton', sans-serif; font-size: clamp(40px, 5vw, 68px); text-transform: uppercase; color: #FFF; line-height: 1; margin-bottom: 14px;">SOLD</h1>
-        <p style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 300; color: #A1A1AA; max-width: 540px; line-height: 1.6;">Solo una piccola parte delle carte che sono andate da altri collezionisti.</p>
+        <h1 style="font-family: 'Anton', sans-serif; font-size: clamp(40px, 5vw, 68px); text-transform: uppercase; color: #FFF; line-height: 1; margin-bottom: 14px;">FOR SALE</h1>
+        <p style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 300; color: #A1A1AA; max-width: 540px; line-height: 1.6;">Pezzi disponibili a trattativa privata. Contattami su Instagram per qualsiasi offerta.</p>
       </div>
       <p style="font-family: 'Inter', sans-serif; font-size: 13px; color: #A1A1AA; font-variant-numeric: tabular-nums;">{{ totalLabel }}</p>
     </div>
@@ -81,23 +81,25 @@
       <div>
         <div onClick="{{ card.onClick }}" style="cursor: pointer; position: relative; transition: transform 0.3s ease;" style-hover="transform: scale(1.03);">
           <div style="aspect-ratio: 5/7; overflow: hidden; border-radius: 10px; background: #1A1A1A; position: relative;">
-            <image-slot id="{{ card.slotId }}" src="{{ card.photoSrc }}" placeholder="{{ card.player }}" shape="rect" fit="contain" style="width: 100%; height: 100%; display: block; filter: grayscale(0.55) brightness(0.72);"></image-slot>
-            <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-              <span style="font-family: 'Anton', sans-serif; font-size: 26px; letter-spacing: 0.14em; color: #FFF; background: rgba(220,38,38,0.92); padding: 5px 16px; transform: rotate(-11deg); border-radius: 3px; box-shadow: 0 6px 20px rgba(0,0,0,0.5); text-transform: uppercase;">SOLD</span>
-            </div>
+            <image-slot id="{{ card.slotId }}" src="{{ card.photoSrc }}" placeholder="{{ card.player }}" shape="rect" fit="contain" style="width: 100%; height: 100%; display: block;"></image-slot>
           </div>
+          <!-- badges top-left -->
           <div style="position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 2;">
             <sc-for list="{{ card.badgesStyled }}" as="badge" hint-placeholder-count="0">
               <span style="display: block; background: {{ badge.bg }}; color: {{ badge.color }}; font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 7px; border-radius: 2px;">{{ badge.label }}</span>
             </sc-for>
           </div>
+          <!-- price badge top-right -->
+          <sc-if value="{{ card.hasPrice }}" hint-placeholder-val="{{ false }}">
+            <span style="position: absolute; top: 10px; right: 10px; z-index: 2; background: #16A34A; color: #FFF; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 8px; border-radius: 2px;">€{{ card.priceLabel }}</span>
+          </sc-if>
         </div>
         <div style="padding: 12px 0 0; border-top: 1px solid #1A1A1A; margin-top: 1px;">
           <p style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #FFF; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.player }}</p>
           <p style="font-family: 'Inter', sans-serif; font-size: 11px; color: #A1A1AA; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.year }} · {{ card.set }}</p>
           <div style="display: flex; align-items: center; justify-content: space-between;">
             <span style="font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: #C8A75B;">{{ card.grade }}</span>
-            <span style="font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #DC2626;">Venduta</span>
+            <span style="font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #16A34A;">Disponibile</span>
           </div>
         </div>
       </div>
@@ -105,8 +107,8 @@
   </div>
   <sc-if value="{{ emptyGrid }}" hint-placeholder-val="{{ false }}">
     <div style="text-align: center; padding: 80px 0;">
-      <p style="font-family: 'Anton', sans-serif; font-size: 28px; text-transform: uppercase; color: #2A2A2A; margin-bottom: 12px;">Nessuna carta venduta</p>
-      <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: #A1A1AA;">Le carte vendute appariranno qui.</p>
+      <p style="font-family: 'Anton', sans-serif; font-size: 28px; text-transform: uppercase; color: #2A2A2A; margin-bottom: 12px;">Nessuna carta in vendita</p>
+      <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: #A1A1AA;">Le carte disponibili appariranno qui.</p>
     </div>
   </sc-if>
 </div>
@@ -118,24 +120,21 @@
       <sc-if value="{{ lightboxHasBack }}" hint-placeholder-val="{{ false }}">
         <div style="display: flex; gap: 20px; flex: none;">
           <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.9); background: #1A1A1A;">
-            <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Fronte" shape="rect" fit="contain" style="width: 180px; height: 252px; display: block; filter: grayscale(0.5) brightness(0.8);"></image-slot>
+            <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Fronte" shape="rect" fit="contain" style="width: 180px; height: 252px; display: block;"></image-slot>
           </div>
           <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.9); background: #1A1A1A;">
-            <image-slot id="{{ lightboxSlotId_back }}" src="{{ lightboxPhotoSrc_back }}" placeholder="Retro" shape="rect" fit="contain" style="width: 180px; height: 252px; display: block; filter: grayscale(0.5) brightness(0.8);"></image-slot>
+            <image-slot id="{{ lightboxSlotId_back }}" src="{{ lightboxPhotoSrc_back }}" placeholder="Retro" shape="rect" fit="contain" style="width: 180px; height: 252px; display: block;"></image-slot>
           </div>
         </div>
       </sc-if>
       <sc-if value="{{ lightboxHasBack }}" hint-placeholder-val="{{ true }}">
-        <div style="flex: none; border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.9); background: #1A1A1A; position: relative;">
-          <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Card" shape="rect" fit="contain" style="width: 260px; height: 364px; display: block; filter: grayscale(0.5) brightness(0.8);"></image-slot>
-          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-            <span style="font-family: 'Anton', sans-serif; font-size: 34px; letter-spacing: 0.14em; color: #FFF; background: rgba(220,38,38,0.92); padding: 7px 22px; transform: rotate(-11deg); border-radius: 4px; box-shadow: 0 8px 26px rgba(0,0,0,0.6); text-transform: uppercase;">SOLD</span>
-          </div>
+        <div style="flex: none; border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.9); background: #1A1A1A;">
+          <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Card" shape="rect" fit="contain" style="width: 260px; height: 364px; display: block;"></image-slot>
         </div>
       </sc-if>
       <div style="flex: 1; padding-top: 4px; min-width: 0;">
         <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px;">
-          <span style="background: #DC2626; color: #FFF; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px;">Venduta</span>
+          <span style="background: #16A34A; color: #FFF; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px;">Disponibile</span>
           <sc-for list="{{ lightboxBadges }}" as="badge" hint-placeholder-count="0">
             <span style="background: {{ badge.bg }}; color: {{ badge.color }}; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px;">{{ badge.label }}</span>
           </sc-for>
@@ -153,9 +152,15 @@
               <span style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: #FFF; font-variant-numeric: tabular-nums;">{{ lightboxSerial }}</span>
             </div>
           </sc-if>
+          <sc-if value="{{ lightboxHasPrice }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-top: 1px solid #1A1A1A;">
+              <span style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #A1A1AA;">Prezzo</span>
+              <span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 700; color: #16A34A;">€{{ lightboxPrice }}</span>
+            </div>
+          </sc-if>
         </div>
         <p style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 300; line-height: 1.75; color: #A1A1AA; margin-bottom: 28px;">{{ lightboxDesc }}</p>
-        <div style="display: inline-block; background: #1A1A1A; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 16px 32px; border-radius: 2px; border: 1px solid #2A2A2A;">★ Andata da un altro collezionista</div>
+        <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: #16A34A; color: #FFF; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 15px 28px; border-radius: 2px; text-decoration: none; transition: background 0.2s;" style-hover="background: #15803D;">◎ Acquista — Instagram DM</a>
       </div>
     </div>
     <button onClick="{{ closeLightbox }}" style="position: fixed; top: 24px; right: 32px; background: none; border: none; color: #A1A1AA; font-size: 28px; cursor: pointer; line-height: 1; font-family: 'Inter', sans-serif; transition: color 0.2s; z-index: 301;" style-hover="color: #FFF;">×</button>
@@ -214,7 +219,7 @@ class Component extends DCLogic {
   };
 
   componentDidMount() {
-    document.title = 'Sold — ADG Merengue Vault';
+    document.title = 'For Sale — ADG Merengue Vault';
     this._fetchDB();
   }
 
@@ -270,7 +275,7 @@ class Component extends DCLogic {
       badges: Array.isArray(c.badges) ? c.badges : [],
       is_grail: !!c.is_grail,
       status: c.status || 'collection',
-      price: c.price || null,
+      price: c.price != null ? c.price : null,
       photo_url: c.photo_url || null,
       photo_url_back: c.photo_url_back || null,
       notes: c.notes || c.desc || '',
@@ -290,6 +295,8 @@ class Component extends DCLogic {
         slotId: 'slot-' + c.id,
         photoSrc: c.photo_url || '',
         hasSerial: !!c.serial,
+        hasPrice: c.price != null,
+        priceLabel: c.price != null ? String(c.price) : '',
         badgesStyled: c.badges.map(b => ({ label: b, ...badgeStyle(b) })),
         onClick: () => this.setState({ lightboxCard: c }),
       };
@@ -298,22 +305,19 @@ class Component extends DCLogic {
     const source = dbCards !== null ? dbCards : [];
     const allCards = source.map(buildCard);
 
-    // Only sold cards, newest first by sort_order
-    const soldCards = allCards.filter(c => c.status === 'sold')
-      .sort((a, b) => a.sort_order - b.sort_order);
+    const forSaleCards = allCards.filter(c => c.status === 'for_sale')
+      .sort((a, b) => (a.sort_forsale ?? a.sort_order ?? 9999) - (b.sort_forsale ?? b.sort_order ?? 9999));
 
-    // Free-text search across all card fields, accent-insensitive
     const fold = (s) => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
     const q = fold(searchQuery.trim());
     const gridCards = !q
-      ? soldCards
-      : soldCards.filter(c => {
+      ? forSaleCards
+      : forSaleCards.filter(c => {
           const hay = fold([c.player, c.year, c.set, c.variant, c.grade, c.serial, c.notes, c.team, ...(c.badges || [])]
             .filter(Boolean).join(' '));
           return hay.includes(q);
         });
 
-    // Lightbox
     const closeLightbox = () => this.setState({ lightboxCard: null });
     const lb = lightboxCard || {};
 
@@ -326,7 +330,6 @@ class Component extends DCLogic {
       hasSearch: !!q,
       onSearchChange: (e) => this.setState({ searchQuery: e.target.value }),
       clearSearch: () => this.setState({ searchQuery: '' }),
-      // Floating contact
       contactOpen,
       contactFabIcon: contactOpen ? '×' : '✉',
       toggleContact: () => this.setState({ contactOpen: !this.state.contactOpen, contactSent: false, contactError: '' }),
@@ -339,26 +342,25 @@ class Component extends DCLogic {
       contactSent,
       contactNotSent: !contactSent,
       contactBtnLabel: contactSending ? 'INVIO…' : '✉ Invia messaggio',
-      contactCardOptions: soldCards.map(c => ({
+      contactCardOptions: forSaleCards.map(c => ({
         value: c.id,
         label: [c.player, c.year, c.set, c.variant].filter(Boolean).join(' · '),
       })),
       sendContactEmail: () => {
         if (contactSending) return;
-        const card = soldCards.find(c => c.id === contactCardId);
+        const card = forSaleCards.find(c => c.id === contactCardId);
         const cardLabel = card ? [card.player, card.year, card.set, card.variant].filter(Boolean).join(' · ') : '';
         this._sendContact(cardLabel);
       },
       gridCards,
       emptyGrid: gridCards.length === 0,
       totalLabel: q
-        ? `${gridCards.length} / ${soldCards.length}`
-        : `${soldCards.length} cart${soldCards.length !== 1 ? 'e vendute' : 'a venduta'}`,
+        ? `${gridCards.length} / ${forSaleCards.length}`
+        : `${forSaleCards.length} cart${forSaleCards.length !== 1 ? 'e in vendita' : 'a in vendita'}`,
       dbLoaded: dbCards !== null,
       dbLoading,
       lastUpdatedText,
       doRefresh: () => this._fetchDB(),
-      // Lightbox
       lightboxOpen: lightboxCard !== null,
       closeLightbox,
       stopProp: (e) => e.stopPropagation(),
@@ -374,6 +376,8 @@ class Component extends DCLogic {
       lightboxGrade: lb.grade || '',
       lightboxSerial: lb.serial || '',
       lightboxHasSerial: !!lb.serial,
+      lightboxPrice: lb.price != null ? String(lb.price) : '',
+      lightboxHasPrice: lb.price != null,
       lightboxDesc: lb.notes || '',
       lightboxBadges: (lb.badgesStyled || []),
     };

@@ -25,6 +25,7 @@ export default defineConfig({
         main: 'index.html',
         collection: 'collection/index.html',
         sold: 'sold/index.html',
+        forsale: 'for-sale/index.html',
       },
     },
   },
