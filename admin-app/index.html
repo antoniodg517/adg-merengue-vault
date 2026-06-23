@@ -409,14 +409,40 @@
                 </div>
               </div>
 
-              <!-- Grade chips -->
+              <!-- Grade (PSA) dropdown -->
               <div>
-                <label style="display: block; font-size: 8px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #A1A1AA; margin-bottom: 9px;">Grade</label>
-                <div style="display: flex; gap: 5px; flex-wrap: wrap;">
-                  <sc-for list="{{ gradeChips }}" as="g" hint-placeholder-count="0">
-                    <button onClick="{{ g.onClick }}" style="background: {{ g.bg }}; color: {{ g.col }}; border-width: 1px; border-style: solid; border-color: {{ g.bc }}; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; padding: 6px 10px; border-radius: 4px; cursor: pointer; transition: all 0.15s; white-space: nowrap;">{{ g.label }}</button>
-                  </sc-for>
-                </div>
+                <label style="display: block; font-size: 8px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #A1A1AA; margin-bottom: 9px;">Grade (PSA)</label>
+                <select value="{{ form.grade }}" onChange="{{ onGradeCh }}" style="width: 100%; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 4px; color: #FFF; font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px 12px; outline: none; cursor: pointer;">
+                  <optgroup label="PSA">
+                    <option value="PSA 10">PSA 10</option>
+                    <option value="PSA 9">PSA 9</option>
+                    <option value="PSA 8">PSA 8</option>
+                    <option value="PSA 7">PSA 7</option>
+                    <option value="PSA 6">PSA 6</option>
+                    <option value="PSA 5">PSA 5</option>
+                    <option value="PSA 4">PSA 4</option>
+                    <option value="PSA 3">PSA 3</option>
+                    <option value="PSA 2">PSA 2</option>
+                    <option value="PSA 1">PSA 1</option>
+                  </optgroup>
+                  <optgroup label="PSA Dual — Carta + Auto">
+                    <option value="PSA 10 · AUTO 10">PSA 10 · AUTO 10</option>
+                    <option value="PSA 10 · AUTO 9">PSA 10 · AUTO 9</option>
+                    <option value="PSA 10 · AUTO 8">PSA 10 · AUTO 8</option>
+                    <option value="PSA 9 · AUTO 10">PSA 9 · AUTO 10</option>
+                    <option value="PSA 9 · AUTO 9">PSA 9 · AUTO 9</option>
+                    <option value="PSA 9 · AUTO 8">PSA 9 · AUTO 8</option>
+                    <option value="PSA 8 · AUTO 10">PSA 8 · AUTO 10</option>
+                    <option value="PSA 8 · AUTO 9">PSA 8 · AUTO 9</option>
+                  </optgroup>
+                  <optgroup label="Authentic">
+                    <option value="PSA AUTH">PSA Authentic</option>
+                    <option value="AUTH · AUTO 10">AUTH · AUTO 10</option>
+                    <option value="AUTH · AUTO 9">AUTH · AUTO 9</option>
+                    <option value="AUTH · AUTO 8">AUTH · AUTO 8</option>
+                    <option value="AUTH · AUTO 7">AUTH · AUTO 7</option>
+                  </optgroup>
+                </select>
               </div>
 
               <!-- Status chips -->
@@ -1087,15 +1113,6 @@ class Component extends DCLogic {
       onClick: () => this.setState({ statusFilter: f.id }),
     }));
 
-    const GRADES = ['PSA 10','PSA 9.5','PSA 9','PSA 8.5','PSA 8','PSA 7','BGS 10','BGS 9.5','BGS 9','BGS 8.5','SGC 10','SGC 9','Raw','AUTH'];
-    const gradeChips = GRADES.map(g => ({
-      label: g,
-      bg: form.grade === g ? '#C8A75B' : 'transparent',
-      col: form.grade === g ? '#0A0A0A' : '#A1A1AA',
-      bc: form.grade === g ? '#C8A75B' : '#2A2A2A',
-      onClick: () => this.setState({ form: { ...form, grade: g } }),
-    }));
-
     const statusChips = [
       { id: 'collection', label: '🏛 Collection', aBg: '#2A2A2A' },
       { id: 'for_sale', label: '💚 For Sale', aBg: '#16A34A' },
@@ -1199,7 +1216,8 @@ class Component extends DCLogic {
 
       form, hasFormErr: !!formErr, formErrMsg: formErr || '',
     photoFile_back: this.state.photoFile_back || null,
-      gradeChips, statusChips, badgeChips,
+      statusChips, badgeChips,
+      onGradeCh: (e) => this.setState({ form: { ...form, grade: e.target.value } }),
       grailBg: form.is_grail ? '#C8A75B' : 'transparent',
       grailCol: form.is_grail ? '#0A0A0A' : '#A1A1AA',
       grailBc: form.is_grail ? '#C8A75B' : '#2A2A2A',
