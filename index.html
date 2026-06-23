@@ -392,10 +392,93 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;ctaUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://instagram.com/adgmerenguevault&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+// Famous formations — vertical pitch (GK bottom, attack top). 11 slots each.
+// Keep identical in admin-app/index.html.
+const FORMATIONS = {
+  '433': { label: '4-3-3', slots: [
+    { pos:'ST',  label:'ST', top:'13%', left:'50%' },
+    { pos:'LW',  label:'LW', top:'22%', left:'18%' },
+    { pos:'RW',  label:'RW', top:'22%', left:'82%' },
+    { pos:'CM1', label:'CM', top:'46%', left:'30%' },
+    { pos:'CM2', label:'CM', top:'42%', left:'50%' },
+    { pos:'CM3', label:'CM', top:'46%', left:'70%' },
+    { pos:'LB',  label:'LB', top:'67%', left:'13%' },
+    { pos:'CB1', label:'CB', top:'69%', left:'38%' },
+    { pos:'CB2', label:'CB', top:'69%', left:'62%' },
+    { pos:'RB',  label:'RB', top:'67%', left:'87%' },
+    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
+  ]},
+  '442': { label: '4-4-2', slots: [
+    { pos:'ST1', label:'ST', top:'14%', left:'36%' },
+    { pos:'ST2', label:'ST', top:'14%', left:'64%' },
+    { pos:'LM',  label:'LM', top:'40%', left:'14%' },
+    { pos:'CM1', label:'CM', top:'42%', left:'39%' },
+    { pos:'CM2', label:'CM', top:'42%', left:'61%' },
+    { pos:'RM',  label:'RM', top:'40%', left:'86%' },
+    { pos:'LB',  label:'LB', top:'67%', left:'13%' },
+    { pos:'CB1', label:'CB', top:'69%', left:'38%' },
+    { pos:'CB2', label:'CB', top:'69%', left:'62%' },
+    { pos:'RB',  label:'RB', top:'67%', left:'87%' },
+    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
+  ]},
+  '4231': { label: '4-2-3-1', slots: [
+    { pos:'ST',   label:'ST',  top:'12%', left:'50%' },
+    { pos:'LAM',  label:'LW',  top:'30%', left:'19%' },
+    { pos:'CAM',  label:'CAM', top:'31%', left:'50%' },
+    { pos:'RAM',  label:'RW',  top:'30%', left:'81%' },
+    { pos:'CDM1', label:'CDM', top:'53%', left:'38%' },
+    { pos:'CDM2', label:'CDM', top:'53%', left:'62%' },
+    { pos:'LB',   label:'LB',  top:'69%', left:'13%' },
+    { pos:'CB1',  label:'CB',  top:'71%', left:'38%' },
+    { pos:'CB2',  label:'CB',  top:'71%', left:'62%' },
+    { pos:'RB',   label:'RB',  top:'69%', left:'87%' },
+    { pos:'GK',   label:'GK',  top:'88%', left:'50%' },
+  ]},
+  '352': { label: '3-5-2', slots: [
+    { pos:'ST1', label:'ST', top:'14%', left:'36%' },
+    { pos:'ST2', label:'ST', top:'14%', left:'64%' },
+    { pos:'LM',  label:'LM', top:'36%', left:'12%' },
+    { pos:'CM1', label:'CM', top:'42%', left:'32%' },
+    { pos:'CM2', label:'CM', top:'39%', left:'50%' },
+    { pos:'CM3', label:'CM', top:'42%', left:'68%' },
+    { pos:'RM',  label:'RM', top:'36%', left:'88%' },
+    { pos:'CB1', label:'CB', top:'68%', left:'28%' },
+    { pos:'CB2', label:'CB', top:'69%', left:'50%' },
+    { pos:'CB3', label:'CB', top:'68%', left:'72%' },
+    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
+  ]},
+  '343': { label: '3-4-3', slots: [
+    { pos:'LW',  label:'LW', top:'15%', left:'20%' },
+    { pos:'ST',  label:'ST', top:'13%', left:'50%' },
+    { pos:'RW',  label:'RW', top:'15%', left:'80%' },
+    { pos:'LM',  label:'LM', top:'42%', left:'15%' },
+    { pos:'CM1', label:'CM', top:'44%', left:'38%' },
+    { pos:'CM2', label:'CM', top:'44%', left:'62%' },
+    { pos:'RM',  label:'RM', top:'42%', left:'85%' },
+    { pos:'CB1', label:'CB', top:'68%', left:'28%' },
+    { pos:'CB2', label:'CB', top:'69%', left:'50%' },
+    { pos:'CB3', label:'CB', top:'68%', left:'72%' },
+    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
+  ]},
+  '532': { label: '5-3-2', slots: [
+    { pos:'ST1', label:'ST', top:'14%', left:'36%' },
+    { pos:'ST2', label:'ST', top:'14%', left:'64%' },
+    { pos:'CM1', label:'CM', top:'42%', left:'30%' },
+    { pos:'CM2', label:'CM', top:'39%', left:'50%' },
+    { pos:'CM3', label:'CM', top:'42%', left:'70%' },
+    { pos:'LWB', label:'LWB',top:'62%', left:'10%' },
+    { pos:'CB1', label:'CB', top:'68%', left:'31%' },
+    { pos:'CB2', label:'CB', top:'69%', left:'50%' },
+    { pos:'CB3', label:'CB', top:'68%', left:'69%' },
+    { pos:'RWB', label:'RWB',top:'62%', left:'90%' },
+    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
+  ]},
+};
+
 class Component extends DCLogic {
   state = {
     inspectOpen: false, idx: 0, flipped: false, modalSource: 'grails',
-    dbCards: null,
+    dbCards: null, config: {},
     contactOpen: false, contactName: '', contactEmail: '', contactMsg: '',
     contactSending: false, contactSent: false, contactError: '',
   };
@@ -406,6 +489,10 @@ class Component extends DCLogic {
       if (!res.ok) return;
       const data = await res.json();
       this.setState({ dbCards: data || [] });
+    } catch (_) {}
+    try {
+      const cres = await fetch('/api/config');
+      if (cres.ok) this.setState({ config: (await cres.json()) || {} });
     } catch (_) {}
   }
 
@@ -437,22 +524,10 @@ class Component extends DCLogic {
     ];
   }
 
-  // 4-3-3 formation, vertical pitch (GK at the bottom, attack at the top)
-  get _formation() {
-    return [
-      { pos:'ST',  label:'ST',  top:'13%', left:'50%' },
-      { pos:'LW',  label:'LW',  top:'24%', left:'19%' },
-      { pos:'RW',  label:'RW',  top:'24%', left:'81%' },
-      { pos:'CM1', label:'CM',  top:'44%', left:'26%' },
-      { pos:'CM2', label:'CM',  top:'40%', left:'50%' },
-      { pos:'CM3', label:'CM',  top:'44%', left:'74%' },
-      { pos:'LB',  label:'LB',  top:'66%', left:'13%' },
-      { pos:'CB1', label:'CB',  top:'68%', left:'38%' },
-      { pos:'CB2', label:'CB',  top:'68%', left:'62%' },
-      { pos:'RB',  label:'RB',  top:'66%', left:'87%' },
-      { pos:'GK',  label:'GK',  top:'88%', left:'50%' },
-    ];
-  }
+  // Active formation, vertical pitch (GK bottom, attack top).
+  // FORMATIONS map is shared (defined below); keep admin-app in sync.
+  get _formationKey() { return (this.state.config && this.state.config.lineup_formation) || '433'; }
+  get _formation() { return (FORMATIONS[this._formationKey] || FORMATIONS['433']).slots; }
 
   _toModal(c, posLabel) {
     return {

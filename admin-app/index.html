@@ -277,7 +277,14 @@
               <p style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #C8A75B; margin-bottom: 12px;">Formazione 4-3-3</p>
               <h2 style="font-family: 'Anton', sans-serif; font-size: clamp(30px,4vw,46px); line-height: 0.95; text-transform: uppercase; color: #FFF; margin-bottom: 18px;">La Mia Top XI</h2>
               <p style="font-size: 13px; color: #A1A1AA; line-height: 1.7; margin-bottom: 16px;">Componi l'undici titolare scegliendo tra le carte in <span style="color:#FFF;">Collection</span>. Clicca una posizione per assegnare una carta, oppure <span style="color:#FFF;">trascina</span> una carta da una posizione all'altra per scambiarle.</p>
-              <p style="font-size: 13px; color: #A1A1AA; line-height: 1.7;">Le posizioni lasciate vuote mostreranno <span style="color:#C8A75B;">“Coming Soon”</span> sul sito pubblico.</p>
+              <p style="font-size: 13px; color: #A1A1AA; line-height: 1.7; margin-bottom: 22px;">Le posizioni lasciate vuote mostreranno <span style="color:#C8A75B;">“Coming Soon”</span> sul sito pubblico.</p>
+
+              <p style="font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #A1A1AA; margin-bottom: 10px;">Modulo</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                <sc-for list="{{ formationOptions }}" as="f" hint-placeholder-count="6">
+                  <button onClick="{{ f.onClick }}" style="background: {{ f.bg }}; color: {{ f.col }}; border: 1px solid {{ f.bc }}; font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; padding: 8px 14px; border-radius: 4px; cursor: pointer; transition: all 0.15s;">{{ f.label }}</button>
+                </sc-for>
+              </div>
             </div>
 
             <!-- right: pitch -->
@@ -587,6 +594,89 @@ const SUPABASE_URL = 'https://iyjmtcmtbrivodqmdjmq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5am10Y210YnJpdm9kcW1kam1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NjI2MzAsImV4cCI6MjA5NzUzODYzMH0.UpxNykyn57Pkgl4SbrV1mt08zamvpQzsX0u4nTPQ-_w'; // public anon key (safe in client)
 const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Famous formations — vertical pitch (GK bottom, attack top). 11 slots each.
+// Keep identical in index.html (public homepage).
+const FORMATIONS = {
+  '433': { label: '4-3-3', slots: [
+    { pos:'ST',  label:'ST', top:'13%', left:'50%' },
+    { pos:'LW',  label:'LW', top:'22%', left:'18%' },
+    { pos:'RW',  label:'RW', top:'22%', left:'82%' },
+    { pos:'CM1', label:'CM', top:'46%', left:'30%' },
+    { pos:'CM2', label:'CM', top:'42%', left:'50%' },
+    { pos:'CM3', label:'CM', top:'46%', left:'70%' },
+    { pos:'LB',  label:'LB', top:'67%', left:'13%' },
+    { pos:'CB1', label:'CB', top:'69%', left:'38%' },
+    { pos:'CB2', label:'CB', top:'69%', left:'62%' },
+    { pos:'RB',  label:'RB', top:'67%', left:'87%' },
+    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
+  ]},
+  '442': { label: '4-4-2', slots: [
+    { pos:'ST1', label:'ST', top:'14%', left:'36%' },
+    { pos:'ST2', label:'ST', top:'14%', left:'64%' },
+    { pos:'LM',  label:'LM', top:'40%', left:'14%' },
+    { pos:'CM1', label:'CM', top:'42%', left:'39%' },
+    { pos:'CM2', label:'CM', top:'42%', left:'61%' },
+    { pos:'RM',  label:'RM', top:'40%', left:'86%' },
+    { pos:'LB',  label:'LB', top:'67%', left:'13%' },
+    { pos:'CB1', label:'CB', top:'69%', left:'38%' },
+    { pos:'CB2', label:'CB', top:'69%', left:'62%' },
+    { pos:'RB',  label:'RB', top:'67%', left:'87%' },
+    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
+  ]},
+  '4231': { label: '4-2-3-1', slots: [
+    { pos:'ST',   label:'ST',  top:'12%', left:'50%' },
+    { pos:'LAM',  label:'LW',  top:'30%', left:'19%' },
+    { pos:'CAM',  label:'CAM', top:'31%', left:'50%' },
+    { pos:'RAM',  label:'RW',  top:'30%', left:'81%' },
+    { pos:'CDM1', label:'CDM', top:'53%', left:'38%' },
+    { pos:'CDM2', label:'CDM', top:'53%', left:'62%' },
+    { pos:'LB',   label:'LB',  top:'69%', left:'13%' },
+    { pos:'CB1',  label:'CB',  top:'71%', left:'38%' },
+    { pos:'CB2',  label:'CB',  top:'71%', left:'62%' },
+    { pos:'RB',   label:'RB',  top:'69%', left:'87%' },
+    { pos:'GK',   label:'GK',  top:'88%', left:'50%' },
+  ]},
+  '352': { label: '3-5-2', slots: [
+    { pos:'ST1', label:'ST', top:'14%', left:'36%' },
+    { pos:'ST2', label:'ST', top:'14%', left:'64%' },
+    { pos:'LM',  label:'LM', top:'36%', left:'12%' },
+    { pos:'CM1', label:'CM', top:'42%', left:'32%' },
+    { pos:'CM2', label:'CM', top:'39%', left:'50%' },
+    { pos:'CM3', label:'CM', top:'42%', left:'68%' },
+    { pos:'RM',  label:'RM', top:'36%', left:'88%' },
+    { pos:'CB1', label:'CB', top:'68%', left:'28%' },
+    { pos:'CB2', label:'CB', top:'69%', left:'50%' },
+    { pos:'CB3', label:'CB', top:'68%', left:'72%' },
+    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
+  ]},
+  '343': { label: '3-4-3', slots: [
+    { pos:'LW',  label:'LW', top:'15%', left:'20%' },
+    { pos:'ST',  label:'ST', top:'13%', left:'50%' },
+    { pos:'RW',  label:'RW', top:'15%', left:'80%' },
+    { pos:'LM',  label:'LM', top:'42%', left:'15%' },
+    { pos:'CM1', label:'CM', top:'44%', left:'38%' },
+    { pos:'CM2', label:'CM', top:'44%', left:'62%' },
+    { pos:'RM',  label:'RM', top:'42%', left:'85%' },
+    { pos:'CB1', label:'CB', top:'68%', left:'28%' },
+    { pos:'CB2', label:'CB', top:'69%', left:'50%' },
+    { pos:'CB3', label:'CB', top:'68%', left:'72%' },
+    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
+  ]},
+  '532': { label: '5-3-2', slots: [
+    { pos:'ST1', label:'ST', top:'14%', left:'36%' },
+    { pos:'ST2', label:'ST', top:'14%', left:'64%' },
+    { pos:'CM1', label:'CM', top:'42%', left:'30%' },
+    { pos:'CM2', label:'CM', top:'39%', left:'50%' },
+    { pos:'CM3', label:'CM', top:'42%', left:'70%' },
+    { pos:'LWB', label:'LWB',top:'62%', left:'10%' },
+    { pos:'CB1', label:'CB', top:'68%', left:'31%' },
+    { pos:'CB2', label:'CB', top:'69%', left:'50%' },
+    { pos:'CB3', label:'CB', top:'68%', left:'69%' },
+    { pos:'RWB', label:'RWB',top:'62%', left:'90%' },
+    { pos:'GK',  label:'GK', top:'88%', left:'50%' },
+  ]},
+};
+
 class Component extends DCLogic {
   state = {
     auth: false, authChecking: true,
@@ -603,24 +693,13 @@ class Component extends DCLogic {
     orderCards: [], orderSaving: false, orderSaved: false,
     reorderGroup: 'collection',
     lineupPickFor: null, lineupSearch: '',
+    config: {},
   };
 
-  // 4-3-3 — vertical pitch (GK bottom, attack top). Mirrors the public homepage.
-  get _formation() {
-    return [
-      { pos:'ST',  label:'ST',  top:'13%', left:'50%' },
-      { pos:'LW',  label:'LW',  top:'24%', left:'19%' },
-      { pos:'RW',  label:'RW',  top:'24%', left:'81%' },
-      { pos:'CM1', label:'CM',  top:'44%', left:'26%' },
-      { pos:'CM2', label:'CM',  top:'40%', left:'50%' },
-      { pos:'CM3', label:'CM',  top:'44%', left:'74%' },
-      { pos:'LB',  label:'LB',  top:'66%', left:'13%' },
-      { pos:'CB1', label:'CB',  top:'68%', left:'38%' },
-      { pos:'CB2', label:'CB',  top:'68%', left:'62%' },
-      { pos:'RB',  label:'RB',  top:'66%', left:'87%' },
-      { pos:'GK',  label:'GK',  top:'88%', left:'50%' },
-    ];
-  }
+  // Active formation — vertical pitch (GK bottom, attack top). Mirrors the
+  // public homepage; FORMATIONS map is defined below the class.
+  get _formationKey() { return (this.state.config && this.state.config.lineup_formation) || '433'; }
+  get _formation() { return (FORMATIONS[this._formationKey] || FORMATIONS['433']).slots; }
 
   async _assignLineup(cardId, pos) {
     this.setState({ loading: true });
@@ -708,7 +787,19 @@ class Component extends DCLogic {
 
     const labelMap = {}; this._formation.forEach(p => labelMap[p.pos] = p.label);
 
+    const activeKey = this._formationKey;
+    const formationOptions = Object.keys(FORMATIONS).map(k => ({
+      key: k,
+      label: FORMATIONS[k].label,
+      active: k === activeKey,
+      bg: k === activeKey ? '#C8A75B' : 'transparent',
+      col: k === activeKey ? '#0A0A0A' : '#A1A1AA',
+      bc: k === activeKey ? '#C8A75B' : '#2A2A2A',
+      onClick: () => this._setFormation(k),
+    }));
+
     return {
+      formationOptions,
       lineupSlots,
       lineupPicking: !!pickFor,
       lineupPickLabel: pickFor ? (labelMap[pickFor] || pickFor) : '',
@@ -756,6 +847,18 @@ class Component extends DCLogic {
     } catch (e) {
       this.setState({ loading: false });
     }
+    try {
+      const cres = await this._api('/api/config');
+      if (cres.ok) this.setState({ config: (await cres.json()) || {} });
+    } catch (e) {}
+  }
+
+  async _setFormation(key) {
+    if (key === this._formationKey) return;
+    this.setState({ config: Object.assign({}, this.state.config, { lineup_formation: key }), lineupPickFor: null });
+    try {
+      await this._api('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'lineup_formation', value: key }) });
+    } catch (e) {}
   }
 
   async _uploadPhoto(file, prefix) {
