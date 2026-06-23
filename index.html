@@ -132,7 +132,7 @@
         </div>
         <div style="text-align:center;">
           <div id="num3" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">—</div>
-          <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">On-Card Autos</div>
+          <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">Leggende nel Vault</div>
           <div style="margin:14px auto 0;width:28px;height:2px;background:#C9A24B;opacity:.6;"></div>
         </div>
       </div>
@@ -406,9 +406,9 @@ class Component extends DCLogic {
     const badges = (c) => Array.isArray(c.badges) ? c.badges : [];
     return [
       cards.length,
-      cards.filter(c => /\b10\b/.test(c.grade || '')).length,
+      cards.filter(c => /PSA\s+10|BGS\s+10|SGC\s+10/.test(c.grade || '')).length,
       cards.filter(c => badges(c).includes('1/1')).length,
-      cards.filter(c => badges(c).includes('AUTO') || badges(c).includes('ON CARD')).length,
+      new Set(cards.map(c => (c.player || '').trim().toLowerCase()).filter(Boolean)).size,
     ];
   }
 
