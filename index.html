@@ -22,6 +22,7 @@
   @keyframes heroUp{from{opacity:0;transform:translateY(36px)}to{opacity:1;transform:translateY(0)}}
   @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
   @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes contactIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.001s!important;animation-iteration-count:1!important}
   }
@@ -349,11 +350,46 @@
     </div>
   </sc-if>
 
+  <!-- ── FLOATING CONTACT ── -->
+  <div style="position:fixed;bottom:24px;right:24px;z-index:250;display:flex;flex-direction:column;align-items:flex-end;gap:14px;">
+    <sc-if value="{{ contactOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="width:330px;max-width:calc(100vw - 40px);background:#111111;border:1px solid #2A2A2A;border-radius:14px;padding:22px;box-shadow:0 24px 64px rgba(0,0,0,0.7);animation:contactIn .2s ease;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <h3 style="font-family:'Anton',sans-serif;font-size:20px;text-transform:uppercase;letter-spacing:.05em;color:#FFF;">Contattami</h3>
+          <button onClick="{{ closeContact }}" style="background:none;border:none;color:#A1A1AA;font-size:22px;cursor:pointer;line-height:1;padding:2px;">×</button>
+        </div>
+        <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#C8A75B;color:#0A0A0A;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:13px;border-radius:6px;text-decoration:none;margin-bottom:18px;">◎ Instagram — @adgmerenguevault</a>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <div style="flex:1;height:1px;background:#1A1A1A;"></div>
+          <span style="font-size:9px;color:#A1A1AA;letter-spacing:.16em;text-transform:uppercase;">oppure scrivimi</span>
+          <div style="flex:1;height:1px;background:#1A1A1A;"></div>
+        </div>
+        <input type="text" value="{{ contactName }}" onChange="{{ onContactName }}" placeholder="Il tuo nome" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:6px;color:#FFF;font-family:'Inter',sans-serif;font-size:13px;padding:10px 12px;outline:none;margin-bottom:10px;">
+        <input type="email" value="{{ contactEmail }}" onChange="{{ onContactEmail }}" placeholder="La tua email" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:6px;color:#FFF;font-family:'Inter',sans-serif;font-size:13px;padding:10px 12px;outline:none;margin-bottom:10px;">
+        <textarea value="{{ contactMsg }}" onChange="{{ onContactMsg }}" placeholder="Messaggio…" rows="3" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:6px;color:#FFF;font-family:'Inter',sans-serif;font-size:13px;padding:10px 12px;outline:none;resize:vertical;line-height:1.5;margin-bottom:14px;"></textarea>
+        <sc-if value="{{ contactError }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size:11px;color:#EF4444;margin-bottom:10px;">{{ contactErrorMsg }}</p>
+        </sc-if>
+        <sc-if value="{{ contactSent }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size:12px;color:#16A34A;font-weight:600;text-align:center;padding:6px 0;">✓ Messaggio inviato! Ti risponderò presto.</p>
+        </sc-if>
+        <sc-if value="{{ contactNotSent }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ sendContact }}" style="width:100%;background:#C8A75B;border:none;color:#0A0A0A;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:13px;border-radius:6px;cursor:pointer;">{{ contactBtnLabel }}</button>
+        </sc-if>
+      </div>
+    </sc-if>
+    <button onClick="{{ toggleContact }}" style="width:56px;height:56px;border-radius:50%;background:#C8A75B;border:none;color:#0A0A0A;font-size:24px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;flex:none;">{{ contactFabIcon }}</button>
+  </div>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;ctaUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://instagram.com/adgmerenguevault&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
-  state = { inspectOpen: false, idx: 0, flipped: false };
+  state = {
+    inspectOpen: false, idx: 0, flipped: false,
+    contactOpen: false, contactName: '', contactEmail: '', contactMsg: '',
+    contactSending: false, contactSent: false, contactError: '',
+  };
 
   get cards() {
     return [
@@ -372,7 +408,27 @@ class Component extends DCLogic {
     ];
   }
 
+  async _sendContact() {
+    const { contactName, contactEmail, contactMsg } = this.state;
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((contactEmail || '').trim());
+    if (!emailOk) { this.setState({ contactError: 'Inserisci un indirizzo email valido.' }); return; }
+    if (!contactMsg.trim()) { this.setState({ contactError: 'Scrivi un messaggio.' }); return; }
+    this.setState({ contactSending: true, contactError: '' });
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: contactName, email: contactEmail, message: contactMsg, card: '' }),
+      });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || 'Invio fallito.'); }
+      this.setState({ contactSending: false, contactSent: true, contactName: '', contactEmail: '', contactMsg: '' });
+    } catch (e) {
+      this.setState({ contactSending: false, contactError: e.message || 'Invio fallito.' });
+    }
+  }
+
   renderVals() {
+    const { contactOpen, contactName, contactEmail, contactMsg, contactSending, contactSent, contactError } = this.state;
     const c = this.cards[this.state.idx] || this.cards[0];
     return {
       cards: this.cards,
@@ -388,6 +444,17 @@ class Component extends DCLogic {
       prev: () => this.setState(s => ({ idx:(s.idx + this.cards.length - 1) % this.cards.length, flipped:false })),
       next: () => this.setState(s => ({ idx:(s.idx + 1) % this.cards.length, flipped:false })),
       stop: (e) => e.stopPropagation(),
+      contactOpen,
+      contactFabIcon: contactOpen ? '×' : '✉',
+      toggleContact: () => this.setState({ contactOpen: !this.state.contactOpen, contactSent: false, contactError: '' }),
+      closeContact: () => this.setState({ contactOpen: false }),
+      contactName, onContactName: (e) => this.setState({ contactName: e.target.value }),
+      contactEmail, onContactEmail: (e) => this.setState({ contactEmail: e.target.value }),
+      contactMsg, onContactMsg: (e) => this.setState({ contactMsg: e.target.value }),
+      contactError: !!contactError, contactErrorMsg: contactError,
+      contactSent, contactNotSent: !contactSent,
+      contactBtnLabel: contactSending ? 'INVIO…' : '✉ Invia messaggio',
+      sendContact: () => { if (!contactSending) this._sendContact(); },
       onModalMove: (e) => this.onModalMove(e),
       onModalLeave: () => this.onModalLeave(),
       onCardMove: (e) => {
