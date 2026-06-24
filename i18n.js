@@ -242,10 +242,10 @@
   };
 
   function applyI18n(root) {
-    var nodes = (root || document).querySelectorAll('[data-i18n]');
+    var nodes = (root || document).querySelectorAll('[data-i18n],[data-i18n-html]');
     for (var i = 0; i < nodes.length; i++) {
       var el = nodes[i];
-      var key = el.getAttribute('data-i18n');
+      var key = el.getAttribute('data-i18n') || el.getAttribute('data-i18n-html');
       var attr = el.getAttribute('data-i18n-attr');
       var isHtml = el.hasAttribute('data-i18n-html');
       var val = window.MV_T(key);
@@ -262,8 +262,8 @@
       for (var j = 0; j < added.length; j++) {
         var n = added[j];
         if (n.nodeType !== 1) continue;
-        if (n.hasAttribute && n.hasAttribute('data-i18n')) applyI18n(n.parentNode || n);
-        if (n.querySelectorAll && n.querySelectorAll('[data-i18n]').length) applyI18n(n);
+        if (n.hasAttribute && (n.hasAttribute('data-i18n') || n.hasAttribute('data-i18n-html'))) applyI18n(n.parentNode || n);
+        if (n.querySelectorAll && n.querySelectorAll('[data-i18n],[data-i18n-html]').length) applyI18n(n);
       }
     }
   });

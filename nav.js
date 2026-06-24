@@ -53,7 +53,7 @@
           (active
             ? 'background:rgba(201,162,75,.14);color:#C9A24B;box-shadow:0 0 0 1px #C9A24B;'
             : 'background:none;color:rgba(255,255,255,.32);box-shadow:0 0 0 1px rgba(255,255,255,.14);');
-        return '<button onclick="window.MV_setLang(\'' + l + '\')" style="' + s + '">' + l.toUpperCase() + '</button>';
+        return '<button data-setlang="' + l + '" style="' + s + '">' + l.toUpperCase() + '</button>';
       }).join('') +
     '</div>';
   }
@@ -67,7 +67,7 @@
           (active
             ? 'background:rgba(201,162,75,.14);color:#C9A24B;box-shadow:0 0 0 1px #C9A24B;'
             : 'background:#111;color:rgba(255,255,255,.4);box-shadow:0 0 0 1px rgba(255,255,255,.1);');
-        return '<button onclick="window.MV_setLang(\'' + l + '\')" style="' + s + '">' + l.toUpperCase() + '</button>';
+        return '<button data-setlang="' + l + '" style="' + s + '">' + l.toUpperCase() + '</button>';
       }).join('') +
     '</div>';
   }
@@ -190,6 +190,13 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
     window.addEventListener('resize', function () {
       if (window.innerWidth > 900 && drawer.classList.contains('open')) setOpen(false);
+    });
+    // Wire language pills (both desktop nav and mobile drawer) via event listeners
+    nav.querySelectorAll('[data-setlang]').forEach(function (btn) {
+      btn.addEventListener('click', function () { if (window.MV_setLang) window.MV_setLang(btn.getAttribute('data-setlang')); });
+    });
+    drawer.querySelectorAll('[data-setlang]').forEach(function (btn) {
+      btn.addEventListener('click', function () { if (window.MV_setLang) window.MV_setLang(btn.getAttribute('data-setlang')); });
     });
   }
 

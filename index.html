@@ -271,9 +271,9 @@
     <div id="s7inner" style="position:relative;z-index:2;width:100%;max-width:1200px;display:flex;align-items:flex-start;justify-content:center;gap:clamp(24px,3.5vw,56px);flex-wrap:wrap;">
 
       <div style="flex:1 1 300px;min-width:280px;max-width:440px;padding-top:clamp(0px,2vh,18px);">
-        <div id="s7kicker" class="{{ s7Cls }}" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°04 / 05 · <span data-i18n="home.s4.kicker">The Starting XI</span></div>
-        <div id="s7title" data-i18n-html="home.s4.title" class="{{ s7Cls }}" style="margin-top:12px;font-family:'Anton',sans-serif;font-size:clamp(40px,5.6vw,86px);line-height:.9;color:#fff;text-transform:uppercase;">La Mia<br>Top XI</div>
-        <p id="s7desc" class="{{ s7Cls }}" style="margin:20px 0 0;max-width:420px;color:#9a9aa1;font-size:clamp(14px,1.1vw,17px);line-height:1.65;"><span data-i18n="home.s4.desc">Il meglio della collezione, schierato</span> <span style="color:#fff;font-weight:600;">{{ formationLabel }}</span>. <span data-i18n="home.s4.hint" id="s7hint">Passa il mouse per sollevare · clicca per ispezionare.</span></p>
+        <div id="s7kicker" class="{{ s7Cls }}" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°04 / 05 · {{ s7Kicker }}</div>
+        <div id="s7title" class="{{ s7Cls }}" style="margin-top:12px;font-family:'Anton',sans-serif;font-size:clamp(40px,5.6vw,86px);line-height:.9;color:#fff;text-transform:uppercase;">{{ s7TitleLine1 }}<br>{{ s7TitleLine2 }}</div>
+        <p id="s7desc" class="{{ s7Cls }}" style="margin:20px 0 0;max-width:420px;color:#9a9aa1;font-size:clamp(14px,1.1vw,17px);line-height:1.65;">{{ s7Desc }} <span style="color:#fff;font-weight:600;">{{ formationLabel }}</span>. <span id="s7hint">{{ s7Hint }}</span></p>
       </div>
 
       <!-- ── THE PITCH ── -->
@@ -690,6 +690,11 @@ class Component extends DCLogic {
       cards: this.cards,
       pitchSlots,
       s7Cls: this._s7Visible ? 's7-in' : '',
+      s7Kicker: (window.MV_T || function(k){return k;})(  'home.s4.kicker'),
+      s7TitleLine1: ((window.MV_T || function(k){return k;})('home.s4.title').split('<br>')[0] || 'My'),
+      s7TitleLine2: ((window.MV_T || function(k){return k;})('home.s4.title').split('<br>')[1] || 'Top XI'),
+      s7Desc: (window.MV_T || function(k){return k;})('home.s4.desc'),
+      s7Hint: (window.MV_T || function(k){return k;})('home.s4.hint'),
       formationLabel: (FORMATIONS[this._formationKey] || FORMATIONS['433']).label,
       pitchAspect: (FORMATIONS[this._formationKey] || FORMATIONS['433']).aspect,
       inspectOpen: this.state.inspectOpen,
