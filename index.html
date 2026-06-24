@@ -725,9 +725,31 @@ class Component extends DCLogic {
     document.title = 'The White Side of Football — ADG Merengue Vault';
     this.scheduled = false;
     const tick = () => { this.scheduled = false; this.update(); };
-    this.onScroll = () => { if (!this.scheduled) { this.scheduled = true; requestAnimationFrame(tick); } };
+    this.onScroll = () => {
+      if (!this._scrollRaf) { this._scrollTarget = window.scrollY; this._scrollCurrent = window.scrollY; }
+      if (!this.scheduled) { this.scheduled = true; requestAnimationFrame(tick); }
+    };
     window.addEventListener('scroll', this.onScroll, { passive:true });
     window.addEventListener('resize', this.onScroll);
+    // — Smooth mouse-wheel scroll (trackpad bypasses, uses native) —
+    this._scrollTarget = window.scrollY;
+    this._scrollCurrent = window.scrollY;
+    this._scrollRaf = null;
+    const smoothLoop = () => {
+      const diff = this._scrollTarget - this._scrollCurrent;
+      if (Math.abs(diff) < 0.5) { this._scrollCurrent = this._scrollTarget; this._scrollRaf = null; return; }
+      this._scrollCurrent += diff * 0.09;
+      window.scrollTo(0, this._scrollCurrent);
+      this._scrollRaf = requestAnimationFrame(smoothLoop);
+    };
+    this._onWheel = (e) => {
+      if (Math.abs(e.deltaY) < 50 && e.deltaMode === 0) return; // trackpad — usa scroll nativo
+      e.preventDefault();
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      this._scrollTarget = Math.max(0, Math.min(max, this._scrollTarget + e.deltaY));
+      if (!this._scrollRaf) this._scrollRaf = requestAnimationFrame(smoothLoop);
+    };
+    window.addEventListener('wheel', this._onWheel, { passive: false });
     this._fetchDB();
     this.update();
     [120, 500, 1200].forEach(t => setTimeout(() => this.update(), t));
@@ -749,6 +771,8 @@ class Component extends DCLogic {
   componentWillUnmount() {
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('resize', this.onScroll);
+    if (this._onWheel) window.removeEventListener('wheel', this._onWheel);
+    if (this._scrollRaf) { cancelAnimationFrame(this._scrollRaf); this._scrollRaf = null; }
   }
   componentDidUpdate() { this.update(); }
 
