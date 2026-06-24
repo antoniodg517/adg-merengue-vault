@@ -328,25 +328,23 @@
       <button onClick="{{ prev }}" style="position:absolute;left:clamp(12px,3vw,40px);top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#fff;font-size:26px;cursor:pointer;line-height:1;">‹</button>
       <button onClick="{{ next }}" style="position:absolute;right:clamp(12px,3vw,40px);top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#fff;font-size:26px;cursor:pointer;line-height:1;">›</button>
 
-      <div onClick="{{ stop }}" style="display:flex;align-items:stretch;justify-content:center;gap:clamp(20px,3vw,48px);max-width:1120px;width:100%;flex-wrap:wrap;">
+      <div onClick="{{ stop }}" style="display:flex;align-items:stretch;justify-content:center;gap:clamp(14px,1.8vw,30px);max-width:1180px;width:100%;flex-wrap:wrap;">
 
-        <!-- LEFT — REVERSE -->
-        <div style="flex:0 1 270px;display:flex;flex-direction:column;gap:12px;align-self:center;">
+        <!-- LEFT — OBVERSE (front) -->
+        <div style="flex:0 1 360px;display:flex;flex-direction:column;gap:12px;align-self:center;">
           <div style="display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6f6f76;">
-            <span style="width:14px;height:1px;background:#C9A24B;"></span>Retro · Reverse
+            <span style="width:14px;height:1px;background:#C9A24B;"></span>Fronte · Obverse
           </div>
-          <div style="position:relative;border:1px solid rgba(255,255,255,.1);border-radius:4px;overflow:hidden;background:#0d0d10;box-shadow:0 30px 70px rgba(0,0,0,.8);">
-            <sc-if value="{{ curHasBack }}" hint-placeholder-val="{{ false }}">
-              <img src="{{ cur.back }}" alt="{{ cur.player }} retro" style="width:100%;aspect-ratio:5/7;object-fit:cover;display:block;">
-            </sc-if>
-            <sc-if value="{{ curNoBack }}" hint-placeholder-val="{{ false }}">
-              <div style="width:100%;aspect-ratio:5/7;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;color:#3a3a40;text-transform:uppercase;text-align:center;padding:20px;">Retro non<br>disponibile</div>
-            </sc-if>
+          <div onMouseMove="{{ onModalMove }}" onMouseLeave="{{ onModalLeave }}" style="position:relative;">
+            <div id="modalCard" style="position:relative;aspect-ratio:5/8.6;transform:perspective(1200px);transition:transform .12s ease-out;will-change:transform;border:1px solid rgba(201,162,75,.28);border-radius:4px;overflow:hidden;background:#0d0d10;box-shadow:0 36px 80px rgba(0,0,0,.85),0 0 50px rgba(201,162,75,.12);">
+              <img src="{{ cur.front }}" alt="{{ cur.player }}" style="width:100%;height:100%;object-fit:contain;display:block;">
+              <div id="modalSheen" style="position:absolute;inset:0;opacity:0;mix-blend-mode:screen;pointer-events:none;background:radial-gradient(420px at 50% 50%,rgba(255,255,255,.4),transparent 60%);"></div>
+            </div>
           </div>
         </div>
 
         <!-- CENTER — DOSSIER -->
-        <div style="flex:1 1 360px;min-width:290px;max-width:460px;align-self:center;background:linear-gradient(180deg,#101012,#0b0b0d);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:clamp(22px,2.4vw,34px);box-shadow:0 40px 90px rgba(0,0,0,.6);">
+        <div style="flex:1 1 340px;min-width:290px;max-width:400px;align-self:center;background:linear-gradient(180deg,#101012,#0b0b0d);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:clamp(22px,2.4vw,34px);box-shadow:0 40px 90px rgba(0,0,0,.6);">
           <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(201,162,75,.28);margin-bottom:18px;">
             <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#C9A24B;">● Vault Dossier</span>
             <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;color:#6f6f76;">FILE Nº {{ curCaseNo }}</span>
@@ -390,16 +388,18 @@
           <a href="{{ igUrl }}" target="_blank" rel="noopener" style="display:block;text-align:center;background:#C9A24B;color:#070708;text-decoration:none;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:15px 28px;border-radius:2px;">Enquire — Instagram DM</a>
         </div>
 
-        <!-- RIGHT — OBVERSE -->
-        <div style="flex:0 1 290px;display:flex;flex-direction:column;gap:12px;align-self:center;">
+        <!-- RIGHT — REVERSE (back) -->
+        <div style="flex:0 1 360px;display:flex;flex-direction:column;gap:12px;align-self:center;">
           <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6f6f76;">
-            Fronte · Obverse<span style="width:14px;height:1px;background:#C9A24B;"></span>
+            Retro · Reverse<span style="width:14px;height:1px;background:#C9A24B;"></span>
           </div>
-          <div onMouseMove="{{ onModalMove }}" onMouseLeave="{{ onModalLeave }}" style="position:relative;">
-            <div id="modalCard" style="position:relative;transform:perspective(1200px);transition:transform .12s ease-out;will-change:transform;border:1px solid rgba(201,162,75,.28);border-radius:4px;overflow:hidden;background:#0d0d10;box-shadow:0 36px 80px rgba(0,0,0,.85),0 0 50px rgba(201,162,75,.12);">
-              <img src="{{ cur.front }}" alt="{{ cur.player }}" style="width:100%;aspect-ratio:5/7;object-fit:cover;display:block;">
-              <div id="modalSheen" style="position:absolute;inset:0;opacity:0;mix-blend-mode:screen;pointer-events:none;background:radial-gradient(420px at 50% 50%,rgba(255,255,255,.4),transparent 60%);"></div>
-            </div>
+          <div style="position:relative;aspect-ratio:5/8.6;border:1px solid rgba(255,255,255,.1);border-radius:4px;overflow:hidden;background:#0d0d10;box-shadow:0 30px 70px rgba(0,0,0,.8);">
+            <sc-if value="{{ curHasBack }}" hint-placeholder-val="{{ false }}">
+              <img src="{{ cur.back }}" alt="{{ cur.player }} retro" style="width:100%;height:100%;object-fit:contain;display:block;">
+            </sc-if>
+            <sc-if value="{{ curNoBack }}" hint-placeholder-val="{{ false }}">
+              <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;color:#3a3a40;text-transform:uppercase;text-align:center;padding:20px;">Retro non<br>disponibile</div>
+            </sc-if>
           </div>
         </div>
 

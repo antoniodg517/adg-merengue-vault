@@ -96,20 +96,18 @@
 <!-- ── LIGHTBOX ── -->
 <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
   <div style="position: fixed; inset: 0; background: radial-gradient(120% 90% at 50% 20%, #0e0c0c 0%, #060505 70%); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 40px 24px; animation: fadeIn 0.2s ease; overflow-y: auto;" onClick="{{ closeLightbox }}">
-    <div style="display: flex; gap: clamp(20px,3vw,48px); align-items: stretch; justify-content: center; max-width: 1120px; width: 100%; flex-wrap: wrap; position: relative;" onClick="{{ stopProp }}">
+    <div style="display: flex; gap: clamp(14px,1.8vw,30px); align-items: stretch; justify-content: center; max-width: 1180px; width: 100%; flex-wrap: wrap; position: relative;" onClick="{{ stopProp }}">
 
-      <!-- LEFT — REVERSE -->
-      <div style="flex: 0 1 270px; display: flex; flex-direction: column; gap: 12px; align-self: center;">
+      <!-- LEFT — OBVERSE (front) -->
+      <div style="flex: 0 1 360px; display: flex; flex-direction: column; gap: 12px; align-self: center;">
         <div style="display: flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #6f6f76;">
-          <span style="width: 14px; height: 1px; background: #DC2626;"></span>Retro · Reverse
+          <span style="width: 14px; height: 1px; background: #DC2626;"></span>Fronte · Obverse
         </div>
-        <div style="position: relative; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; background: #0d0d10; box-shadow: 0 30px 70px rgba(0,0,0,0.8);">
-          <sc-if value="{{ lightboxHasBack }}" hint-placeholder-val="{{ false }}">
-            <image-slot id="{{ lightboxSlotId_back }}" src="{{ lightboxPhotoSrc_back }}" placeholder="Retro" shape="rect" fit="contain" style="width: 100%; aspect-ratio: 5/7; display: block; filter: grayscale(0.5) brightness(0.8);"></image-slot>
-          </sc-if>
-          <sc-if value="{{ lightboxNoBack }}" hint-placeholder-val="{{ false }}">
-            <div style="width: 100%; aspect-ratio: 5/7; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: #3a3a40; text-transform: uppercase; text-align: center; padding: 20px;">Retro non<br>disponibile</div>
-          </sc-if>
+        <div style="position: relative; aspect-ratio: 5/8.6; border: 1px solid rgba(220,38,38,0.3); border-radius: 4px; overflow: hidden; background: #0d0d10; box-shadow: 0 36px 80px rgba(0,0,0,0.85);">
+          <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Fronte" shape="rect" fit="contain" style="width: 100%; height: 100%; display: block; filter: grayscale(0.5) brightness(0.8);"></image-slot>
+          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+            <span style="font-family: 'Anton', sans-serif; font-size: 34px; letter-spacing: 0.14em; color: #FFF; background: rgba(220,38,38,0.92); padding: 7px 22px; transform: rotate(-11deg); border-radius: 4px; box-shadow: 0 8px 26px rgba(0,0,0,0.6); text-transform: uppercase;">SOLD</span>
+          </div>
         </div>
       </div>
 
@@ -161,16 +159,18 @@
         <div style="text-align: center; background: #1A1A1A; color: #A1A1AA; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 15px 28px; border-radius: 2px; border: 1px solid #2A2A2A;">★ Andata da un altro collezionista</div>
       </div>
 
-      <!-- RIGHT — OBVERSE -->
-      <div style="flex: 0 1 290px; display: flex; flex-direction: column; gap: 12px; align-self: center;">
+      <!-- RIGHT — REVERSE (back) -->
+      <div style="flex: 0 1 360px; display: flex; flex-direction: column; gap: 12px; align-self: center;">
         <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #6f6f76;">
-          Fronte · Obverse<span style="width: 14px; height: 1px; background: #DC2626;"></span>
+          Retro · Reverse<span style="width: 14px; height: 1px; background: #DC2626;"></span>
         </div>
-        <div style="position: relative; border: 1px solid rgba(220,38,38,0.3); border-radius: 4px; overflow: hidden; background: #0d0d10; box-shadow: 0 36px 80px rgba(0,0,0,0.85);">
-          <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Fronte" shape="rect" fit="contain" style="width: 100%; aspect-ratio: 5/7; display: block; filter: grayscale(0.5) brightness(0.8);"></image-slot>
-          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-            <span style="font-family: 'Anton', sans-serif; font-size: 34px; letter-spacing: 0.14em; color: #FFF; background: rgba(220,38,38,0.92); padding: 7px 22px; transform: rotate(-11deg); border-radius: 4px; box-shadow: 0 8px 26px rgba(0,0,0,0.6); text-transform: uppercase;">SOLD</span>
-          </div>
+        <div style="position: relative; aspect-ratio: 5/8.6; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; background: #0d0d10; box-shadow: 0 30px 70px rgba(0,0,0,0.8);">
+          <sc-if value="{{ lightboxHasBack }}" hint-placeholder-val="{{ false }}">
+            <image-slot id="{{ lightboxSlotId_back }}" src="{{ lightboxPhotoSrc_back }}" placeholder="Retro" shape="rect" fit="contain" style="width: 100%; height: 100%; display: block; filter: grayscale(0.5) brightness(0.8);"></image-slot>
+          </sc-if>
+          <sc-if value="{{ lightboxNoBack }}" hint-placeholder-val="{{ false }}">
+            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: #3a3a40; text-transform: uppercase; text-align: center; padding: 20px;">Retro non<br>disponibile</div>
+          </sc-if>
         </div>
       </div>
 
