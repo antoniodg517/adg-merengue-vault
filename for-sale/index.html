@@ -25,6 +25,12 @@
       #page-header { padding: 40px 24px 32px !important; }
       #filters-bar { padding: 0 24px 24px !important; }
       #grid-wrap { padding: 0 24px 80px !important; }
+      /* Dossier lightbox: was centered with no reachable scroll → card front/back
+         clipped on phones. Top-align + scroll, shrink the scans, like the home. */
+      #lightbox { align-items: flex-start !important; padding: 58px 16px 44px !important; }
+      #lbInner { gap: 16px !important; }
+      .lb-side { flex: 0 0 auto !important; width: 66% !important; max-width: 240px !important; margin: 0 auto !important; }
+      #lbInner > div:not(.lb-side) { width: 100% !important; max-width: none !important; min-width: 0 !important; }
     }
   </style>
 </helmet>
@@ -97,11 +103,11 @@
 
 <!-- ── LIGHTBOX ── -->
 <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
-  <div style="position: fixed; inset: 0; background: radial-gradient(120% 90% at 50% 20%, #0c0e0c 0%, #050605 70%); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 40px 24px; animation: fadeIn 0.2s ease; overflow-y: auto;" onClick="{{ closeLightbox }}">
-    <div style="display: flex; gap: clamp(14px,1.8vw,30px); align-items: stretch; justify-content: center; max-width: 1180px; width: 100%; flex-wrap: wrap; position: relative;" onClick="{{ stopProp }}">
+  <div id="lightbox" style="position: fixed; inset: 0; background: radial-gradient(120% 90% at 50% 20%, #0c0e0c 0%, #050605 70%); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 40px 24px; animation: fadeIn 0.2s ease; overflow-y: auto;" onClick="{{ closeLightbox }}">
+    <div id="lbInner" style="display: flex; gap: clamp(14px,1.8vw,30px); align-items: stretch; justify-content: center; max-width: 1180px; width: 100%; flex-wrap: wrap; position: relative;" onClick="{{ stopProp }}">
 
       <!-- LEFT — OBVERSE (front) -->
-      <div style="flex: 0 1 360px; display: flex; flex-direction: column; gap: 12px; align-self: center;">
+      <div class="lb-side" style="flex: 0 1 360px; display: flex; flex-direction: column; gap: 12px; align-self: center;">
         <div style="display: flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #6f6f76;">
           <span style="width: 14px; height: 1px; background: #16A34A;"></span>Fronte · Obverse
         </div>
@@ -166,7 +172,7 @@
       </div>
 
       <!-- RIGHT — REVERSE (back) -->
-      <div style="flex: 0 1 360px; display: flex; flex-direction: column; gap: 12px; align-self: center;">
+      <div class="lb-side" style="flex: 0 1 360px; display: flex; flex-direction: column; gap: 12px; align-self: center;">
         <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #6f6f76;">
           Retro · Reverse<span style="width: 14px; height: 1px; background: #16A34A;"></span>
         </div>
