@@ -6,7 +6,7 @@ function copyStaticScripts() {
   return {
     name: 'copy-static-scripts',
     closeBundle() {
-      const files = ['support.js', 'image-slot.js', 'nav.js'];
+      const files = ['support.js', 'image-slot.js', 'nav.js', 'i18n.js'];
       mkdirSync('dist', { recursive: true });
       files.forEach(f => copyFileSync(f, `dist/${f}`));
     },
