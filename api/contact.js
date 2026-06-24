@@ -1,8 +1,40 @@
 // Sends a contact-form email via Resend. No SDK needed — just the REST API.
 // Requires env RESEND_API_KEY. Sends to the vault owner; visitor's email goes
 // in reply_to so a reply lands straight in their inbox.
+const { createClient } = require('@supabase/supabase-js');
+
 const TO = 'adg.merenguevault@gmail.com';
 const FROM = 'ADG Merengue Vault <onboarding@resend.dev>';
+
+// Rate limit: max submissions per IP within the rolling window.
+const RATE_LIMIT = 5;
+const WINDOW_MINUTES = 60;
+
+function clientIp(req) {
+  const xff = (req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+  return xff || req.headers['x-real-ip'] || req.socket?.remoteAddress || 'unknown';
+}
+
+// Returns true if the IP is over the limit. Fails open on DB errors so a
+// Supabase hiccup never blocks a genuine message.
+async function isRateLimited(ip) {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) return false;
+  try {
+    const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+    const since = new Date(Date.now() - WINDOW_MINUTES * 60 * 1000).toISOString();
+    const { count, error } = await sb
+      .from('contact_rate_limit')
+      .select('id', { count: 'exact', head: true })
+      .eq('ip', ip)
+      .gte('created_at', since);
+    if (error) return false;
+    if ((count || 0) >= RATE_LIMIT) return true;
+    await sb.from('contact_rate_limit').insert({ ip });
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,6 +51,10 @@ module.exports = async function handler(req, res) {
   const emailOk = typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   if (!emailOk) return res.status(400).json({ error: 'Email non valida.' });
   if (!message || !String(message).trim()) return res.status(400).json({ error: 'Messaggio mancante.' });
+
+  if (await isRateLimited(clientIp(req))) {
+    return res.status(429).json({ error: 'Troppi invii. Riprova tra qualche minuto.' });
+  }
 
   const subject = card ? `Interesse carta: ${card}` : 'Nuovo messaggio dal sito — ADG Merengue Vault';
   const text = [
