@@ -32,6 +32,28 @@
     #nav-links{display:none!important;}
     #dots{display:none!important;}
     #hudCap{display:none!important;}
+    /* Scene 03 — Hall of Grails: scroll-choreographed horizontal shelf is too
+       cramped on phones. Flatten the sticky scene into a static 2×2 grid the
+       JS animation can't fight (inline styles are non-important, so !important
+       wins). Cards stay tappable → opens the same dossier modal. */
+    #sc5{height:auto!important;}
+    #sc5>div:first-child{position:relative!important;height:auto!important;
+      padding:96px 18px 56px!important;overflow:visible!important;}
+    #s5kicker{position:relative!important;top:auto!important;opacity:1!important;margin-bottom:30px;}
+    #s5cupL,#s5cupR{display:none!important;}
+    #s5shelf{position:relative!important;left:auto!important;top:auto!important;
+      transform:none!important;width:100%!important;}
+    #s5shelf>div:first-child{display:grid!important;grid-template-columns:1fr 1fr!important;
+      gap:22px 18px!important;align-items:start!important;justify-items:center!important;padding:0!important;}
+    #s5shelf>div:nth-child(2),#s5shelf>div:nth-child(3){display:none!important;}
+    [id^="s5card"]{opacity:1!important;transform:none!important;width:100%;}
+    [id^="s5card"] [data-lift]{transform:none!important;}
+    [id^="s5card"]>div:nth-child(2){display:none!important;} /* drop reflections */
+    [id^="s5card"] img{width:100%!important;}
+    [id^="s5spot"]{display:none!important;}
+    #s5cap{font-size:0!important;margin-top:30px!important;}
+    #s5cap::after{content:"Tap per ispezionare · 4 pezzi";font-size:11px;
+      letter-spacing:.28em;color:rgba(255,255,255,.45);font-family:'Space Mono',monospace;}
   }
   @media (max-width:640px){
     #s8grid{grid-template-columns:1fr!important;}
@@ -208,7 +230,7 @@
         <!-- shelf surface -->
         <div style="position:relative;margin-top:-58px;height:30px;background:linear-gradient(180deg,#26262d,#0d0d11);border-radius:3px;box-shadow:0 30px 60px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.12);"></div>
         <div style="height:3px;width:100%;background:linear-gradient(90deg,transparent,#C9A24B,transparent);opacity:.65;"></div>
-        <div style="text-align:center;margin-top:18px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.34em;color:rgba(255,255,255,.4);text-transform:uppercase;">Hover to lift · tap to inspect · 4 pieces</div>
+        <div id="s5cap" style="text-align:center;margin-top:18px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.34em;color:rgba(255,255,255,.4);text-transform:uppercase;">Hover to lift · tap to inspect · 4 pieces</div>
       </div>
     </div>
   </section>
