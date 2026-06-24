@@ -1095,7 +1095,7 @@ class Component extends DCLogic {
         sBg: si.bg, sCol: si.col, sLbl: si.lbl,
         rowBg: this._dragIndex === i ? '#1A1A1A' : 'transparent',
         rowOpacity: this._dragIndex === i ? '0.5' : '1',
-        onDragStart: () => { this._dragIndex = i; },
+        onDragStart: (e) => { this._dragIndex = i; if (e && e.dataTransfer) e.dataTransfer.effectAllowed = 'move'; },
         onDragOver: (e) => { e.preventDefault(); if (this._dragIndex !== i) this._moveCard(this._dragIndex, i); },
         onDrop: (e) => { e.preventDefault(); },
         onDragEnd: () => { this._saveOrder(); },
