@@ -21,6 +21,9 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     @media (max-width: 900px) {
       #collection-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+      /* Let cells shrink to their 1fr track — without this the card image's
+         intrinsic width blows the column out, making cards oversized & uneven. */
+      #collection-grid > * { min-width: 0 !important; }
       #nav-links { display: none !important; }
       #page-header { padding: 40px 24px 32px !important; }
       #filters-bar { padding: 0 24px 24px !important; }
