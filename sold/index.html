@@ -103,7 +103,7 @@
         <div style="display: flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #6f6f76;">
           <span style="width: 14px; height: 1px; background: #DC2626;"></span>Fronte · Obverse
         </div>
-        <div style="position: relative; aspect-ratio: 5/8.6; border: 1px solid rgba(220,38,38,0.3); border-radius: 4px; overflow: hidden; background: #0d0d10; box-shadow: 0 36px 80px rgba(0,0,0,0.85);">
+        <div onMouseMove="{{ onCardTilt }}" onMouseLeave="{{ onCardTiltLeave }}" style="position: relative; aspect-ratio: 5/8.6; transition: transform 0.15s ease-out; will-change: transform; border: 1px solid rgba(220,38,38,0.3); border-radius: 4px; overflow: hidden; background: #0d0d10; box-shadow: 0 36px 80px rgba(0,0,0,0.85);">
           <image-slot id="{{ lightboxSlotId }}" src="{{ lightboxPhotoSrc }}" placeholder="Fronte" shape="rect" fit="contain" style="width: 100%; height: 100%; display: block; filter: grayscale(0.5) brightness(0.8);"></image-slot>
           <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
             <span style="font-family: 'Anton', sans-serif; font-size: 34px; letter-spacing: 0.14em; color: #FFF; background: rgba(220,38,38,0.92); padding: 7px 22px; transform: rotate(-11deg); border-radius: 4px; box-shadow: 0 8px 26px rgba(0,0,0,0.6); text-transform: uppercase;">SOLD</span>
@@ -164,7 +164,7 @@
         <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #6f6f76;">
           Retro · Reverse<span style="width: 14px; height: 1px; background: #DC2626;"></span>
         </div>
-        <div style="position: relative; aspect-ratio: 5/8.6; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; background: #0d0d10; box-shadow: 0 30px 70px rgba(0,0,0,0.8);">
+        <div onMouseMove="{{ onCardTilt }}" onMouseLeave="{{ onCardTiltLeave }}" style="position: relative; aspect-ratio: 5/8.6; transition: transform 0.15s ease-out; will-change: transform; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; background: #0d0d10; box-shadow: 0 30px 70px rgba(0,0,0,0.8);">
           <sc-if value="{{ lightboxHasBack }}" hint-placeholder-val="{{ false }}">
             <image-slot id="{{ lightboxSlotId_back }}" src="{{ lightboxPhotoSrc_back }}" placeholder="Retro" shape="rect" fit="contain" style="width: 100%; height: 100%; display: block; filter: grayscale(0.5) brightness(0.8);"></image-slot>
           </sc-if>
@@ -379,6 +379,8 @@ class Component extends DCLogic {
       lightboxOpen: lightboxCard !== null,
       closeLightbox,
       stopProp: (e) => e.stopPropagation(),
+      onCardTilt: (e) => { const el = e.currentTarget; const r = el.getBoundingClientRect(); const px = (e.clientX - r.left) / r.width - 0.5; const py = (e.clientY - r.top) / r.height - 0.5; el.style.transform = `perspective(1200px) rotateY(${px*14}deg) rotateX(${-py*14}deg) scale(1.03)`; },
+      onCardTiltLeave: (e) => { e.currentTarget.style.transform = 'perspective(1200px)'; },
       lightboxSlotId: lb.id ? ('lb-' + lb.id) : 'lb-none',
       lightboxPhotoSrc: lb.photo_url || '',
       lightboxSlotId_back: lb.id ? ('lb-back-' + lb.id) : 'lb-back-none',
