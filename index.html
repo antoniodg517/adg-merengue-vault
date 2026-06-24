@@ -38,7 +38,7 @@
        wins). Cards stay tappable → opens the same dossier modal. */
     #sc5{height:auto!important;}
     #sc5>div:first-child{position:relative!important;height:auto!important;
-      padding:96px 18px 56px!important;overflow:visible!important;}
+      padding:48px 18px 48px!important;overflow:visible!important;}
     #s5kicker{position:relative!important;top:auto!important;opacity:1!important;margin-bottom:30px;}
     #s5cupL,#s5cupR{display:none!important;}
     #s5shelf{position:relative!important;left:auto!important;top:auto!important;
@@ -54,6 +54,35 @@
     #s5cap{font-size:0!important;margin-top:30px!important;}
     #s5cap::after{content:"Tap per ispezionare · 4 pezzi";font-size:11px;
       letter-spacing:.28em;color:rgba(255,255,255,.45);font-family:'Space Mono',monospace;}
+    /* ── Reduce dead space between scenes; drop the scroll-choreography heights.
+       Mobile paints scenes statically (see update()'s mobile branch), so the
+       tall sticky sections are pure empty scroll — flatten them. ── */
+    #sc1,#sc2{height:auto!important;}
+    #sc1>div,#sc2>div{position:relative!important;height:auto!important;overflow:visible!important;}
+    #sc1>div{padding:104px 0 56px!important;}
+    #sc2>div{padding:52px 0!important;}
+    #sc7{min-height:0!important;padding:52px 18px!important;}
+    #sc8{min-height:0!important;padding:52px 20px!important;}
+    /* Scene 04 (Top XI): static, no entrance animation */
+    #s7kicker,#s7title,#s7desc,#s7pitch{opacity:1!important;animation:none!important;transform:none!important;}
+    #s7glow{opacity:.5!important;animation:none!important;}
+    #s7hint{font-size:0!important;}
+    #s7hint::after{content:"Tocca una carta per ispezionarla.";font-size:clamp(14px,1.1vw,17px);}
+    /* drop desktop-only HUD chrome on phones */
+    #hudL,#cue{display:none!important;}
+    /* ── Dossier modal: was centered with no scroll, so top & bottom were
+       clipped and unreachable. Make it top-aligned + scrollable, shrink the
+       front/back scans, and move prev/next to a bottom pager. ── */
+    #modal{align-items:flex-start!important;overflow-y:auto!important;
+      -webkit-overflow-scrolling:touch;padding:58px 14px 94px!important;z-index:300!important;
+      backdrop-filter:none!important;background:rgba(5,5,7,.97)!important;}
+    #mInner{gap:16px!important;}
+    .m-side{flex:0 0 auto!important;width:64%!important;max-width:236px!important;margin:0 auto!important;}
+    #mClose{top:12px!important;right:12px!important;z-index:302!important;}
+    #mPrev,#mNext{position:fixed!important;top:auto!important;bottom:16px!important;
+      transform:none!important;width:50px!important;height:50px!important;z-index:302!important;}
+    #mPrev{left:calc(50% - 58px)!important;right:auto!important;}
+    #mNext{left:calc(50% + 8px)!important;right:auto!important;}
   }
   @media (max-width:640px){
     #s8grid{grid-template-columns:1fr!important;}
@@ -243,7 +272,7 @@
       <div style="flex:1 1 300px;min-width:280px;max-width:440px;padding-top:clamp(0px,2vh,18px);">
         <div id="s7kicker" class="{{ s7Cls }}" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°04 / 05 · The Starting XI</div>
         <div id="s7title" class="{{ s7Cls }}" style="margin-top:12px;font-family:'Anton',sans-serif;font-size:clamp(40px,5.6vw,86px);line-height:.9;color:#fff;text-transform:uppercase;">La Mia<br>Top XI</div>
-        <p id="s7desc" class="{{ s7Cls }}" style="margin:20px 0 0;max-width:420px;color:#9a9aa1;font-size:clamp(14px,1.1vw,17px);line-height:1.65;">Il meglio della collezione, schierato <span style="color:#fff;font-weight:600;">{{ formationLabel }}</span>. Passa il mouse per sollevare · clicca per ispezionare.</p>
+        <p id="s7desc" class="{{ s7Cls }}" style="margin:20px 0 0;max-width:420px;color:#9a9aa1;font-size:clamp(14px,1.1vw,17px);line-height:1.65;">Il meglio della collezione, schierato <span style="color:#fff;font-weight:600;">{{ formationLabel }}</span>. <span id="s7hint">Passa il mouse per sollevare · clicca per ispezionare.</span></p>
       </div>
 
       <!-- ── THE PITCH ── -->
@@ -357,14 +386,14 @@
   <!-- ===================== INSPECTION MODAL ===================== -->
   <sc-if value="{{ inspectOpen }}" hint-placeholder-val="{{ false }}">
     <div id="modal" onClick="{{ closeInspect }}" style="position:fixed;inset:0;z-index:200;background:rgba(5,5,7,.93);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:clamp(20px,5vw,70px);">
-      <button onClick="{{ closeInspect }}" style="position:absolute;top:24px;right:28px;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#fff;font-size:22px;cursor:pointer;line-height:1;">×</button>
-      <button onClick="{{ prev }}" style="position:absolute;left:clamp(12px,3vw,40px);top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#fff;font-size:26px;cursor:pointer;line-height:1;">‹</button>
-      <button onClick="{{ next }}" style="position:absolute;right:clamp(12px,3vw,40px);top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#fff;font-size:26px;cursor:pointer;line-height:1;">›</button>
+      <button id="mClose" onClick="{{ closeInspect }}" style="position:absolute;top:24px;right:28px;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#fff;font-size:22px;cursor:pointer;line-height:1;">×</button>
+      <button id="mPrev" onClick="{{ prev }}" style="position:absolute;left:clamp(12px,3vw,40px);top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#fff;font-size:26px;cursor:pointer;line-height:1;">‹</button>
+      <button id="mNext" onClick="{{ next }}" style="position:absolute;right:clamp(12px,3vw,40px);top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#fff;font-size:26px;cursor:pointer;line-height:1;">›</button>
 
-      <div onClick="{{ stop }}" style="display:flex;align-items:stretch;justify-content:center;gap:clamp(14px,1.8vw,30px);max-width:1180px;width:100%;flex-wrap:wrap;">
+      <div id="mInner" onClick="{{ stop }}" style="display:flex;align-items:stretch;justify-content:center;gap:clamp(14px,1.8vw,30px);max-width:1180px;width:100%;flex-wrap:wrap;">
 
         <!-- LEFT — OBVERSE (front) -->
-        <div style="flex:0 1 360px;display:flex;flex-direction:column;gap:12px;align-self:center;">
+        <div class="m-side" style="flex:0 1 360px;display:flex;flex-direction:column;gap:12px;align-self:center;">
           <div style="display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6f6f76;">
             <span style="width:14px;height:1px;background:#C9A24B;"></span>Fronte · Obverse
           </div>
@@ -422,7 +451,7 @@
         </div>
 
         <!-- RIGHT — REVERSE (back) -->
-        <div style="flex:0 1 360px;display:flex;flex-direction:column;gap:12px;align-self:center;">
+        <div class="m-side" style="flex:0 1 360px;display:flex;flex-direction:column;gap:12px;align-self:center;">
           <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6f6f76;">
             Retro · Reverse<span style="width:14px;height:1px;background:#C9A24B;"></span>
           </div>
@@ -812,6 +841,19 @@ class Component extends DCLogic {
     const seg = (p,p0,p1) => { const t = cl((p-p0)/(p1-p0)); return t*t*(3-2*t); };
     const prog = (id) => { const s = document.getElementById(id); if (!s) return 0; const r = s.getBoundingClientRect(); const d = s.offsetHeight - vh; return d<=0 ? cl(-r.top/Math.max(1,s.offsetHeight)) : cl(-r.top/d); };
     const sY = window.scrollY || window.pageYOffset || 0;
+
+    // ── MOBILE: no scroll choreography — paint every scene at its static end-state. ──
+    if (window.innerWidth <= 760) {
+      const show = (el) => { if (el) { el.style.opacity = '1'; el.style.transform = 'none'; el.style.filter = 'none'; } };
+      show(E.s1head); if (E.s1glow) E.s1glow.style.opacity = '0'; if (E.s1dust) E.s1dust.style.opacity = '0';
+      show(E.s2head); if (E.s2foot) E.s2foot.style.opacity = '1';
+      const tg = this._stats, loaded = this.state.dbCards !== null;
+      for (let i = 0; i < 4; i++) { const el = E['num' + i]; if (el) el.textContent = loaded ? String(tg[i]) : '—'; }
+      show(E.s5kicker); for (let i = 0; i < 4; i++) show(E['s5card' + i]);
+      show(E.s8inner);
+      if (E.cue) E.cue.style.opacity = '0';
+      return;
+    }
 
     if (E.cue) E.cue.style.opacity = String(cl(1 - sY/(vh*0.35)));
 
