@@ -6,6 +6,16 @@
   var isFS   = /^\/for-sale/.test(p);
   var isSold = /^\/sold/.test(p);
 
+  // Translation helper — falls back to default strings if i18n.js hasn't loaded
+  var T = window.MV_T || function (k) {
+    var D = {
+      'nav.home': 'HOME', 'nav.collection': 'COLLECTION', 'nav.forsale': 'FOR SALE',
+      'nav.sold': 'SOLD', 'nav.cta': 'BUY · SELL · TRADE',
+      'nav.navigation': 'Navigation', 'nav.tagline': 'THE WHITE SIDE OF FOOTBALL',
+    };
+    return D[k] || k;
+  };
+
   var B = "font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;";
 
   function lnk(href, label, col, w, active) {
@@ -28,6 +38,38 @@
     if (active) base += 'background:linear-gradient(90deg,rgba(255,255,255,.04),transparent);';
     return '<a href="' + href + '" class="mv-mlink" style="' + base + '">' +
       '<span>' + label + '</span>' + arrow + '</a>';
+  }
+
+  // ── Language switcher pills ──
+  var LANGS = ['en', 'it', 'es', 'de'];
+  var curLang = window.MV_LANG || 'en';
+
+  function langPillsDesktop() {
+    return '<div id="mv-lang" style="display:flex;align-items:center;gap:3px;margin-left:10px;padding-left:14px;border-left:1px solid #2A2A2A;">' +
+      LANGS.map(function (l) {
+        var active = l === curLang;
+        var s = "font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;" +
+          "padding:5px 7px;border-radius:2px;cursor:pointer;border:none;line-height:1;" +
+          (active
+            ? 'background:rgba(201,162,75,.14);color:#C9A24B;box-shadow:0 0 0 1px #C9A24B;'
+            : 'background:none;color:rgba(255,255,255,.32);box-shadow:0 0 0 1px rgba(255,255,255,.14);');
+        return '<button onclick="window.MV_setLang(\'' + l + '\')" style="' + s + '">' + l.toUpperCase() + '</button>';
+      }).join('') +
+    '</div>';
+  }
+
+  function langPillsMobile() {
+    return '<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:18px 0 6px;">' +
+      LANGS.map(function (l) {
+        var active = l === curLang;
+        var s = "font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;" +
+          "padding:8px 14px;border-radius:3px;cursor:pointer;border:none;flex:1;" +
+          (active
+            ? 'background:rgba(201,162,75,.14);color:#C9A24B;box-shadow:0 0 0 1px #C9A24B;'
+            : 'background:#111;color:rgba(255,255,255,.4);box-shadow:0 0 0 1px rgba(255,255,255,.1);');
+        return '<button onclick="window.MV_setLang(\'' + l + '\')" style="' + s + '">' + l.toUpperCase() + '</button>';
+      }).join('') +
+    '</div>';
   }
 
   // ── Injected styles: everything responsive lives here so desktop is untouched ──
@@ -69,14 +111,15 @@
       '<img src="/logo.png" alt="ADG Merengue Vault" style="height:40px;width:auto;mix-blend-mode:screen;display:block;">' +
     '</a>' +
     '<div id="nav-links" style="display:flex;align-items:center;gap:24px;">' +
-      lnk('/', 'HOME', '#A1A1AA', '600', isHome) +
-      lnk('/collection/', 'COLLECTION', '#C8A75B', '700', isColl) +
-      lnk('/for-sale/', 'FOR SALE', '#16A34A', '700', isFS) +
-      lnk('/sold/', 'SOLD', '#DC2626', '700', isSold) +
+      lnk('/', T('nav.home'), '#A1A1AA', '600', isHome) +
+      lnk('/collection/', T('nav.collection'), '#C8A75B', '700', isColl) +
+      lnk('/for-sale/', T('nav.forsale'), '#16A34A', '700', isFS) +
+      lnk('/sold/', T('nav.sold'), '#DC2626', '700', isSold) +
       '<a href="' + IG + '" target="_blank" rel="noopener" style="background:#C8A75B;color:#0A0A0A;' + B +
         'font-weight:700;letter-spacing:.12em;padding:10px 20px;text-decoration:none;border-radius:2px;transition:background .2s;">' +
-        'BUY · SELL · TRADE' +
+        T('nav.cta') +
       '</a>' +
+      langPillsDesktop() +
     '</div>' +
     // hamburger (mobile only)
     '<button id="mv-burger" aria-label="Apri menu" aria-expanded="false" ' +
@@ -100,24 +143,25 @@
         'font-size:30px;line-height:1;cursor:pointer;padding:4px 6px;">×</button>' +
     '</div>' +
     '<p style="font-family:\'Space Mono\',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;' +
-      'color:#5A5A5A;margin:6px 2px 14px;">Navigazione</p>' +
+      'color:#5A5A5A;margin:6px 2px 14px;">' + T('nav.navigation') + '</p>' +
     '<nav style="display:flex;flex-direction:column;">' +
-      mlnk('/', 'Home', '#EDEDED', isHome) +
-      mlnk('/collection/', 'Collection', '#C8A75B', isColl) +
-      mlnk('/for-sale/', 'For Sale', '#16A34A', isFS) +
-      mlnk('/sold/', 'Sold', '#DC2626', isSold) +
+      mlnk('/', T('nav.home'), '#EDEDED', isHome) +
+      mlnk('/collection/', T('nav.collection'), '#C8A75B', isColl) +
+      mlnk('/for-sale/', T('nav.forsale'), '#16A34A', isFS) +
+      mlnk('/sold/', T('nav.sold'), '#DC2626', isSold) +
     '</nav>' +
+    langPillsMobile() +
     '<a href="' + IG + '" target="_blank" rel="noopener" ' +
-      'style="margin-top:22px;display:block;text-align:center;background:#C8A75B;color:#0A0A0A;' +
+      'style="margin-top:12px;display:block;text-align:center;background:#C8A75B;color:#0A0A0A;' +
       "font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;" +
-      'padding:15px;text-decoration:none;border-radius:3px;">BUY · SELL · TRADE</a>' +
+      'padding:15px;text-decoration:none;border-radius:3px;">' + T('nav.cta') + '</a>' +
     '<a href="' + IG + '" target="_blank" rel="noopener" ' +
       "style=\"margin-top:14px;display:flex;align-items:center;gap:8px;justify-content:center;color:#7A7A7A;" +
       "font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.06em;text-decoration:none;\">" +
       '<span style="font-size:15px;">◎</span> @adgmerenguevault</a>' +
     '<div style="flex:1;"></div>' +
     '<p style="font-family:\'Space Mono\',monospace;font-size:10px;letter-spacing:.15em;color:#3A3A3A;' +
-      'text-align:center;margin-top:20px;">THE WHITE SIDE OF FOOTBALL</p>';
+      'text-align:center;margin-top:20px;">' + T('nav.tagline') + '</p>';
 
   // ── Toggle logic ──
   function setOpen(open) {

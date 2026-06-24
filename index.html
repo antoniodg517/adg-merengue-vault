@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+<script src="/i18n.js"></script>
 </head>
 <body>
 <script src="/nav.js"></script>
@@ -113,7 +114,7 @@
 
   <!-- scroll cue -->
   <div id="cue" style="position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:115;display:flex;flex-direction:column;align-items:center;gap:10px;">
-    <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.3em;color:rgba(255,255,255,.55);text-transform:uppercase;">[ Scroll to Enter ]</span>
+    <span data-i18n="home.scrollcue" style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.3em;color:rgba(255,255,255,.55);text-transform:uppercase;">[ Scroll to Enter ]</span>
     <span style="width:1px;height:40px;background:linear-gradient(#C9A24B,transparent);animation:cueBlink 2.2s ease-in-out infinite;display:block;"></span>
   </div>
 
@@ -141,14 +142,14 @@
         <span style="position:absolute;left:74%;top:48%;width:3px;height:3px;border-radius:50%;background:#E8D9A8;animation:dustFloat 9s ease-in 2s infinite;"></span>
       </div>
       <div id="s1head" style="position:relative;z-index:2;padding:0 clamp(22px,6vw,90px);max-width:1300px;">
-        <div style="display:flex;align-items:center;gap:14px;font-family:'Space Mono',monospace;font-size:clamp(10px,1vw,12px);font-weight:400;letter-spacing:.24em;color:#C9A24B;text-transform:uppercase;animation:lineUp 1s cubic-bezier(.2,.7,.2,1) both;"><span style="color:rgba(255,255,255,.4);">N°01 / 05</span><span style="width:22px;height:1px;background:rgba(255,255,255,.3);"></span>Real Madrid · Sports Cards · Private Collection</div>
+        <div style="display:flex;align-items:center;gap:14px;font-family:'Space Mono',monospace;font-size:clamp(10px,1vw,12px);font-weight:400;letter-spacing:.24em;color:#C9A24B;text-transform:uppercase;animation:lineUp 1s cubic-bezier(.2,.7,.2,1) both;"><span style="color:rgba(255,255,255,.4);">N°01 / 05</span><span style="width:22px;height:1px;background:rgba(255,255,255,.3);"></span><span data-i18n="home.s1.kicker">Real Madrid · Sports Cards · Private Collection</span></div>
         <h1 style="margin-top:clamp(14px,2vw,26px);font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;color:#fff;line-height:.86;letter-spacing:-.005em;font-size:clamp(58px,12vw,210px);">
           <span style="display:block;animation:lineUp 1.05s cubic-bezier(.2,.7,.2,1) .08s both;">The White</span>
           <span style="display:block;animation:lineUp 1.05s cubic-bezier(.2,.7,.2,1) .18s both;">Side Of</span>
           <span style="display:block;animation:lineUp 1.05s cubic-bezier(.2,.7,.2,1) .28s both;">Football</span>
         </h1>
         <div style="width:96px;height:3px;background:#C9A24B;margin-top:clamp(20px,2.6vw,38px);animation:lineUp 1s ease .5s both;"></div>
-        <p style="margin-top:22px;max-width:540px;color:#9a9aa1;font-size:clamp(14px,1.15vw,18px);line-height:1.6;font-weight:400;animation:lineUp 1s ease .62s both;">A private vault of meticulously curated Real Madrid sports cards. Every slab, a piece of Madridista heritage.</p>
+        <p data-i18n="home.s1.body" style="margin-top:22px;max-width:540px;color:#9a9aa1;font-size:clamp(14px,1.15vw,18px);line-height:1.6;font-weight:400;animation:lineUp 1s ease .62s both;">A private vault of meticulously curated Real Madrid sports cards. Every slab, a piece of Madridista heritage.</p>
       </div>
     </div>
   </section>
@@ -159,31 +160,31 @@
       <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(60% 50% at 50% 50%,rgba(201,162,75,.08),transparent 65%);"></div>
       <div id="s2head" style="position:relative;z-index:2;text-align:center;opacity:0;margin-bottom:clamp(30px,5vh,64px);">
         <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°02 / 05 · The Vault Ledger</div>
-        <h2 style="margin-top:14px;font-family:'Anton',sans-serif;font-size:clamp(40px,6.5vw,104px);line-height:.9;color:#fff;text-transform:uppercase;">In Numbers</h2>
+        <h2 data-i18n="home.s2.title" style="margin-top:14px;font-family:'Anton',sans-serif;font-size:clamp(40px,6.5vw,104px);line-height:.9;color:#fff;text-transform:uppercase;">In Numbers</h2>
       </div>
       <div style="position:relative;z-index:2;display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:clamp(26px,5vw,80px);padding:0 24px;">
         <div style="text-align:center;">
           <div id="num0" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">—</div>
-          <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">Slabs in the Vault</div>
+          <div data-i18n="home.s2.stat0" style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">Slabs in the Vault</div>
           <div style="margin:14px auto 0;width:28px;height:2px;background:#C9A24B;opacity:.6;"></div>
         </div>
         <div style="text-align:center;">
           <div id="num1" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">—</div>
-          <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">PSA 10 Gem-Mint</div>
+          <div data-i18n="home.s2.stat1" style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">PSA 10 Gem-Mint</div>
           <div style="margin:14px auto 0;width:28px;height:2px;background:#C9A24B;opacity:.6;"></div>
         </div>
         <div style="text-align:center;">
           <div id="num2" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">—</div>
-          <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">One of Ones</div>
+          <div data-i18n="home.s2.stat2" style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">One of Ones</div>
           <div style="margin:14px auto 0;width:28px;height:2px;background:#C9A24B;opacity:.6;"></div>
         </div>
         <div style="text-align:center;">
           <div id="num3" style="font-family:'Anton',sans-serif;font-size:clamp(56px,9vw,150px);line-height:1;color:#fff;">—</div>
-          <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">Di Ritorno da PSA</div>
+          <div data-i18n="home.s2.stat3" style="margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8a8a90;text-transform:uppercase;">Di Ritorno da PSA</div>
           <div style="margin:14px auto 0;width:28px;height:2px;background:#C9A24B;opacity:.6;"></div>
         </div>
       </div>
-      <div id="s2foot" style="position:relative;z-index:2;margin-top:clamp(34px,5vh,60px);opacity:0;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.22em;color:rgba(255,255,255,.4);text-transform:uppercase;">Every number, authenticated &amp; graded</div>
+      <div id="s2foot" data-i18n="home.s2.footer" style="position:relative;z-index:2;margin-top:clamp(34px,5vh,60px);opacity:0;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.22em;color:rgba(255,255,255,.4);text-transform:uppercase;">Every number, authenticated &amp; graded</div>
     </div>
   </section>
 
@@ -193,8 +194,8 @@
       <div style="position:absolute;inset:0;background:radial-gradient(60% 50% at 50% 30%,rgba(232,217,168,.06),transparent 70%);pointer-events:none;"></div>
 
       <div id="s5kicker" style="position:absolute;left:0;right:0;top:11vh;z-index:5;text-align:center;opacity:0;">
-        <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°03 / 05 · The Collection</div>
-        <div style="margin-top:10px;font-family:'Anton',sans-serif;font-size:clamp(34px,5.4vw,86px);line-height:.92;color:#fff;text-transform:uppercase;">The Hall of Grails</div>
+        <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°03 / 05 · <span data-i18n="home.s3.kicker">The Collection</span></div>
+        <div data-i18n="home.s3.title" style="margin-top:10px;font-family:'Anton',sans-serif;font-size:clamp(34px,5.4vw,86px);line-height:.92;color:#fff;text-transform:uppercase;">The Hall of Grails</div>
       </div>
 
       <!-- Champions League trophies peeking in from the sides -->
@@ -259,7 +260,7 @@
         <!-- shelf surface -->
         <div style="position:relative;margin-top:-58px;height:30px;background:linear-gradient(180deg,#26262d,#0d0d11);border-radius:3px;box-shadow:0 30px 60px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.12);"></div>
         <div style="height:3px;width:100%;background:linear-gradient(90deg,transparent,#C9A24B,transparent);opacity:.65;"></div>
-        <div id="s5cap" style="text-align:center;margin-top:18px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.34em;color:rgba(255,255,255,.4);text-transform:uppercase;">Hover to lift · tap to inspect · 4 pieces</div>
+        <div id="s5cap" data-i18n="home.s3.cap" style="text-align:center;margin-top:18px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.34em;color:rgba(255,255,255,.4);text-transform:uppercase;">Hover to lift · tap to inspect · 4 pieces</div>
       </div>
     </div>
   </section>
@@ -270,9 +271,9 @@
     <div id="s7inner" style="position:relative;z-index:2;width:100%;max-width:1200px;display:flex;align-items:flex-start;justify-content:center;gap:clamp(24px,3.5vw,56px);flex-wrap:wrap;">
 
       <div style="flex:1 1 300px;min-width:280px;max-width:440px;padding-top:clamp(0px,2vh,18px);">
-        <div id="s7kicker" class="{{ s7Cls }}" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°04 / 05 · The Starting XI</div>
-        <div id="s7title" class="{{ s7Cls }}" style="margin-top:12px;font-family:'Anton',sans-serif;font-size:clamp(40px,5.6vw,86px);line-height:.9;color:#fff;text-transform:uppercase;">La Mia<br>Top XI</div>
-        <p id="s7desc" class="{{ s7Cls }}" style="margin:20px 0 0;max-width:420px;color:#9a9aa1;font-size:clamp(14px,1.1vw,17px);line-height:1.65;">Il meglio della collezione, schierato <span style="color:#fff;font-weight:600;">{{ formationLabel }}</span>. <span id="s7hint">Passa il mouse per sollevare · clicca per ispezionare.</span></p>
+        <div id="s7kicker" class="{{ s7Cls }}" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°04 / 05 · <span data-i18n="home.s4.kicker">The Starting XI</span></div>
+        <div id="s7title" data-i18n-html="home.s4.title" class="{{ s7Cls }}" style="margin-top:12px;font-family:'Anton',sans-serif;font-size:clamp(40px,5.6vw,86px);line-height:.9;color:#fff;text-transform:uppercase;">La Mia<br>Top XI</div>
+        <p id="s7desc" class="{{ s7Cls }}" style="margin:20px 0 0;max-width:420px;color:#9a9aa1;font-size:clamp(14px,1.1vw,17px);line-height:1.65;"><span data-i18n="home.s4.desc">Il meglio della collezione, schierato</span> <span style="color:#fff;font-weight:600;">{{ formationLabel }}</span>. <span data-i18n="home.s4.hint" id="s7hint">Passa il mouse per sollevare · clicca per ispezionare.</span></p>
       </div>
 
       <!-- ── THE PITCH ── -->
@@ -302,7 +303,7 @@
             <sc-if value="{{ slot.noCard }}" hint-placeholder-val="{{ true }}">
               <div style="display:flex;flex-direction:column;align-items:center;">
                 <div style="width:16cqw;aspect-ratio:5/7;border:1px dashed rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);">
-                  <span style="font-family:'Anton',sans-serif;font-size:clamp(8px,2cqw,12px);letter-spacing:.06em;color:rgba(255,255,255,.42);text-transform:uppercase;text-align:center;line-height:1.05;">Coming<br>Soon</span>
+                  <span data-i18n-html="home.s4.comingsoon" style="font-family:'Anton',sans-serif;font-size:clamp(8px,2cqw,12px);letter-spacing:.06em;color:rgba(255,255,255,.42);text-transform:uppercase;text-align:center;line-height:1.05;">Coming<br>Soon</span>
                 </div>
                 <div style="margin-top:clamp(3px,1cqw,7px);font-family:'Space Mono',monospace;font-size:clamp(8px,1.7cqw,11px);letter-spacing:.14em;color:rgba(255,255,255,.32);text-transform:uppercase;white-space:nowrap;">{{ slot.label }}</div>
               </div>
@@ -320,9 +321,9 @@
     <img src="/assets/cup.png" alt="" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-46%);height:86%;width:auto;opacity:.05;filter:brightness(1.5);pointer-events:none;">
     <div id="s8inner" style="position:relative;z-index:2;max-width:1180px;margin:0 auto;width:100%;opacity:0;transform:translateY(40px);will-change:transform,opacity;">
       <div style="text-align:center;">
-        <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:400;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°05 / 05 · Enter the Vault</div>
-        <h2 style="margin-top:16px;font-family:'Anton',sans-serif;font-size:clamp(46px,8vw,128px);line-height:.88;color:#fff;text-transform:uppercase;">Choose<br>Your Way In</h2>
-        <p style="margin:20px auto 0;max-width:500px;color:#9a9aa1;font-size:clamp(14px,1.15vw,17px);line-height:1.6;">Four doors into the white side of football.</p>
+        <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:400;letter-spacing:.42em;color:#C9A24B;text-transform:uppercase;">N°05 / 05 · <span data-i18n="home.s5.kicker">Enter the Vault</span></div>
+        <h2 data-i18n-html="home.s5.title" style="margin-top:16px;font-family:'Anton',sans-serif;font-size:clamp(46px,8vw,128px);line-height:.88;color:#fff;text-transform:uppercase;">Choose<br>Your Way In</h2>
+        <p data-i18n="home.s5.body" style="margin:20px auto 0;max-width:500px;color:#9a9aa1;font-size:clamp(14px,1.15vw,17px);line-height:1.6;">Four doors into the white side of football.</p>
       </div>
 
       <div id="s8grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,1.6vw,22px);margin-top:clamp(42px,6vh,72px);">
@@ -334,7 +335,7 @@
           </div>
           <div>
             <div style="font-family:'Anton',sans-serif;font-size:clamp(22px,2.2vw,36px);line-height:.92;color:#fff;text-transform:uppercase;">The<br>Collection</div>
-            <div style="margin-top:12px;font-size:12px;color:#8a8a90;line-height:1.5;">Every slab in the vault, fully catalogued.</div>
+            <div data-i18n="home.s5.c1desc" style="margin-top:12px;font-size:12px;color:#8a8a90;line-height:1.5;">Every slab in the vault, fully catalogued.</div>
           </div>
         </a>
 
@@ -345,7 +346,7 @@
           </div>
           <div>
             <div style="font-family:'Anton',sans-serif;font-size:clamp(22px,2.2vw,36px);line-height:.92;color:#fff;text-transform:uppercase;">For<br>Sale</div>
-            <div style="margin-top:12px;font-size:12px;color:#8a8a90;line-height:1.5;">Pezzi disponibili a trattativa privata.</div>
+            <div data-i18n="home.s5.c2desc" style="margin-top:12px;font-size:12px;color:#8a8a90;line-height:1.5;">Pezzi disponibili a trattativa privata.</div>
           </div>
         </a>
 
@@ -356,7 +357,7 @@
           </div>
           <div>
             <div style="font-family:'Anton',sans-serif;font-size:clamp(22px,2.2vw,36px);line-height:.92;color:#fff;text-transform:uppercase;">Sold<br>Archive</div>
-            <div style="margin-top:12px;font-size:12px;color:#8a8a90;line-height:1.5;">The grails that found new homes.</div>
+            <div data-i18n="home.s5.c3desc" style="margin-top:12px;font-size:12px;color:#8a8a90;line-height:1.5;">The grails that found new homes.</div>
           </div>
         </a>
 
@@ -367,7 +368,7 @@
           </div>
           <div>
             <div style="font-family:'Anton',sans-serif;font-size:clamp(22px,2.2vw,36px);line-height:.92;color:#070708;text-transform:uppercase;">Buy · Sell<br>Trade</div>
-            <div style="margin-top:12px;font-size:12px;color:rgba(7,7,8,.72);line-height:1.5;font-weight:600;">Deal direct — DM the vault on Instagram.</div>
+            <div data-i18n="home.s5.c4desc" style="margin-top:12px;font-size:12px;color:rgba(7,7,8,.72);line-height:1.5;font-weight:600;">Deal direct — DM the vault on Instagram.</div>
           </div>
         </a>
 
@@ -395,7 +396,7 @@
         <!-- LEFT — OBVERSE (front) -->
         <div class="m-side" style="flex:0 1 360px;display:flex;flex-direction:column;gap:12px;align-self:center;">
           <div style="display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6f6f76;">
-            <span style="width:14px;height:1px;background:#C9A24B;"></span>Fronte · Obverse
+            <span style="width:14px;height:1px;background:#C9A24B;"></span><span data-i18n="lb.obverse">Fronte · Obverse</span>
           </div>
           <div onMouseMove="{{ onCardTilt }}" onMouseLeave="{{ onCardTiltLeave }}" style="position:relative;aspect-ratio:5/8.6;transition:transform .15s ease-out;will-change:transform;border:1px solid rgba(201,162,75,.28);border-radius:4px;overflow:hidden;background:#0d0d10;box-shadow:0 36px 80px rgba(0,0,0,.85),0 0 50px rgba(201,162,75,.12);">
             <img src="{{ cur.front }}" alt="{{ cur.player }}" style="width:100%;height:100%;object-fit:contain;display:block;">
@@ -416,26 +417,26 @@
             <div style="margin-bottom:16px;"><span style="display:inline-block;background:#C9A24B;color:#070708;font-size:9px;font-weight:800;letter-spacing:.14em;padding:4px 10px;border-radius:2px;text-transform:uppercase;">{{ cur.badge }}</span></div>
           </sc-if>
 
-          <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:#6f6f76;margin-bottom:6px;">Subject</div>
+          <div data-i18n="lb.subject" style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:#6f6f76;margin-bottom:6px;">Subject</div>
           <h3 style="font-family:'Anton',sans-serif;font-size:clamp(30px,3.4vw,46px);line-height:.92;color:#fff;text-transform:uppercase;margin-bottom:6px;">{{ cur.player }}</h3>
           <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;color:#9a9aa1;margin-bottom:22px;">{{ cur.line }}</div>
 
           <div style="margin-bottom:22px;">
             <sc-if value="{{ curHasVariant }}" hint-placeholder-val="{{ false }}">
               <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;">
-                <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#6f6f76;flex:none;">Parallel</span>
+                <span data-i18n="lb.parallel" style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#6f6f76;flex:none;">Parallel</span>
                 <span style="flex:1;border-bottom:1px dotted rgba(255,255,255,.16);transform:translateY(-3px);"></span>
                 <span style="font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#fff;text-align:right;">{{ cur.variant }}</span>
               </div>
             </sc-if>
             <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;">
-              <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#6f6f76;flex:none;">Grade</span>
+              <span data-i18n="lb.grade" style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#6f6f76;flex:none;">Grade</span>
               <span style="flex:1;border-bottom:1px dotted rgba(255,255,255,.16);transform:translateY(-3px);"></span>
               <span style="font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:#C9A24B;text-align:right;">{{ cur.grade }}</span>
             </div>
             <sc-if value="{{ curHasSerial }}" hint-placeholder-val="{{ true }}">
               <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;">
-                <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#6f6f76;flex:none;">Serial</span>
+                <span data-i18n="lb.serial" style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#6f6f76;flex:none;">Serial</span>
                 <span style="flex:1;border-bottom:1px dotted rgba(255,255,255,.16);transform:translateY(-3px);"></span>
                 <span style="font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:#fff;text-align:right;">{{ cur.serial }}</span>
               </div>
@@ -443,24 +444,24 @@
           </div>
 
           <sc-if value="{{ curHasDesc }}" hint-placeholder-val="{{ true }}">
-            <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:#6f6f76;margin-bottom:8px;">Field Notes</div>
+            <div data-i18n="lb.fieldnotes" style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:#6f6f76;margin-bottom:8px;">Field Notes</div>
             <p style="font-family:'Inter',sans-serif;font-size:13px;font-weight:300;line-height:1.7;color:#b4b4ba;margin-bottom:24px;">{{ cur.desc }}</p>
           </sc-if>
 
-          <a href="{{ igUrl }}" target="_blank" rel="noopener" style="display:block;text-align:center;background:#C9A24B;color:#070708;text-decoration:none;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:15px 28px;border-radius:2px;">Enquire — Instagram DM</a>
+          <a data-i18n="lb.enquire" href="{{ igUrl }}" target="_blank" rel="noopener" style="display:block;text-align:center;background:#C9A24B;color:#070708;text-decoration:none;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:15px 28px;border-radius:2px;">Enquire — Instagram DM</a>
         </div>
 
         <!-- RIGHT — REVERSE (back) -->
         <div class="m-side" style="flex:0 1 360px;display:flex;flex-direction:column;gap:12px;align-self:center;">
           <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6f6f76;">
-            Retro · Reverse<span style="width:14px;height:1px;background:#C9A24B;"></span>
+            <span data-i18n="lb.reverse">Retro · Reverse</span><span style="width:14px;height:1px;background:#C9A24B;"></span>
           </div>
           <div onMouseMove="{{ onCardTilt }}" onMouseLeave="{{ onCardTiltLeave }}" style="position:relative;aspect-ratio:5/8.6;transition:transform .15s ease-out;will-change:transform;border:1px solid rgba(255,255,255,.1);border-radius:4px;overflow:hidden;background:#0d0d10;box-shadow:0 30px 70px rgba(0,0,0,.8);">
             <sc-if value="{{ curHasBack }}" hint-placeholder-val="{{ false }}">
               <img src="{{ cur.back }}" alt="{{ cur.player }} retro" style="width:100%;height:100%;object-fit:contain;display:block;">
             </sc-if>
             <sc-if value="{{ curNoBack }}" hint-placeholder-val="{{ false }}">
-              <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;color:#3a3a40;text-transform:uppercase;text-align:center;padding:20px;">Retro non<br>disponibile</div>
+              <div data-i18n="lb.noback" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;color:#3a3a40;text-transform:uppercase;text-align:center;padding:20px;">Back not available</div>
             </sc-if>
             <sc-if value="{{ isGrail }}" hint-placeholder-val="{{ false }}">
               <div data-sheen style="position:absolute;inset:0;opacity:0;mix-blend-mode:screen;pointer-events:none;transition:opacity .15s;"></div>
@@ -477,23 +478,23 @@
     <sc-if value="{{ contactOpen }}" hint-placeholder-val="{{ false }}">
       <div style="width:330px;max-width:calc(100vw - 40px);background:#111111;border:1px solid #2A2A2A;border-radius:14px;padding:22px;box-shadow:0 24px 64px rgba(0,0,0,0.7);animation:contactIn .2s ease;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-          <h3 style="font-family:'Anton',sans-serif;font-size:20px;text-transform:uppercase;letter-spacing:.05em;color:#FFF;">Contattami</h3>
+          <h3 data-i18n="contact.title" style="font-family:'Anton',sans-serif;font-size:20px;text-transform:uppercase;letter-spacing:.05em;color:#FFF;">Contattami</h3>
           <button onClick="{{ closeContact }}" style="background:none;border:none;color:#A1A1AA;font-size:22px;cursor:pointer;line-height:1;padding:2px;">×</button>
         </div>
         <a href="https://instagram.com/adgmerenguevault" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#C8A75B;color:#0A0A0A;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:13px;border-radius:6px;text-decoration:none;margin-bottom:18px;">◎ Instagram — @adgmerenguevault</a>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
           <div style="flex:1;height:1px;background:#1A1A1A;"></div>
-          <span style="font-size:9px;color:#A1A1AA;letter-spacing:.16em;text-transform:uppercase;">oppure scrivimi</span>
+          <span data-i18n="contact.or" style="font-size:9px;color:#A1A1AA;letter-spacing:.16em;text-transform:uppercase;">oppure scrivimi</span>
           <div style="flex:1;height:1px;background:#1A1A1A;"></div>
         </div>
-        <input type="text" value="{{ contactName }}" onChange="{{ onContactName }}" placeholder="Il tuo nome" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:6px;color:#FFF;font-family:'Inter',sans-serif;font-size:13px;padding:10px 12px;outline:none;margin-bottom:10px;">
-        <input type="email" value="{{ contactEmail }}" onChange="{{ onContactEmail }}" placeholder="La tua email" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:6px;color:#FFF;font-family:'Inter',sans-serif;font-size:13px;padding:10px 12px;outline:none;margin-bottom:10px;">
-        <textarea value="{{ contactMsg }}" onChange="{{ onContactMsg }}" placeholder="Messaggio…" rows="3" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:6px;color:#FFF;font-family:'Inter',sans-serif;font-size:13px;padding:10px 12px;outline:none;resize:vertical;line-height:1.5;margin-bottom:14px;"></textarea>
+        <input type="text" value="{{ contactName }}" onChange="{{ onContactName }}" data-i18n="contact.namePh" data-i18n-attr="placeholder" placeholder="Il tuo nome" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:6px;color:#FFF;font-family:'Inter',sans-serif;font-size:13px;padding:10px 12px;outline:none;margin-bottom:10px;">
+        <input type="email" value="{{ contactEmail }}" onChange="{{ onContactEmail }}" data-i18n="contact.emailPh" data-i18n-attr="placeholder" placeholder="La tua email" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:6px;color:#FFF;font-family:'Inter',sans-serif;font-size:13px;padding:10px 12px;outline:none;margin-bottom:10px;">
+        <textarea value="{{ contactMsg }}" onChange="{{ onContactMsg }}" data-i18n="contact.msgPh" data-i18n-attr="placeholder" placeholder="Messaggio…" rows="3" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:6px;color:#FFF;font-family:'Inter',sans-serif;font-size:13px;padding:10px 12px;outline:none;resize:vertical;line-height:1.5;margin-bottom:14px;"></textarea>
         <sc-if value="{{ contactError }}" hint-placeholder-val="{{ false }}">
           <p style="font-size:11px;color:#EF4444;margin-bottom:10px;">{{ contactErrorMsg }}</p>
         </sc-if>
         <sc-if value="{{ contactSent }}" hint-placeholder-val="{{ false }}">
-          <p style="font-size:12px;color:#16A34A;font-weight:600;text-align:center;padding:6px 0;">✓ Messaggio inviato! Ti risponderò presto.</p>
+          <p data-i18n="contact.sent" style="font-size:12px;color:#16A34A;font-weight:600;text-align:center;padding:6px 0;">✓ Messaggio inviato! Ti risponderò presto.</p>
         </sc-if>
         <sc-if value="{{ contactNotSent }}" hint-placeholder-val="{{ true }}">
           <button onClick="{{ sendContact }}" style="width:100%;background:#C8A75B;border:none;color:#0A0A0A;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:13px;border-radius:6px;cursor:pointer;">{{ contactBtnLabel }}</button>
@@ -661,10 +662,11 @@ class Component extends DCLogic {
   }
 
   async _sendContact() {
+    const MT = window.MV_T || function(k) { return k; };
     const { contactName, contactEmail, contactMsg } = this.state;
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((contactEmail || '').trim());
-    if (!emailOk) { this.setState({ contactError: 'Inserisci un indirizzo email valido.' }); return; }
-    if (!contactMsg.trim()) { this.setState({ contactError: 'Scrivi un messaggio.' }); return; }
+    if (!emailOk) { this.setState({ contactError: MT('contact.errEmail') }); return; }
+    if (!contactMsg.trim()) { this.setState({ contactError: MT('contact.errMsg') }); return; }
     this.setState({ contactSending: true, contactError: '' });
     try {
       const res = await fetch('/api/contact', {
@@ -672,10 +674,10 @@ class Component extends DCLogic {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: contactName, email: contactEmail, message: contactMsg, card: '' }),
       });
-      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || 'Invio fallito.'); }
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || MT('contact.errFail')); }
       this.setState({ contactSending: false, contactSent: true, contactName: '', contactEmail: '', contactMsg: '' });
     } catch (e) {
-      this.setState({ contactSending: false, contactError: e.message || 'Invio fallito.' });
+      this.setState({ contactSending: false, contactError: e.message || MT('contact.errFail') });
     }
   }
 
@@ -718,7 +720,7 @@ class Component extends DCLogic {
       contactMsg, onContactMsg: (e) => this.setState({ contactMsg: e.target.value }),
       contactError: !!contactError, contactErrorMsg: contactError,
       contactSent, contactNotSent: !contactSent,
-      contactBtnLabel: contactSending ? 'INVIO…' : '✉ Invia messaggio',
+      contactBtnLabel: contactSending ? (window.MV_T ? window.MV_T('contact.sending') : 'SENDING…') : (window.MV_T ? window.MV_T('contact.send') : '✉ Send message'),
       sendContact: () => { if (!contactSending) this._sendContact(); },
       onModalMove: (e) => this.onModalMove(e),
       onModalLeave: () => this.onModalLeave(),
