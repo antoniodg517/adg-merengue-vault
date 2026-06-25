@@ -91,7 +91,7 @@
       '#mv-nav{padding:0 18px!important;height:62px!important;}' +
       '#mv-nav #nav-links{display:none!important;}' +
       '#mv-burger{display:inline-flex!important;}' +
-      '#mv-nav img{height:34px!important;}' +
+      '#mv-nav img{height:40px!important;}' +
     '}' +
     '@media (min-width:901px){' +
       '#mv-drawer,#mv-overlay{display:none!important;}' +
@@ -108,7 +108,7 @@
   );
   nav.innerHTML =
     '<a href="/" style="display:block;line-height:0;">' +
-      '<img src="/logo.png" alt="ADG Merengue Vault" style="height:40px;width:auto;mix-blend-mode:screen;display:block;">' +
+      '<img src="/logo.png" alt="ADG Merengue Vault" style="height:48px;width:auto;display:block;">' +
     '</a>' +
     '<div id="nav-links" style="display:flex;align-items:center;gap:24px;">' +
       lnk('/', T('nav.home'), '#A1A1AA', '600', isHome) +
