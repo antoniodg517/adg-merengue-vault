@@ -118,6 +118,7 @@
           <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
             <span style="font-family: 'Anton', sans-serif; font-size: 34px; letter-spacing: 0.14em; color: #FFF; background: rgba(220,38,38,0.92); padding: 7px 22px; transform: rotate(-11deg); border-radius: 4px; box-shadow: 0 8px 26px rgba(0,0,0,0.6); text-transform: uppercase;">SOLD</span>
           </div>
+          <div data-sheen style="position:absolute;inset:0;opacity:0;mix-blend-mode:screen;pointer-events:none;transition:opacity .15s;"></div>
         </div>
       </div>
 
@@ -181,6 +182,7 @@
           <sc-if value="{{ lightboxNoBack }}" hint-placeholder-val="{{ false }}">
             <div data-i18n="lb.noback" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: #3a3a40; text-transform: uppercase; text-align: center; padding: 20px;">Back not available</div>
           </sc-if>
+          <div data-sheen style="position:absolute;inset:0;opacity:0;mix-blend-mode:screen;pointer-events:none;transition:opacity .15s;"></div>
         </div>
       </div>
 
@@ -391,8 +393,8 @@ class Component extends DCLogic {
       lightboxOpen: lightboxCard !== null,
       closeLightbox,
       stopProp: (e) => e.stopPropagation(),
-      onCardTilt: (e) => { const el = e.currentTarget; const r = el.getBoundingClientRect(); const px = (e.clientX - r.left) / r.width - 0.5; const py = (e.clientY - r.top) / r.height - 0.5; el.style.transform = `perspective(1200px) rotateY(${px*14}deg) rotateX(${-py*14}deg) scale(1.03)`; },
-      onCardTiltLeave: (e) => { e.currentTarget.style.transform = 'perspective(1200px)'; },
+      onCardTilt: (e) => { const el = e.currentTarget; const r = el.getBoundingClientRect(); const px = (e.clientX - r.left) / r.width - 0.5; const py = (e.clientY - r.top) / r.height - 0.5; el.style.transform = `perspective(1200px) rotateY(${px*14}deg) rotateX(${-py*14}deg) scale(1.03)`; const sh = el.querySelector('[data-sheen]'); if (sh) { sh.style.background = `radial-gradient(420px at ${(px+0.5)*100}% ${(py+0.5)*100}%, rgba(255,255,255,.42), transparent 60%)`; sh.style.opacity = '1'; } },
+      onCardTiltLeave: (e) => { const el = e.currentTarget; el.style.transform = 'perspective(1200px)'; const sh = el.querySelector('[data-sheen]'); if (sh) sh.style.opacity = '0'; },
       lightboxSlotId: lb.id ? ('lb-' + lb.id) : 'lb-none',
       lightboxPhotoSrc: lb.photo_url || '',
       lightboxSlotId_back: lb.id ? ('lb-back-' + lb.id) : 'lb-back-none',
