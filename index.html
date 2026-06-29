@@ -142,14 +142,14 @@
         <span style="position:absolute;left:74%;top:48%;width:3px;height:3px;border-radius:50%;background:#E8D9A8;animation:dustFloat 9s ease-in 2s infinite;"></span>
       </div>
       <div id="s1head" style="position:relative;z-index:2;padding:0 clamp(22px,6vw,90px);max-width:1300px;">
-        <div style="display:flex;align-items:center;gap:14px;font-family:'Space Mono',monospace;font-size:clamp(10px,1vw,12px);font-weight:400;letter-spacing:.24em;color:#C9A24B;text-transform:uppercase;animation:lineUp 1s cubic-bezier(.2,.7,.2,1) both;"><span style="color:rgba(255,255,255,.4);">N°01 / 05</span><span style="width:22px;height:1px;background:rgba(255,255,255,.3);"></span><span data-i18n="home.s1.kicker">Real Madrid · Sports Cards · Private Collection</span></div>
+        <div style="display:flex;align-items:center;gap:14px;font-family:'Space Mono',monospace;font-size:clamp(10px,1vw,12px);font-weight:400;letter-spacing:.24em;color:#C9A24B;text-transform:uppercase;animation:lineUp 1s cubic-bezier(.2,.7,.2,1) both;"><span style="color:rgba(255,255,255,.4);">N°01 / 05</span><span style="width:22px;height:1px;background:rgba(255,255,255,.3);"></span><span>{{ s1Kicker }}</span></div>
         <h1 style="margin-top:clamp(14px,2vw,26px);font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;color:#fff;line-height:.86;letter-spacing:-.005em;font-size:clamp(58px,12vw,210px);">
           <span style="display:block;animation:lineUp 1.05s cubic-bezier(.2,.7,.2,1) .08s both;">The White</span>
           <span style="display:block;animation:lineUp 1.05s cubic-bezier(.2,.7,.2,1) .18s both;">Side Of</span>
           <span style="display:block;animation:lineUp 1.05s cubic-bezier(.2,.7,.2,1) .28s both;">Football</span>
         </h1>
         <div style="width:96px;height:3px;background:#C9A24B;margin-top:clamp(20px,2.6vw,38px);animation:lineUp 1s ease .5s both;"></div>
-        <p data-i18n="home.s1.body" style="margin-top:22px;max-width:540px;color:#9a9aa1;font-size:clamp(14px,1.15vw,18px);line-height:1.6;font-weight:400;animation:lineUp 1s ease .62s both;">A private vault of meticulously curated Real Madrid sports cards. Every slab, a piece of Madridista heritage.</p>
+        <p style="margin-top:22px;max-width:540px;color:#9a9aa1;font-size:clamp(14px,1.15vw,18px);line-height:1.6;font-weight:400;animation:lineUp 1s ease .62s both;">{{ s1Body }}</p>
       </div>
     </div>
   </section>
@@ -686,6 +686,8 @@ class Component extends DCLogic {
       cards: this.cards,
       pitchSlots,
       s7Cls: this._s7Visible ? 's7-in' : '',
+      s1Kicker: (window.MV_T || function(k){return k;})('home.s1.kicker'),
+      s1Body: (window.MV_T || function(k){return k;})('home.s1.body'),
       s2Stat0: (window.MV_T || function(k){return k;})('home.s2.stat0'),
       s2Stat1: (window.MV_T || function(k){return k;})('home.s2.stat1'),
       s2Stat2: (window.MV_T || function(k){return k;})('home.s2.stat2'),
